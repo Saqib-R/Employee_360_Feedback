@@ -1,0 +1,96 @@
+<div
+  class="container mt-0 px-4 py-2 bg-white rounded shadow d-flex gap-3 align-items-center w-100 "
+>
+  <div class="col-1">
+    <img
+      src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
+      width="200"
+      height="200"
+      alt="Profile"
+      class="img-fluid rounded-circle"
+    />
+  </div>
+  <div class="col-9">
+    <h4>Jon Doe</h4>
+    <div class="d-flex flex-row gap-1 align-items-center">
+      <span class="badge bg-secondary">Vice President</span>
+      <span class="badge bg-light text-dark">Level 8</span>
+      <span class="badge bg-dark-subtle text-dark">GPE</span>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-3 p-4 bg-white rounded shadow position-relative" >
+  <!-- Header Section -->
+  <div class="row align-items-center mb-4 border-bottom pb-3">
+    <div class="col-9">
+      <h5>
+        Summarization for: <span class="text-muted">{{ question }}</span>
+      </h5>
+    </div>
+    <div class="col-3 text-end">
+      <span class="badge bg-info text-dark px-3 py-2">Summarization Mode</span>
+    </div>
+  </div>
+  <!-- Summarization Response Section -->
+  <!-- <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title text-primary mb-3">Summarization Response:</h6>
+          <p class="card-text text-muted">
+            {{ summaryResponse }}
+          </p>
+          <div class="text-end">
+            <a href="#" class="link-primary">Expand full summary</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Summarization Response Section -->
+  <div class="row mb-4" style="min-height: 39vh; ">
+    <div class="col-12">
+      <div class="card shadow-sm summarization-card">
+        <div class="card-body">
+          <h6 class="card-title text-primary mb-3">
+            <i class="fas fa-lightbulb text-warning me-2"></i> Summarization
+            Response
+          </h6>
+          <div class="summary-box">
+            <p class="card-text text-muted summary-text">
+              {{ summaryResponse }}
+            </p>
+          </div>
+          <!-- <div class="text-end mt-2">
+            <a href="#" class="link-primary summary-toggle" (click)="toggleSummary()">Expand full summary
+            <i class="fas fa-chevron-down ms-1"></i>
+            </a>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prompt Input Section -->
+  <div class="row mt-4" style="position: sticky; bottom: 0;">
+    <div class="col-12">
+      <h6>Provide a Custom Prompt:</h6>
+      <div class="chat-input-group">
+        <textarea
+          class="form-control prompt-textarea"
+          rows="2"
+          placeholder="Enter your custom prompt..."
+          (input)="adjustTextareaHeight($event)"
+        ></textarea>
+        <button
+          class="btn btn-primary rounded-circle chat-submit-btn"
+          (click)="submitPrompt()"
+        >
+          <i class="bi bi-arrow-up-short"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

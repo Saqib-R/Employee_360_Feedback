@@ -1,0 +1,123 @@
+.container {
+  background-color: #f8f9fa;
+}
+
+h5 {
+  font-weight: 500;
+  color: #495057;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-weight: 600;
+}
+
+.text-muted {
+  font-size: 0.95rem;
+}
+
+textarea {
+  resize: none;
+  overflow: hidden;
+}
+
+.chat-input-group {
+  position: relative;
+}
+
+.prompt-textarea {
+  padding-right: 50px;
+  resize: none;
+  min-height: 40px;
+  max-height: 150px;
+  border-radius: 0.5rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-submit-btn {
+  position: absolute;
+  z-index: 10000;
+  width: 2rem;
+  height: 2rem;
+  right: 0.5%;
+  bottom: 6%;
+  background-color: #637180;
+  border: none;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-submit-btn i {
+  z-index: 10000;
+  font-size: 1.2rem;
+  color: white;
+}
+
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+input-group {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form-text {
+  font-size: 0.875rem;
+}
+
+
+
+.summarization-card {
+  border: none;
+  background: linear-gradient(145deg, #f0f0f0, #ffffff);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.summarization-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.summary-box {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.summary-text {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #6c757d;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.summary-toggle {
+  font-size: 0.875rem;
+  text-decoration: none;
+  font-weight: 500;
+  color: #007bff;
+}
+
+.summary-toggle i {
+  transition: transform 0.3s ease;
+}
+
+.summary-toggle.collapsed i {
+  transform: rotate(180deg);
+}

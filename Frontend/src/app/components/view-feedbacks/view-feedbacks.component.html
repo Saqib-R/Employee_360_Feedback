@@ -1,0 +1,124 @@
+<div class="container mt-3 p-4 bg-white rounded shadow">
+  <!-- Header Section -->
+  <div class="row align-items-center">
+    <div class="col-2">
+      <img
+        src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
+        alt="Profile"
+        class="img-fluid rounded-circle"
+      />
+    </div>
+    <div class="col-10">
+      <h4>Jane Doe</h4>
+      <span class="badge bg-secondary">Senior Analyst</span>
+      <span class="badge bg-light text-dark">Level 4</span>
+      <span class="badge bg-dark-subtle text-dark">GPE</span>
+    </div>
+  </div>
+  <!-- Tabs Section -->
+  <ul class="nav nav-tabs mt-3">
+    <li class="nav-item">
+      <a class="nav-link active" data-bs-toggle="tab" href="#business-need"
+        >Business Need</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#leadership">Leadership</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#strive-to-excel"
+        >Strive to Excel</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#deliver-for-firm"
+        >Deliver for the Firm</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#challenge-status-quo"
+        >Challenge the Status Quo</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#leverage-perspectives"
+        >Leverage Diverse Perspectives</a
+      >
+    </li>
+  </ul>
+  <!-- Tab Content -->
+  <div class="tab-content p-3 border">
+    <div id="business-need" class="tab-pane active">
+      <!-- Rating Section -->
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="text-primary">
+          Jane meets the business need by making effective decisions and
+          demonstrating good judgment in escalating issues appropriately.
+        </div>
+        <div>
+          <span class="text-warning">★ ★ ★ ★ ☆</span>
+        </div>
+      </div>
+      <p class="small text-muted">
+        (Met: 3/5 | Not Met: 1/5 | Insufficient Data: 1/5)
+      </p>
+      <!-- Collapsible Feedback Sections -->
+      <div class="accordion" id="feedbackAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="true"
+              aria-controls="collapseOne"
+            >
+              Starts to make decisions for work assigned:
+            </button>
+          </h2>
+          <div
+            id="collapseOne"
+            class="accordion-collapse collapse show"
+            aria-labelledby="headingOne"
+            data-bs-parent="#feedbackAccordion"
+          >
+            <div class="accordion-body">
+              <div class="alert alert-success">
+                <strong>Met:</strong> Jane demonstrates the ability to make
+                decisions effectively, as mentioned in feedback regarding her
+                proactive nature and independence.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
+            >
+              Exhibits judgment in knowing when to escalate problems and obtain
+              approval at a higher level:
+            </button>
+          </h2>
+          <div
+            id="collapseTwo"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingTwo"
+            data-bs-parent="#feedbackAccordion"
+          >
+            <div class="accordion-body">
+              <!-- Content for second collapsible section -->
+            </div>
+          </div>
+        </div>
+        <!-- Additional feedback sections can go here -->
+      </div>
+    </div>
+  </div>
+</div>

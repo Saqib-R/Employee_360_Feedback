@@ -1,0 +1,20 @@
+.container {
+  background-color: #f8f9fa;
+ }
+ .badge {
+  margin-right: 5px;
+ }
+ .accordion-button:after {
+  content: "";
+ }
+ .img-fluid {
+  max-width: 100px;
+ }
+ .text-warning {
+  font-size: 1.5rem;
+ }
+ .alert-success {
+  background-color: #e6ffea;
+  border: 1px solid #d4edd9;
+  color: #276749;
+ }

@@ -1,0 +1,38 @@
+<div class="container" style="margin-top: -0.5rem;">
+  <h2 style="font-size: 1.1rem; margin-bottom: 5px;">Upload CSV File</h2>
+  <form enctype="multipart/form-data">
+
+    <!-- UPLOAD CSV SECTION -->
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+      <div class="d-flex flex-column gap-0">
+        <label for="formFile" class="form-label" style="font-size: small;">Choose CSV File</label>
+        <input class="form-control w-100" type="file" id="formFile" (change)="onFileChange($event)" accept=".csv">
+      </div>
+      <div class="d-flex gap-1 align-items-center mt-4">
+        <button type="button" (click)="onSubmit()" class="btn btn-primary" [disabled]="!csvFile">Upload</button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="resetFile()">Reset</button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="showData()">Show Data</button>
+      </div>
+    </div>
+
+  </form>
+
+
+<!-- FEEDBACKS ACCORDIAN -->
+<section *ngIf="data" class="bsb-faq-3 py-3 py-md-3 py-xl-5" style="margin-top: -0.4rem;">
+  <div class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
+        <h2 class="mb-2 display-5 text-center fs-2">All Employee Feedbacks</h2>
+        <!-- <p class="text-secondary text-center lead fs-4">Welcome to our FAQ page, your one-stop resource for answers to commonly asked questions.</p>
+        <p class="mb-5 text-center">Whether you're a new customer looking to learn more about what we offer or a long-time user seeking clarification on specific topics, this page has clear and concise information about our products and services.</p> -->
+        <hr class="w-50 mx-auto border-dark-subtle">
+      </div>
+    </div>
+  </div>
+
+  <!--  EMPLOYEE FEEDBACKS CARD COMPONENT  -->
+  <app-feedback-accordian *ngFor="let item of data; let i = index" [emp_data]="item" [index]="i"></app-feedback-accordian>
+
+</section>
+</div>

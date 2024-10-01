@@ -1,0 +1,151 @@
+<!-- EMPLOYEE FEEDBACK CARD SECTION -->
+<div class="mb-4 bg-white rounded shadow">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="accordion-item bg-transparent border-bottom py-3">
+        <h2 class="accordion-header border-bottom w-100" [attr.id]="'faqAccountHeading' + index">
+          <button class="accordion-button collapsed bg-transparent fw-bold shadow-none d-flex align-items-end mb-3" type="button" data-bs-toggle="collapse" (click)="toggleIcon(index)" [attr.data-bs-target]="'#faqAccountCollapse' + index" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse' + index">
+            <!-- Header Section -->
+            <div class="row align-items-center w-100">
+              <div class="col-1">
+                <img src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250" width="200" height="200" alt="Profile" class="img-fluid rounded-circle">
+              </div>
+              <div class="col-9">
+                <h4>{{emp_data?.subject}}</h4>
+                <div class="d-flex flex-row gap-1 align-items-center">
+                  <span class="badge bg-secondary">{{emp_data?.job_title}}</span>
+                  <span class="badge bg-light text-dark">{{emp_data?.level}}</span>
+                  <span class="badge bg-dark-subtle text-dark">{{emp_data?.function_code}}</span>
+                </div>
+              </div>
+              <div class="col-2 text-end">
+                <i class="transition-icon" [ngClass]="{'bi-chevron-down': !isCollapsed[index], 'bi-chevron-up': isCollapsed[index]}"></i>
+              </div>
+            </div>
+          </button>
+        </h2>
+        <div [attr.id]="'faqAccountCollapse' + index" class="accordion-collapse collapse w-100" [attr.aria-labelledby]="'faqAccountHeading' + index">
+          <div class="accordion-body">
+            <div class="col-12">
+              <div class="accordion accordion-flush" id="faqAccount">
+
+                <div class="accordion-item bg-transparent border-bottom py-2 " style="width: 100%; margin: auto;">
+                  <h2 class="accordion-header" [attr.id]="'faqAccountHeading'+ (index+99)">
+                    <button class="accordion-button collapsed bg-transparent fw-bold shadow-none link-primary" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#faqAccountCollapse'+ (index+99)" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse'+ (index+99)">
+
+                      <p>1. Please provide a few examples of this individuals’ greatest achievements and/or contributions this year from your perspective.</p>
+                    </button>
+                  </h2>
+                  <div [attr.id]="'faqAccountCollapse' + (index+99)" class="accordion-collapse collapse" [attr.aria-labelledby]="'faqAccountHeading'+ (index+99)">
+                    <div class="accordion-body">
+                      <p *ngFor="let item of emp_data?.question1; let i = index; let last = last"
+                        [ngClass]="{'border-bottom': !last, 'pb-1' : !last}"
+                        style="margin-left: 7px;"
+                        class="d-flex align-items-center gap-2 text-sm-start pb-1">
+                        <i class="bi bi-arrow-right-short" style="font-size: 1.5rem;"></i>
+                        <span>
+                          {{item}}
+                        </span>
+                      </p>
+
+                      <div class="text-end mt-3">
+                        <button class="btn btn-primary btn-summarize">
+                          <i class="bi bi-arrow-repeat"></i> Summarize
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item bg-transparent border-bottom py-2">
+                  <h2 class="accordion-header" [attr.id]="'faqAccountHeading' + (index+28)">
+                    <button class="accordion-button collapsed bg-transparent fw-bold shadow-none link-primary" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#faqAccountCollapse'+ (index+28)" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse' + (index+28)">
+                      <p>2. How has this individual demonstrated CustomerOrg's cultural values, according to the Career Framework? Please provide a few examples.</p>
+                    </button>
+                  </h2>
+                  <div [attr.id]="'faqAccountCollapse'+ (index+28)" class="accordion-collapse collapse" [attr.aria-labelledby]="'faqAccountHeading'+ (index+28)">
+                    <div class="accordion-body">
+                      <p *ngFor="let item of emp_data?.question2; let i = index; let last = last"
+                        [ngClass]="{'border-bottom': !last, 'pb-1' : !last}"
+                        style="margin-left: 7px;"
+                        class="d-flex align-items-center gap-2 text-sm-start pb-1">
+                        <i class="bi bi-arrow-right-short" style="font-size: 1.5rem;"></i>
+                        <span>
+                          {{item}}
+                        </span>
+                      </p>
+
+                      <div class="text-end mt-3">
+                        <button class="btn btn-primary btn-summarize">
+                          <i class="bi bi-arrow-repeat"></i> Summarize
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item bg-transparent border-bottom py-2">
+                  <h2 class="accordion-header" [attr.id]="'faqAccountHeading'+ (index+111)">
+                    <button class="accordion-button collapsed bg-transparent fw-bold shadow-none link-primary" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#faqAccountCollapse'+ (index+111)" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse'+ (index+111)">
+                      <p>3. What skills or capabilities can this individual build or expand upon that would allow the individual to contribute even more value in the future?</p>
+                    </button>
+                  </h2>
+                  <div [attr.id]="'faqAccountCollapse'+ (index+111)" class="accordion-collapse collapse" [attr.aria-labelledby]="'faqAccountHeading'+ (index+111)">
+                    <div class="accordion-body">
+                      <p *ngFor="let item of emp_data?.question3; let i = index; let last = last"
+                        [ngClass]="{'border-bottom': !last, 'pb-1' : !last}"
+                        style="margin-left: 7px;"
+                        class="d-flex align-items-center gap-2 text-sm-start pb-1">
+                        <i class="bi bi-arrow-right-short" style="font-size: 1.5rem;"></i>
+                        <span>
+                          {{item}}
+                        </span>
+                      </p>
+
+                      <div class="text-end mt-3">
+                        <button class="btn btn-primary btn-summarize">
+                          <i class="bi bi-arrow-repeat"></i> Summarize
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item bg-transparent py-2">
+                  <h2 class="accordion-header" [attr.id]="'faqAccountHeading'+ (index+69)">
+                    <button class="accordion-button collapsed bg-transparent fw-bold shadow-none link-primary" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#faqAccountCollapse'+ (index+69)" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse'+ (index+69)">
+                      <p>4. What skills should this individual focus on developing in the future to progress to the next level (if applicable)? Please refer to the Career Framework to review the expected results and behaviors at the next level.</p>
+                    </button>
+                  </h2>
+                  <div [attr.id]="'faqAccountCollapse'+ (index+69)" class="accordion-collapse collapse" [attr.aria-labelledby]="'faqAccountHeading'+ (index+69)">
+                    <div class="accordion-body">
+                      <p *ngFor="let item of emp_data?.question4; let i = index; let last = last"
+                        [ngClass]="{'border-bottom': !last, 'pb-1' : !last}"
+                        style="margin-left: 7px;"
+                        class="d-flex align-items-center gap-2 text-sm-start ">
+                        <i class="bi bi-arrow-right-short" style="font-size: 1.5rem;"></i>
+                        <span>
+                          {{item}}
+                        </span>
+                      </p>
+                      <div class="text-end mt-3">
+                        <button class="btn btn-primary btn-summarize">
+                          <i class="bi bi-arrow-repeat"></i> Summarize
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-start mt-3">
+                  <button class="btn btn-primary btn-summarize">
+                    <i class="bi bi-arrow-repeat"></i> Summarize All Feedbacks
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
