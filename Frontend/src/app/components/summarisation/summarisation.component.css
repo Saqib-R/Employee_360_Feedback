@@ -121,3 +121,65 @@ form-text {
 .summary-toggle.collapsed i {
   transform: rotate(180deg);
 }
+
+
+
+/* new */
+
+.feedback-card,
+.summary-card {
+ border-radius: 10px;
+}
+.table-bordered th,
+.table-bordered td {
+ vertical-align: middle;
+}
+.card-title i {
+ font-size: 1.2rem;
+}
+.table-responsive {
+ overflow-x: auto;
+}
+/* Ensures the cards are well spaced on smaller screens */
+@media (max-width: 768px) {
+ .col-md-4 {
+   margin-bottom: 1rem;
+ }
+}
+
+
+/* Latest */
+
+.card {
+
+  transition: transform 0.2s;
+
+}
+
+.card:hover {
+
+  transform: scale(1.01);
+
+}
+
+.table th {
+
+  background-color: #f8f9fa;
+
+  font-weight: bold;
+
+}
+
+.table td {
+
+  padding: 12px;
+
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+
+  background-color: #f2f2f2;
+
+}
+
+

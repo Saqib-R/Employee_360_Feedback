@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-
 import { AppComponent } from './app.component';
 import { UploadService } from './services/upload.service';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -12,6 +11,8 @@ import { ViewFeedbacksComponent } from './components/view-feedbacks/view-feedbac
 import { UploadCSVComponent } from './components/upload-csv/upload-csv.component';
 import { FeedbackAccordianComponent } from './components/feedback-accordian/feedback-accordian.component';
 import { SummarisationComponent } from './components/summarisation/summarisation.component';
+import { NoFeedbacksComponent } from './components/no-feedbacks/no-feedbacks.component';
+import { BatchSummarizationComponent } from './components/batch-summarization/batch-summarization.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,9 @@ import { SummarisationComponent } from './components/summarisation/summarisation
     ViewFeedbacksComponent,
     UploadCSVComponent,
     FeedbackAccordianComponent,
-    SummarisationComponent
+    SummarisationComponent,
+    NoFeedbacksComponent,
+    BatchSummarizationComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, Input, input } from '@angular/core';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-summarisation',
@@ -7,9 +8,28 @@ import { Component } from '@angular/core';
 })
 export class SummarisationComponent {
 
+  feedbackQuestion = {
+    'question1' : "Please provide a few examples of this individual's greatest achievements and/or contributions this year from your perspective.",
+    'question2': "How has this individual demonstrated CustomerOrg's cultural values, according to the Career Framework? Please provide a few examples.",
+    'question3': "What skills or capabilities can this individual build or expand upon that would allow the individual to contribute even more value in the future?",
+    'question4': "What skills should this individual focus on developing in the future to progress to the next level (if applicable)? Please refer to the Career Framework to review the expected results and behaviors at the next level."
+  };
+
   question: string = "How does Jane Doe handle complex tasks?";
   summaryResponse: string = "Jane consistently demonstrates strong problem-solving skills in handling complex tasks. Jane consistently demonstrates strong problem-solving skills in handling complex tasks. Jane consistently demonstrates strong problem-solving skills in handling complex tasks";
   promptInput: string = '';
+  isCollapsed : boolean = false;
+  sharedService : SharedService = inject(SharedService);
+  data: any;
+  questionNo : any;
+
+
+  ngOnInit(): void {
+    this.sharedService.employeeData.subscribe(data => this.data = data);
+    this.sharedService.questionNu.subscribe(question => this.questionNo = question);
+    console.log("Emplpoyee Data\n", this.data, "\nQuestion No\n", this.question);
+    console.log("QUESTION", this.feedbackQuestion?.[this.questionNo]);
+  }
 
   // Function to handle prompt submission
   submitPrompt() {
@@ -38,6 +58,10 @@ export class SummarisationComponent {
       summaryText?.setAttribute('style', 'max-height: 100px');
       toggleIcon?.classList.remove('collapsed');
     }
+  }
+
+  toggleIcon() {
+    this.isCollapsed = !this.isCollapsed;
   }
 
 }

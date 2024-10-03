@@ -1,6 +1,11 @@
-<div
-  class="container mt-0 px-4 py-2 bg-white rounded shadow d-flex gap-3 align-items-center w-100 "
->
+
+
+<!-- Summarisation Page Section -->
+ <div *ngIf="data">
+      <!-- Header Section -->
+  <div
+  class="container mt-0 px-4 py-2 bg-white rounded shadow d-flex gap-3 align-items-center w-100"
+  >
   <div class="col-1">
     <img
       src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
@@ -11,46 +16,30 @@
     />
   </div>
   <div class="col-9">
-    <h4>Jon Doe</h4>
+    <h4>{{data?.subject}}</h4>
     <div class="d-flex flex-row gap-1 align-items-center">
-      <span class="badge bg-secondary">Vice President</span>
-      <span class="badge bg-light text-dark">Level 8</span>
-      <span class="badge bg-dark-subtle text-dark">GPE</span>
+      <span class="badge bg-secondary">{{data?.job_title}}</span>
+      <span class="badge bg-light text-dark">{{data?.level}}</span>
+      <span class="badge bg-dark-subtle text-dark">{{data?.function_code}}</span>
     </div>
   </div>
-</div>
+  </div>
 
-<div class="container mt-3 p-4 bg-white rounded shadow position-relative" >
-  <!-- Header Section -->
+  <div class="container mt-3 mb-4 p-4 bg-white rounded shadow position-relative">
+  <!-- Main Section -->
   <div class="row align-items-center mb-4 border-bottom pb-3">
     <div class="col-9">
-      <h5>
-        Summarization for: <span class="text-muted">{{ question }}</span>
+      <h5 class="text-primary fw-bold">
+        Summarization for: <span class="text-muted fs-5 fw-medium shadow-none">{{ feedbackQuestion[questionNo] }}</span>
       </h5>
     </div>
     <div class="col-3 text-end">
       <span class="badge bg-info text-dark px-3 py-2">Summarization Mode</span>
     </div>
   </div>
-  <!-- Summarization Response Section -->
-  <!-- <div class="row mb-4">
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h6 class="card-title text-primary mb-3">Summarization Response:</h6>
-          <p class="card-text text-muted">
-            {{ summaryResponse }}
-          </p>
-          <div class="text-end">
-            <a href="#" class="link-primary">Expand full summary</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
 
   <!-- Summarization Response Section -->
-  <div class="row mb-4" style="min-height: 39vh; ">
+  <!-- <div class="row mb-4" style="min-height: 39vh; ">
     <div class="col-12">
       <div class="card shadow-sm summarization-card">
         <div class="card-body">
@@ -63,20 +52,155 @@
               {{ summaryResponse }}
             </p>
           </div>
-          <!-- <div class="text-end mt-2">
-            <a href="#" class="link-primary summary-toggle" (click)="toggleSummary()">Expand full summary
-            <i class="fas fa-chevron-down ms-1"></i>
-            </a>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- New Summarisation Section -->
+  <div class="container mt-5">
+    <div class="row mb-4">
+      <!-- First Table (Original Feedbacks) -->
+      <div class="col-md-12 mb-4">
+        <div class="card mt-3 shadow border-light rounded">
+
+          <div class="card-body accordion-item bg-transparent border-bottom py-2 " style="width: 100%; margin: auto;">
+            <h2 class="accordion-header py-1 d-flex justify-content-between align-items-center" [attr.id]="'faqAccountHeading0'">
+              <button class="accordion-button collapsed bg-transparent fw-bold shadow-none link-primary" type="button" data-bs-toggle="collapse" (click)="toggleIcon()" [attr.data-bs-target]="'#faqAccountCollapse0'" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse0'">
+
+                <p class="d-flex align-items-center gap-2">
+                  <i class="bi bi-list-nested fs-4"></i>
+                  <span class="fs-5">Original Feedbacks</span>
+                </p>
+              </button>
+              <div class="col-2 text-end">
+                <i class="transition-icon" [ngClass]="{'bi-chevron-down': !isCollapsed, 'bi-chevron-up': isCollapsed}"></i>
+              </div>
+            </h2>
+            <div [attr.id]="'faqAccountCollapse0'" class="accordion-collapse collapse" style="margin-left: 1rem;" [attr.aria-labelledby]="'faqAccountHeading0'">
+              <div class="accordion-body">
+                <p *ngFor="let item of data?.[questionNo]; let i = index; let last = last"
+                [ngClass]="{'border-bottom': !last, 'pb-1' : !last}"
+                  style="margin-left: 7px;"
+                  class="d-flex align-items-center gap-2 text-sm-start pb-1">
+                  <i class="bi bi-arrow-right-short" style="font-size: 1.5rem;"></i>
+                  <span>
+                    {{item}}
+                  </span>
+                </p>
+
+
+                <!-- <div class="text-end mt-3">
+                  <button class="btn btn-primary btn-summarize">
+                    <i class="bi bi-arrow-repeat"></i> Summarize
+                  </button>
+                </div> -->
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="card-body">
+            <h6 class="card-title text-primary mb-3">
+              <i class="fas fa-comments text-info me-2"></i> Original Feedbacks
+            </h6>
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">Feedback</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Great at decision-making and proactive.</td>
+                  </tr>
+                  <tr>
+                    <td>Needs improvement in communication skills.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div> -->
+        </div>
+      </div>
+
+      <!-- Second Table (Summary 1) -->
+      <div class="col-md-6 mb-4" >
+        <div class="card shadow border-light rounded " style="min-height: 250px;">
+          <div class="card-body">
+            <!-- <h6 class="card-title text-success mb-3">
+              <i class="fas fa-lightbulb text-warning me-2"></i> Summary 1
+              Response
+            </h6> -->
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" class="d-flex align-items-center gap-1">
+                      <i class="bi bi-lightbulb text-warning me-2"></i>
+                      <span class="text-success">Response 1</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      Jane demonstrates effective decision-making skills and
+                      takes ownership of tasks. John needs to enhance his communication to improve team
+                      collaboration. John needs to enhance his communication to improve team
+                      collaboration. Jane demonstrates effective decision-making skills and
+                      takes ownership of tasks.
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Third Table (Summary 2) -->
+      <div class="col-md-6 mb-4" >
+        <div class="card shadow border-light rounded" style="min-height: 250px;">
+          <div class="card-body">
+            <!-- <h6 class="card-title text-success mb-3">
+              <i class="fas fa-lightbulb text-warning me-2"></i> Summary 2
+              Response
+            </h6> -->
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" class="d-flex align-items-center gap-1">
+                      <i class="bi bi-lightbulb text-warning me-2"></i>
+                      <span class="text-success">Response 2</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      Jane continues to excel in decision-making, but should
+                      work on further developing proactive strategies. John’s communication needs a structured improvement plan
+                      to ensure clarity. John’s communication needs a structured improvement plan
+                      to ensure clarity. Jane continues to excel in decision-making, but should
+                      work.
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Prompt Input Section -->
-  <div class="row mt-4" style="position: sticky; bottom: 0;">
+  <div class="row mt-4" style="position: sticky; bottom: 0">
     <div class="col-12">
-      <h6>Provide a Custom Prompt:</h6>
+      <!-- <h6>Provide a Custom Prompt:</h6> -->
       <div class="chat-input-group">
         <textarea
           class="form-control prompt-textarea"
@@ -93,4 +217,8 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
+ </div>
+
+ <app-no-feedbacks *ngIf="!data"></app-no-feedbacks>
+
