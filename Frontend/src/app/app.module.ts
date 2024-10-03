@@ -13,6 +13,9 @@ import { FeedbackAccordianComponent } from './components/feedback-accordian/feed
 import { SummarisationComponent } from './components/summarisation/summarisation.component';
 import { NoFeedbacksComponent } from './components/no-feedbacks/no-feedbacks.component';
 import { BatchSummarizationComponent } from './components/batch-summarization/batch-summarization.component';
+import { CommonModule } from '@angular/common';
+import { ToastrModule } from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -30,9 +33,13 @@ import { BatchSummarizationComponent } from './components/batch-summarization/ba
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CommonModule,
+    ToastrModule.forRoot(),
   ],
-  providers: [UploadService],
+  providers: [
+    UploadService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

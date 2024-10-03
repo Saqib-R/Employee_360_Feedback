@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-batch-summarization',
@@ -10,6 +11,8 @@ export class BatchSummarizationComponent {
   fileName: string | null = null;
   isLoading = false;
   isSummarized = false;
+  toastr : ToastrService = inject(ToastrService);
+
   // Triggered when a file is selected
   onFileSelect(event: any) {
     const file = event.target.files[0];
@@ -35,29 +38,29 @@ export class BatchSummarizationComponent {
   summarizeFile() {
     this.isLoading = true;
     this.isSummarized = false;
-    // Simulate a delay for summarization (replace with actual summarization logic)
+    // Simulating a delay for summarization
     setTimeout(() => {
+      this.toastr.success('Summarization Process Completed', 'Success...👍', {
+        timeOut: 50000,
+      });
+
+
       this.isLoading = false;
-      this.isSummarized = true; // Enable export button after summarization is done
-    }, 3000); // Adjust time as needed
+      this.isSummarized = true;
+
+    }, 3000);
   }
   // Clear the selected file
   clearFile() {
     this.fileSelected = false;
-    this.fileName = null; // Reset file name
+    this.fileName = null;
     this.isSummarized = false;
     this.isLoading = false;
   }
-  // Simulate CSV export functionality
+  // Export functionality
   exportCsv() {
     console.log('Exporting CSV...');
-    // Implement your CSV export logic here
   }
 
-  ngOnChanges(): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
-    console.log("Loading Value : \t", this.isLoading, "\nSummarise Value : \t", this.isSummarized);
-  }
 
 }

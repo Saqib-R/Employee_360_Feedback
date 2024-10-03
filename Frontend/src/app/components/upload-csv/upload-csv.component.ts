@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UploadService } from '../../services/upload.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-upload-csv',
@@ -12,9 +13,10 @@ export class UploadCSVComponent {
     csvFile: File | null = null;
     csvData : any[] | null = null;
     data: any[] | null = null;
+    toastr : ToastrService = inject(ToastrService);
+
 
   ngOnInit(): void {
-    console.log("Agya", this.csvData, "Data",this.data);
     if(localStorage.getItem('csvData')) {
       this.data = JSON.parse(localStorage.getItem('csvData'));
     }
@@ -29,6 +31,10 @@ export class UploadCSVComponent {
     if(this.csvFile) {
       this.uploadService.uploadFile(this.csvFile).subscribe({
         next : (res) => {
+          this.toastr.success('File Uplaoded', 'Success...👍', {
+            timeOut: 50000,
+          });
+
           this.csvData = res;
         },
         error : (err) => {
