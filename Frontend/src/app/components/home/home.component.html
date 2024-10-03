@@ -1,15 +1,10 @@
 <div class="d-flex flex-column gap-3 mt-1" style="width: 88%; margin: auto;" >
   <div class="nav-links  ">
     <!-- <a class="nav-item text-black" routerLink="/home" [routerLinkActive]="'active'">Home</a> -->
-    <a class="nav-item text-black" routerLink="/home/upload-csv" routerLinkActive="active">Feedbacks</a>
     <!-- <a class="nav-item text-black" routerLink="/home/view-feedbacks" routerLinkActive="active">Employee Summary</a> -->
-    <a class="nav-item text-black" routerLink="/home/summarisation" routerLinkActive="active">Summarisation</a>
+    <a class="nav-item text-black" routerLink="/home/upload-csv" routerLinkActive="active">Feedback Hub</a>
+    <a class="nav-item text-black" routerLink="/home/summarisation" routerLinkActive="active">Summary</a>
+    <a class="nav-item text-black" routerLink="/home/batch-summarisation" routerLinkActive="active">Bulk Summary</a>
   </div>
-
-  <!-- <div class="d-flex flex-column align-items-center justify-content-center " style="min-height: 75vh;">
-    <h1>Welcome to Employee 360</h1>
-    <p>An AI Tool to help Organisation</p>
-  </div> -->
-
   <router-outlet></router-outlet>
 </div>

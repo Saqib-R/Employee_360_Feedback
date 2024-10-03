@@ -1,13 +1,14 @@
 .nav-links {
   display: flex;
   gap: 20px;
+  width: fit-content;
+  padding: 5px;
 }
 
 .nav-item {
   position: relative;
   text-decoration: none;
-  /* color: white; */
-  padding: 5px 0;
+  padding: 5px ;
 }
 
 .nav-item::after {
@@ -33,4 +34,9 @@
   width: 100%;
   left: 0;
   background: rgb(131, 35, 35);
+}
+
+.nav-item.active {
+  font-weight: 600;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
 }
