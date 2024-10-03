@@ -1,0 +1,39 @@
+.no-data-page {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.no-data-icon {
+  font-size: 6rem;
+  animation: bounce 1.5s infinite;
+}
+
+.animated-icon {
+  color: #007bff;
+}
+
+/* Keyframe animation for bounce effect */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.text-muted {
+  font-size: 1.2rem;
+}
+
+.btn-primary {
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 1.1rem;
+}
+
+.height {
+  height: 75vh;
+}
