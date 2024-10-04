@@ -41,7 +41,7 @@ export class BatchSummarizationComponent {
     // Simulating a delay for summarization
     setTimeout(() => {
       this.toastr.success('Summarization Process Completed', 'Success...👍', {
-        timeOut: 50000,
+        timeOut: 30000,
       });
 
 
