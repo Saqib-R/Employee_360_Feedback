@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { UploadService } from '../../services/upload.service';
 
 @Component({
   selector: 'app-batch-summarization',
@@ -7,18 +8,19 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './batch-summarization.component.css'
 })
 export class BatchSummarizationComponent {
-  fileSelected = false;
+  fileSelected : any;
   fileName: string | null = null;
   isLoading = false;
   isSummarized = false;
   toastr : ToastrService = inject(ToastrService);
+  uploadService : UploadService = inject(UploadService);
 
   // Triggered when a file is selected
   onFileSelect(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.fileSelected = true;
-      this.fileName = file.name; // Display the file name
+      this.fileSelected = file;
+      this.fileName = file.name; 
     }
   }
   // Triggered when a file is dropped
@@ -26,8 +28,8 @@ export class BatchSummarizationComponent {
     event.preventDefault();
     const file = event.dataTransfer?.files[0];
     if (file) {
-      this.fileSelected = true;
-      this.fileName = file.name; // Display the file name
+      this.fileSelected = file;
+      this.fileName = file.name; 
     }
   }
   // Prevents default behavior on dragover
@@ -39,17 +41,35 @@ export class BatchSummarizationComponent {
     this.isLoading = true;
     this.isSummarized = false;
     // Simulating a delay for summarization
-    setTimeout(() => {
-      this.toastr.success('Summarization Process Completed', 'Success...👍', {
-        timeOut: 30000,
-      });
+    // setTimeout(() => {
+    //   this.toastr.success('Summarization Process Completed', 'Success...👍', {
+    //     timeOut: 30000,
+    //   });
 
 
-      this.isLoading = false;
-      this.isSummarized = true;
+    //   this.isLoading = false;
+    //   this.isSummarized = true;
 
-    }, 3000);
+    // }, 3000);
+
+    if(this.fileSelected) {
+      this.uploadService.exportFeedback(this.fileSelected).subscribe({
+        next : (res) => {
+          this.toastr.success('Summarization Process Completed', 'Success...👍', {
+            timeOut: 30000,
+          });
+          console.log(res);
+          this.isLoading = false;
+          this.isSummarized = true;          
+        }, 
+        error : (err) => {
+          console.log(err);
+          
+        }
+      })
+    }
   }
+
   // Clear the selected file
   clearFile() {
     this.fileSelected = false;
@@ -57,10 +77,26 @@ export class BatchSummarizationComponent {
     this.isSummarized = false;
     this.isLoading = false;
   }
+
   // Export functionality
   exportCsv() {
     console.log('Exporting CSV...');
-  }
-
+    this.uploadService.downloadSummaryCSV().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'summarized_feedback.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.log(error);
+        
+      }
+    }
+  )}
 
 }

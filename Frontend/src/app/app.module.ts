@@ -15,6 +15,7 @@ import { NoFeedbacksComponent } from './components/no-feedbacks/no-feedbacks.com
 import { BatchSummarizationComponent } from './components/batch-summarization/batch-summarization.component';
 import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { ToastrModule } from 'ngx-toastr';
     AppRoutingModule,
     CommonModule,
     ToastrModule.forRoot(),
+    FormsModule
   ],
   providers: [
     UploadService

@@ -2,56 +2,84 @@ import { Component, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UploadService } from '../../services/upload.service';
 import { ToastrService } from 'ngx-toastr';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-upload-csv',
   templateUrl: './upload-csv.component.html',
-  styleUrl: './upload-csv.component.css'
+  styleUrls: ['./upload-csv.component.css']
 })
 export class UploadCSVComponent {
-  uploadService : UploadService = inject(UploadService);
+    uploadService: UploadService = inject(UploadService);
     csvFile: File | null = null;
-    csvData : any[] | null = null;
-    data: any[] | null = null;
-    toastr : ToastrService = inject(ToastrService);
+    csvData: any[] | null = null;
+    displayedData: any[] | null = null; // Separate variable for filtered data
+    searchTerm: string = '';
+    toastr: ToastrService = inject(ToastrService);
 
-
-  ngOnInit(): void {
-    if(localStorage.getItem('csvData')) {
-      this.data = JSON.parse(localStorage.getItem('csvData'));
-    }
-  }
-
-  onFileChange(event) {
-    this.csvFile = event.target.files[0];
-    console.log(this.csvFile);
-  }
-
-  onSubmit() {
-    if(this.csvFile) {
-      this.uploadService.uploadFile(this.csvFile).subscribe({
-        next : (res) => {
-          this.toastr.success('File Uplaoded', 'Success...👍', {
-            timeOut: 50000,
-          });
-
-          this.csvData = res;
-        },
-        error : (err) => {
-          console.error(err);
+    ngOnInit(): void {
+        if (localStorage.getItem('csvData')) {
+            this.csvData = JSON.parse(localStorage.getItem('csvData'));
+            this.displayedData = this.csvData; // Initialize displayedData with csvData
         }
-      })
     }
-  }
 
-  showData() {
-    this.data = this.csvData;
-    localStorage.setItem('csvData', JSON.stringify(this.data));
-  }
+    onFileChange(event: Event) {
+        const target = event.target as HTMLInputElement;
+        if (target.files) {
+            this.csvFile = target.files[0];
+            console.log(this.csvFile);
+        }
+    }
 
-  resetFile() {
-    this.csvFile = null;
-    this.data = null;
-    localStorage.removeItem('csvData')
-  }
+    onSubmit() {
+        if (this.csvFile) {
+            this.uploadService.uploadFile(this.csvFile).subscribe({
+                next: (res) => {
+                    this.toastr.success('File Uploaded', 'Success...👍', {
+                        timeOut: 5000,
+                    });
+
+                    this.csvData = res;
+                    this.displayedData = this.csvData; // Reset displayedData after upload
+                    localStorage.setItem('csvData', JSON.stringify(this.csvData));
+                },
+                error: (err) => {
+                    console.error(err);
+                }
+            });
+        }
+    }
+
+    showData() {
+        this.displayedData = this.csvData;
+        localStorage.setItem('csvData', JSON.stringify(this.displayedData));
+    }
+
+    resetFile() {
+        this.csvFile = null;
+        this.csvData = null;
+        this.displayedData = null; // Reset displayed data too
+        localStorage.removeItem('csvData');
+    }
+
+    onSearchChange() {
+        const term = this.searchTerm.toLowerCase();
+        console.log("DATA\n", this.csvData, "\nTERM\n", term);
+
+        if (this.csvData) {
+            this.displayedData = this.csvData.filter(employee =>
+                employee.subject.toLowerCase().includes(term) ||
+                employee.function_code.toLowerCase().includes(term) ||
+                employee.job_title.toLowerCase().includes(term) ||
+                employee.level.toLowerCase().includes(term)
+            );
+
+            // If the search term is empty, reset displayedData to the full csvData
+            if (term === '') {
+                this.displayedData = this.csvData;
+            }
+        }
+        console.log(this.displayedData);
+    }
 }

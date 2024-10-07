@@ -1,2 +1,5 @@
 Flask
 pandas
+flask_cors
+openai
+dotenv

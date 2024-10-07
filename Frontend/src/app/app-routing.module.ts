@@ -7,7 +7,7 @@ import { SummarisationComponent } from './components/summarisation/summarisation
 import { BatchSummarizationComponent } from './components/batch-summarization/batch-summarization.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: '/home/upload-csv', pathMatch: 'full' },
   {path: "home", component : HomeComponent},
 
   {

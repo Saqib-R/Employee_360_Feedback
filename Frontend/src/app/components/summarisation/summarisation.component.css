@@ -76,8 +76,6 @@ form-text {
   font-size: 0.875rem;
 }
 
-
-
 .summarization-card {
   border: none;
   background: linear-gradient(145deg, #f0f0f0, #ffffff);
@@ -149,37 +147,74 @@ form-text {
 
 
 /* Latest */
-
 .card {
-
   transition: transform 0.2s;
-
 }
 
 .card:hover {
-
   transform: scale(1.01);
-
 }
 
 .table th {
-
   background-color: #f8f9fa;
-
   font-weight: bold;
-
 }
 
 .table td {
-
   padding: 12px;
-
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-
   background-color: #f2f2f2;
-
 }
 
 
+.loader {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 3px solid;
+  border-color: #0f0f0f9c #0e0d0d93 transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px solid;
+  border-color: transparent #FF3D00 #FF3D00;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  animation: rotationBack 0.5s linear infinite;
+  transform-origin: center center;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(-360deg);
+  }
+}
