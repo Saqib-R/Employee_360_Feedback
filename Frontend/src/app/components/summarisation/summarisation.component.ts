@@ -17,8 +17,13 @@ export class SummarisationComponent {
     'question4': "What skills should this individual focus on developing in the future to progress to the next level (if applicable)? Please refer to the Career Framework to review the expected results and behaviors at the next level."
   };
 
-  question: string = "How does Jane Doe handle complex tasks?";
-  summaryResponse: string = "Jane consistently demonstrates strong problem-solving skills in handling complex tasks. Jane consistently demonstrates strong problem-solving skills in handling complex tasks. Jane consistently demonstrates strong problem-solving skills in handling complex tasks";
+  feedbackQuestionNo = {
+    'question1' : "Question - 1:-",
+    'question2': "Question - 2:-",
+    'question3': "Question - 3:-",
+    'question4': "Question - 4:-"
+  };
+
   promptInput: string = '';
   isCollapsed : boolean = false;
   sharedService : SharedService = inject(SharedService);
@@ -29,9 +34,7 @@ export class SummarisationComponent {
   data: any;
   questionNo : any;
   loading: boolean ;
-  prevName : string = null;
   currName : string = null;
-  prevQueNo : string = null;
   currQueNo : string = null;
   prompt: string = '';
   customSummary: string | null = null;

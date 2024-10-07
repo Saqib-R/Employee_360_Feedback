@@ -51,7 +51,10 @@
   </div>
 
   <!--  EMPLOYEE FEEDBACKS CARD COMPONENT  -->
-  <app-feedback-accordian *ngFor="let item of displayedData; let i = index" [emp_data]="item" [index]="i"></app-feedback-accordian>
+    <div *ngIf="displayedData" class="p-3 bg-white rounded shadow-sm">
+      <app-feedback-accordian *ngFor="let item of displayedData; let i = index" [emp_data]="item" [index]="i"></app-feedback-accordian>
+
+    </div>
 
 </section>
 </div>
