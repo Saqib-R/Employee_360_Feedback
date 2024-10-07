@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, finalize, Observable, throwError } from 'rxjs';
 import { endpoints } from './api_endpoints';
 import { ToastrService } from 'ngx-toastr';
@@ -124,4 +124,35 @@ export class UploadService {
       })
     );
   }
+
+  // Custom-Summarize-Feedback-API
+  customSummarizeFeedback (feedbacks: string[], prompt: string) : Observable<any> {
+    const loadingToast = this.toastr.info('Generating response...', 'Please wait', {
+      disableTimeOut: true,
+      closeButton: false,
+      positionClass: 'toast-top-center'
+    });
+
+    const body = { feedbacks, prompt };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+
+    return this.http.post(endpoints.CUSTOM_SUMMARY_API, body, {headers}).pipe(
+      catchError(error => {
+        if (loadingToast) {
+          this.toastr.clear();
+        }
+        this.toastr.error('Failed to Summarize Data', 'Error');
+
+        console.log(error);
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        if (loadingToast) {
+          this.toastr.clear();
+        }
+      })
+    );
+  }
+
 }
