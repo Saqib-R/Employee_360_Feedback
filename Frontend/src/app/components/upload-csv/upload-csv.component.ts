@@ -41,7 +41,7 @@ export class UploadCSVComponent {
                     });
 
                     this.csvData = res;
-                    this.displayedData = this.csvData; // Reset displayedData after upload
+                    // this.displayedData = this.csvData; // Reset displayedData after upload
                     localStorage.setItem('csvData', JSON.stringify(this.csvData));
                 },
                 error: (err) => {
