@@ -26,6 +26,7 @@ client = AzureOpenAI()
 
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
+# EXPORT SUMMARY TO CSV
 def exp_summarize_feedback(feedbacks):
     if not feedbacks:
         return "No feedback provided."
@@ -60,7 +61,36 @@ def exp_summarize_feedback(feedbacks):
 
     return summaries
 
+# CUSTOM PROMT SUMMARY
+def cust_summarize_feedback(feedbacks, user_prompt):
+    if not feedbacks:
+        return "No feedback provided."
 
+    # Create a prompt based on user input
+    prompt = f"{user_prompt}\n\n" + "\n".join(feedbacks)
+
+    try:
+        res = client.chat.completions.create(
+            model="gpt-4o",  # Use the appropriate model
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=150,
+            top_p=0.9,
+            frequency_penalty=0.5
+        )
+
+        # Extract summary from the response
+        summary = res.choices[0].message.content.strip()  # Get the generated summary
+
+    except Exception as e:
+        return f"Error during summarization: {str(e)}"
+
+    return summary
+
+# Upload CSV and Read API
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -88,7 +118,7 @@ def upload_file():
         # print(result)
         return jsonify(result)
 
-
+# Individual Summary API
 @app.route('/summarize', methods=['POST'])
 def summarize_feedback():
     # Get the feedback array from the request
@@ -129,7 +159,7 @@ def summarize_feedback():
 
     return jsonify({"summaries": summaries})
 
-
+# Batch Summarization API
 @app.route('/upload_feedback', methods=['POST'])
 def upload_feedback():
     if 'file' not in request.files:
@@ -183,7 +213,7 @@ def upload_feedback():
 
     return jsonify({"error": "Invalid file type"}), 400
 
-
+# Download Summary CSV
 @app.route('/download_feedback', methods=['GET'])
 def download_feedback():
     output_filename = 'summarized_feedback.csv'
@@ -193,6 +223,24 @@ def download_feedback():
         return send_file(output_path, as_attachment=True)
     
     return jsonify({"error": "File not found"}), 404
+
+# Custom Summary API
+@app.route('/custom_summarize', methods=['POST'])
+def summarize():
+    data = request.get_json()
+
+    if not data or 'feedbacks' not in data or 'prompt' not in data:
+        return jsonify({"error": "Invalid input. Please provide both 'feedbacks' and 'prompt'."}), 400
+
+    feedbacks = data['feedbacks']
+    prompt = data['prompt']
+
+    # Call the summarization function
+    summary = cust_summarize_feedback(feedbacks, prompt)
+
+    # Return the response as JSON
+    return jsonify({"summary": summary})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
