@@ -59,7 +59,7 @@
 
   <!-- New Summarisation Section -->
   <div class="container mt-5">
-    <div class="row mb-4">
+    <div class="row mb-2">
       <!-- First Table (Original Feedbacks) -->
       <div class="col-md-12 mb-4">
         <div class="card mt-3 shadow border-light rounded">
@@ -199,6 +199,24 @@
         </div>
       </div>
     </div>
+
+     <!-- Summarization Response Section -->
+    <div *ngIf="customSummary" class="row mb-4">
+      <div class="col-12">
+        <div class="card shadow-sm summarization-card">
+          <div class="card-body">
+            <h6 class="card-title text-primary mb-3 fs-5">
+              <i class="bi bi-gear-wide-connected me-2"></i> Custom Promt Response
+            </h6>
+            <div class="summary-box">
+              <p class="card-text text-muted summary-text">
+                {{ customSummary }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Prompt Input Section -->
@@ -211,6 +229,8 @@
           rows="2"
           placeholder="Enter your custom prompt..."
           (input)="adjustTextareaHeight($event)"
+          [(ngModel)]="prompt"
+          (keydown)="handleKeyDown($event)"
         ></textarea>
         <button
           class="btn btn-primary rounded-circle chat-submit-btn"

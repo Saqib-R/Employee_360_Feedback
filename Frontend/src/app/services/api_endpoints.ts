@@ -8,4 +8,5 @@ export const endpoints = {
     VIEW_SUMMARY_API: BASE_URL + "summarize",
     EXPORT_SUMMARY_API: BASE_URL + "upload_feedback",
     DOWNLOAD_SUMMARY_CSV_API: BASE_URL + "download_feedback",
+    CUSTOM_SUMMARY_API: BASE_URL + "custom_summarize",
 }

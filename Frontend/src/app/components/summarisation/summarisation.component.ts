@@ -25,6 +25,7 @@ export class SummarisationComponent {
   summarizeService : UploadService = inject(UploadService);
   toastr : ToastrService = inject(ToastrService);
   summaries : any;
+  isExpanded: boolean = false;
   data: any;
   questionNo : any;
   loading: boolean ;
@@ -32,32 +33,31 @@ export class SummarisationComponent {
   currName : string = null;
   prevQueNo : string = null;
   currQueNo : string = null;
-  
+  prompt: string = '';
+  customSummary: string | null = null;
 
 
   ngOnInit(): void {
     this.sharedService.employeeData.subscribe(data =>{
-      if(this.currName === null) {
-        this.prevName = data?.subject;
-      }
-      this.prevName = this.currName
+      
       this.currName = data?.subject;
       this.data = data;
     } );
     this.sharedService.questionNu.subscribe(question => {
-      if(this.currQueNo === null) {
-        this.prevQueNo = question;
-      }
-      this.prevQueNo = this.currQueNo;
+      
       this.currQueNo = question;
       this.questionNo = question;
-
     });
 
-    
+    if(!localStorage.getItem('Name')) {
+      localStorage.setItem('Name', this.currName) ;
+    }
+
+    if(!localStorage.getItem('QueNo')) {
+      localStorage.setItem('QueNo', this.currQueNo) ;
+    }
 
     this.handleSummarization();
-
 
     // if(JSON.parse(localStorage.getItem('summary'))) {
     //   this.summaries = JSON.parse(localStorage.getItem('summary'))
@@ -85,13 +85,14 @@ export class SummarisationComponent {
 
   private handleSummarization(): void {
 
-    console.log(this.questionNo , this.prevQueNo, this.questionNo==this.prevQueNo);
+    console.log(this.currQueNo , localStorage.getItem('QueNo'), this.questionNo===localStorage.getItem('QueNo'));
     
     // Clear local storage if the question or employee changes
-      if(this.currName === this.prevName && this.currQueNo === this.prevQueNo) {
-        console.log("All Ok");
-        
+      if(this.currName === localStorage.getItem('Name') && this.currQueNo === localStorage.getItem('QueNo')) {
+        console.log("All Ok");        
       }else {
+        localStorage.setItem('Name', this.currName) ;
+        localStorage.setItem('QueNo', this.questionNo) ;
         localStorage.removeItem('summary')
       }
 
@@ -124,7 +125,29 @@ export class SummarisationComponent {
   // Function to handle prompt submission
   submitPrompt() {
     console.log('Prompt submitted: ', this.promptInput);
-    // Lama response will get it later
+    
+    if (this?.data?.[this.questionNo].length === 0 || !this.prompt) {
+      this.toastr.error('Please provide feedbacks and a prompt.', 'Validation Error');
+      return;
+    }
+    this.summarizeService.customSummarizeFeedback(this?.data?.[this.questionNo], this.prompt).subscribe({
+      next: (response) => {
+        this.customSummary = response.summary;
+        console.log(response);        
+        this.toastr.success('Summary generated successfully!', 'Success');
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Failed to generate summary.', 'Error');
+      }
+    });
+  }
+
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); 
+        this.submitPrompt();
+    }
   }
 
   // Adjusting textarea height dynamically
@@ -134,8 +157,6 @@ export class SummarisationComponent {
     textarea.style.height = textarea.scrollHeight + 'px';
   }
 
-  // Tracking whether the summary is expanded or not
-  isExpanded: boolean = false;
   // Toggle expand/collapse state
   toggleSummary() {
     this.isExpanded = !this.isExpanded;
