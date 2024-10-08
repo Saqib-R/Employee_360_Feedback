@@ -45,7 +45,7 @@ export class UploadService {
 
   // Summarize-Feedback-API
   summarizeFeedback (feedbacks: string[]) : Observable<any> {
-    const loadingToast = this.toastr.info('Generating response...', 'Please wait', {
+    const loadingToast = this.toastr.info('Generating summarized response...', 'Please wait', {
       disableTimeOut: true,
       closeButton: false,
       positionClass: 'toast-top-center'
@@ -127,7 +127,7 @@ export class UploadService {
 
   // Custom-Summarize-Feedback-API
   customSummarizeFeedback (feedbacks: string[], prompt: string) : Observable<any> {
-    const loadingToast = this.toastr.info('Generating response...', 'Please wait', {
+    const loadingToast = this.toastr.info('Generating custom prompt response...', 'Please wait', {
       disableTimeOut: true,
       closeButton: false,
       positionClass: 'toast-top-center'

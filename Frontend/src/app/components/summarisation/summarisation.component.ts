@@ -41,8 +41,9 @@ export class SummarisationComponent {
 
 
   ngOnInit(): void {
-    this.sharedService.employeeData.subscribe(data =>{
-      
+
+
+    this.sharedService.employeeData.subscribe(data =>{      
       this.currName = data?.subject;
       this.data = data;
     } );
@@ -88,7 +89,7 @@ export class SummarisationComponent {
 
   private handleSummarization(): void {
 
-    console.log(this.currQueNo , localStorage.getItem('QueNo'), this.questionNo===localStorage.getItem('QueNo'));
+    // console.log(this.currQueNo , localStorage.getItem('QueNo'), this.questionNo===localStorage.getItem('QueNo'));
     
     // Clear local storage if the question or employee changes
       if(this.currName === localStorage.getItem('Name') && this.currQueNo === localStorage.getItem('QueNo')) {
@@ -97,12 +98,15 @@ export class SummarisationComponent {
         localStorage.setItem('Name', this.currName) ;
         localStorage.setItem('QueNo', this.questionNo) ;
         localStorage.removeItem('summary')
+        localStorage.removeItem('cusSummary');
       }
 
     // Check if we have a valid summary in local storage
     const storedSummary = JSON.parse(localStorage?.getItem('summary'));
+    const custSummary = localStorage.getItem('cusSummary');
     if (storedSummary) {
         this.summaries = storedSummary;
+        this.customSummary = custSummary;
     } else {
         // If no summary in local storage, make the API call
         if (this?.data?.[this.questionNo]) {
@@ -136,7 +140,8 @@ export class SummarisationComponent {
     this.summarizeService.customSummarizeFeedback(this?.data?.[this.questionNo], this.prompt).subscribe({
       next: (response) => {
         this.customSummary = response.summary;
-        console.log(response);        
+        console.log(response);     
+        localStorage.setItem("cusSummary", response.summary); 
         this.toastr.success('Summary generated successfully!', 'Success');
       },
       error: (err) => {
@@ -150,7 +155,9 @@ export class SummarisationComponent {
     if (event.key === 'Enter') {
         event.preventDefault(); 
         this.submitPrompt();
+        this.prompt = '';
     }
+    
   }
 
   // Adjusting textarea height dynamically

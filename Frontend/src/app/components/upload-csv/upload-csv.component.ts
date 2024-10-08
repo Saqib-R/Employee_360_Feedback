@@ -37,7 +37,7 @@ export class UploadCSVComponent {
             this.uploadService.uploadFile(this.csvFile).subscribe({
                 next: (res) => {
                     this.toastr.success('File Uploaded', 'Success...👍', {
-                        timeOut: 5000,
+                        timeOut: 300000,
                     });
 
                     this.csvData = res;

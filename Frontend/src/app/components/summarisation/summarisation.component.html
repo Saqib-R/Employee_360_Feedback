@@ -70,9 +70,10 @@
       <div class="col-md-12 mb-4">
         <div class="card mt-3 shadow border-light rounded">
 
-          <div class="card-body accordion-item bg-transparent border-bottom py-2 " style="width: 100%; margin: auto;">
+          <div class="card-body accordion-item bg-transparent border-bottom py-2 " style="width: 100%; margin: auto;" 
+          type="button" data-bs-toggle="collapse" (click)="toggleIcon()" [attr.data-bs-target]="'#faqAccountCollapse0'" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse0'">
             <h2 class="accordion-header py-1 d-flex justify-content-between align-items-center" [attr.id]="'faqAccountHeading0'">
-              <button class="accordion-button collapsed bg-transparent fw-bold shadow-none link-primary" type="button" data-bs-toggle="collapse" (click)="toggleIcon()" [attr.data-bs-target]="'#faqAccountCollapse0'" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse0'">
+              <button class="accordion-button collapsed bg-transparent fw-bold shadow-none link-primary" >
 
                 <p class="d-flex align-items-center gap-2">
                   <i class="bi bi-list-nested fs-4"></i>
@@ -212,7 +213,7 @@
         <div class="card shadow-sm summarization-card">
           <div class="card-body">
             <h6 class="card-title text-primary mb-3 fs-5">
-              <i class="bi bi-gear-wide-connected me-2"></i> Custom Promt Response
+              <i class="bi bi-gear-wide-connected me-2"></i> Custom Prompt Response
             </h6>
             <div class="summary-box">
               <p class="card-text text-muted summary-text">

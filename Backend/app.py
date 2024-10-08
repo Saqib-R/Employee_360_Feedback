@@ -132,8 +132,8 @@ def summarize_feedback():
 
     # Create two nuanced prompts for comprehensive summaries
     prompts = [
-        "Provide a comprehensive summary in only 100 words of the following feedbacks about Alice, focusing on her leadership, project management skills, and the overall impact of her contributions on the team and company:\n\n" + "\n".join(feedbacks),
-        "Generate a detailed summary in only 50 words of the following feedbacks regarding Alice, highlighting her achievements, teamwork, and how her efforts have enhanced the company's market position and operational efficiency:\n\n" + "\n".join(feedbacks)
+        "Provide a comprehensive summary in only 100 words of the following feedbacks, focusing on leadership, project management skills, and the overall impact and contributions on the team and company:\n\n" + "\n".join(feedbacks),
+        "Generate a detailed summary in only 50 words of the following feedbacks, highlighting achievements, teamwork, and how his\her efforts have enhanced the company's market position and operational efficiency:\n\n" + "\n".join(feedbacks)
     ]
 
     for prompt in prompts:
