@@ -36,16 +36,17 @@ export class UploadCSVComponent {
         if (this.csvFile) {
             this.uploadService.uploadFile(this.csvFile).subscribe({
                 next: (res) => {
-                    this.toastr.success('File Uploaded', 'Success...👍', {
-                        timeOut: 300000,
-                    });
-
                     this.csvData = res;
-                    // this.displayedData = this.csvData; // Reset displayedData after upload
+                    this.displayedData = this.csvData; // Reset displayedData after upload
                     localStorage.setItem('csvData', JSON.stringify(this.csvData));
                 },
                 error: (err) => {
                     console.error(err);
+                },
+                complete : () => {
+                    this.toastr.success('File Uploaded', 'Success...👍', {
+                        timeOut: 500000,
+                    });
                 }
             });
         }

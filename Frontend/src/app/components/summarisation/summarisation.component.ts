@@ -185,4 +185,24 @@ export class SummarisationComponent {
     this.isCollapsed = !this.isCollapsed;
   }
 
+  reSummarize() {
+    if (this?.data?.[this.questionNo]) {
+      this.loading = true;
+      this.summarizeService.summarizeFeedback(this?.data?.[this.questionNo]).subscribe({
+          next: (res) => {
+              this.toastr.success('Response Generated', 'Success...👍', {
+                  timeOut: 50000,
+              });
+              this.loading = false;
+              this.summaries = res?.summaries;
+              localStorage.setItem('summary', JSON.stringify(res?.summaries));
+          },
+          error: (err) => {
+              console.error(err);
+              this.loading = false;
+          }
+      });
+  }
+  }
+
 }

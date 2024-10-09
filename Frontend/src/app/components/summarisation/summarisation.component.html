@@ -40,7 +40,7 @@
       </h5>
     </div>
     <div class="col-3 text-end">
-      <span class="badge bg-info text-dark px-3 py-2">Summarization Mode</span>
+      <button type="button" class="badge btn-primary text-dark px-3 py-2" (click)="reSummarize()">Re-Generate Summary</button>
     </div>
   </div>
 
@@ -132,8 +132,8 @@
       </div>
 
       <!-- Second Table (Summary 1) -->
-      <div class="col-md-6 mb-4" >
-        <div class="card shadow border-light rounded " style="min-height: 250px; height: 350px;">
+      <div class="col-md-12 mb-4" >
+        <div class="card shadow border-light rounded " >
           <div class="card-body">
             <!-- <h6 class="card-title text-success mb-3">
               <i class="fas fa-lightbulb text-warning me-2"></i> Summary 1
@@ -145,7 +145,7 @@
                   <tr>
                     <th scope="col" class="d-flex align-items-center gap-1">
                       <i class="bi bi-lightbulb text-warning me-2"></i>
-                      <span class="text-success">Response 1</span>
+                      <span class="text-success">Generated Summary</span>
                     </th>
                   </tr>
                 </thead>
@@ -169,13 +169,10 @@
         </div>
       </div>
       <!-- Third Table (Summary 2) -->
-      <div class="col-md-6 mb-4" >
+      <!-- <div class="col-md-6 mb-4" >
         <div class="card shadow border-light rounded" style="min-height: 250px; height: 350px;">
           <div class="card-body">
-            <!-- <h6 class="card-title text-success mb-3">
-              <i class="fas fa-lightbulb text-warning me-2"></i> Summary 2
-              Response
-            </h6> -->
+            
             <div class="table-responsive" style="height: 100%;">
               <table class="table table-striped table-bordered" style="height: 93%;">
                 <thead class="table-light">
@@ -192,7 +189,7 @@
                       <div *ngIf="loading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
                         <span>Loading summaries...</span>
                         <span  class="loader text-primary"></span>
-                      </div>   <!-- Loading message -->
+                      </div>  
                       <div *ngIf="!loading" class="d-flex" style="justify-content: start;">
                         <p>{{ summaries[1] || 'Summary Response will be loaded here' }}</p>
                       </div>
@@ -204,12 +201,50 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
      <!-- Summarization Response Section -->
     <div *ngIf="customSummary" class="row mb-4">
-      <div class="col-12">
+
+      <div class="col-md-12 mb-4" >
+        <div class="card shadow border-light rounded " >
+          <div class="card-body">
+            <!-- <h6 class="card-title text-success mb-3">
+              <i class="fas fa-lightbulb text-warning me-2"></i> Summary 1
+              Response
+            </h6> -->
+            <div class="table-responsive " style="height: 100%;">
+              <table class="table table-striped table-bordered" style="height: 93%;">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" class="d-flex align-items-center gap-1">
+                      <i class="bi bi-gear-wide-connected text-warning me-2"></i>
+                      <span class="text-success">Custom Generated Summary</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div *ngIf="loading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
+                        <span>Loading summaries...</span>
+                        <span  class="loader text-primary"></span>
+                      </div>  <!-- Loading message -->
+                      <div *ngIf="!loading" style="justify-content: start;">
+                        <p>{{ customSummary || 'Summary Response will be loaded here' }}</p>
+                      </div>                    
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="col-12">
         <div class="card shadow-sm summarization-card">
           <div class="card-body">
             <h6 class="card-title text-primary mb-3 fs-5">
@@ -222,7 +257,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 

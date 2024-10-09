@@ -71,7 +71,7 @@ export class UploadService {
   }
 
   // Export-Summarize-Feedback-API
-  exportFeedback (file : File) : Observable<any> {
+  exportFeedback (file : File, selectedPrompt : number) : Observable<any> {
     const loadingToast = this.toastr.info('Summarization in progress...', 'Please wait', {
       disableTimeOut: true,
       closeButton: false,
@@ -80,6 +80,7 @@ export class UploadService {
 
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
+    formData.append('use_custom_prompt', selectedPrompt.toString());
 
     return this.http.post(endpoints.EXPORT_SUMMARY_API, formData).pipe(
 

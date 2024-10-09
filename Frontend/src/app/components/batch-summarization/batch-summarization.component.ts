@@ -14,13 +14,24 @@ export class BatchSummarizationComponent {
   isSummarized = false;
   toastr : ToastrService = inject(ToastrService);
   uploadService : UploadService = inject(UploadService);
+  selectedPrompt: number = null;
+
+  prompts: string[] = [
+    'Generated Summary',
+    'Custom Generated Summary',
+  ];
+
+  ngOnChanges() {
+    console.log(this.selectedPrompt);
+
+  }
 
   // Triggered when a file is selected
   onFileSelect(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.fileSelected = file;
-      this.fileName = file.name; 
+      this.fileName = file.name;
     }
   }
   // Triggered when a file is dropped
@@ -29,17 +40,17 @@ export class BatchSummarizationComponent {
     const file = event.dataTransfer?.files[0];
     if (file) {
       this.fileSelected = file;
-      this.fileName = file.name; 
+      this.fileName = file.name;
     }
   }
   // Prevents default behavior on dragover
   onDragOver(event: DragEvent) {
     event.preventDefault();
   }
+
   // Simulate summarization process
   summarizeFile() {
-    this.isLoading = true;
-    this.isSummarized = false;
+
     // Simulating a delay for summarization
     // setTimeout(() => {
     //   this.toastr.success('Summarization Process Completed', 'Success...👍', {
@@ -52,19 +63,29 @@ export class BatchSummarizationComponent {
 
     // }, 3000);
 
-    if(this.fileSelected) {
-      this.uploadService.exportFeedback(this.fileSelected).subscribe({
+    if (!this.fileSelected || this.selectedPrompt === null) {
+      this.toastr.error('Please upload valid csv file and select prompt to use.')
+      return;
+    }
+
+    if(this.fileSelected && this.selectedPrompt) {
+      this.isLoading = true;
+      this.isSummarized = false;
+      console.log(this.selectedPrompt);
+
+      this.uploadService.exportFeedback(this.fileSelected, this.selectedPrompt).subscribe({
         next : (res) => {
           this.toastr.success('Summarization Process Completed', 'Success...👍', {
             timeOut: 30000,
           });
           console.log(res);
           this.isLoading = false;
-          this.isSummarized = true;          
-        }, 
+          this.isSummarized = true;
+        },
         error : (err) => {
           console.log(err);
-          
+          this.isLoading = false;
+          this.isSummarized = false;
         }
       })
     }
@@ -76,6 +97,9 @@ export class BatchSummarizationComponent {
     this.fileName = null;
     this.isSummarized = false;
     this.isLoading = false;
+    this.selectedPrompt = null;
+    localStorage.removeItem('cusSummary')
+    localStorage.removeItem('summary')
   }
 
   // Export functionality
@@ -94,7 +118,7 @@ export class BatchSummarizationComponent {
       },
       error: (error) => {
         console.log(error);
-        
+
       }
     }
   )}
