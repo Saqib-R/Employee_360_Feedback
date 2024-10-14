@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\2000123703\OneDrive - Hexaware Technologies\Python_Project\EmpFeedBack_FLANG\Backend\venv
+set VIRTUAL_ENV=C:\Users\2000123703\OneDrive - Hexaware Technologies\AzureOpenAI\Emp360Feedback\360-Degree-Feedback\Backend-New\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

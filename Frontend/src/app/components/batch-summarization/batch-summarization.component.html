@@ -48,7 +48,7 @@
         <div class="form-group " >
           <select id="promptSelect" [(ngModel)]="selectedPrompt" name="promptType" class="form-control" required>
             <option value="" disabled [ngValue]="null">Select a prompt</option>
-            <option *ngFor="let prompt of prompts; let i = index" [ngValue]="i">{{ prompt }}</option>
+            <option *ngFor="let prompt of prompts; let i = index" [ngValue]="i+1">{{ prompt }}</option>
           </select>
         </div>
         <button

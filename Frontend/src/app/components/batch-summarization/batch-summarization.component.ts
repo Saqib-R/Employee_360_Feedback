@@ -23,7 +23,6 @@ export class BatchSummarizationComponent {
 
   ngOnChanges() {
     console.log(this.selectedPrompt);
-
   }
 
   // Triggered when a file is selected
@@ -48,30 +47,20 @@ export class BatchSummarizationComponent {
     event.preventDefault();
   }
 
-  // Simulate summarization process
+  // summarization process
   summarizeFile() {
 
-    // Simulating a delay for summarization
-    // setTimeout(() => {
-    //   this.toastr.success('Summarization Process Completed', 'Success...👍', {
-    //     timeOut: 30000,
-    //   });
-
-
-    //   this.isLoading = false;
-    //   this.isSummarized = true;
-
-    // }, 3000);
-
     if (!this.fileSelected || this.selectedPrompt === null) {
+
       this.toastr.error('Please upload valid csv file and select prompt to use.')
       return;
     }
 
     if(this.fileSelected && this.selectedPrompt) {
+      console.log(this.selectedPrompt);
+
       this.isLoading = true;
       this.isSummarized = false;
-      console.log(this.selectedPrompt);
 
       this.uploadService.exportFeedback(this.fileSelected, this.selectedPrompt).subscribe({
         next : (res) => {
@@ -84,6 +73,8 @@ export class BatchSummarizationComponent {
         },
         error : (err) => {
           console.log(err);
+          this.toastr.error('Something wen wrong. \nPlease try again later!')
+
           this.isLoading = false;
           this.isSummarized = false;
         }

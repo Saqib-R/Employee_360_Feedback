@@ -16,7 +16,7 @@ import { BatchSummarizationComponent } from './components/batch-summarization/ba
 import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
-
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,8 @@ import { FormsModule } from '@angular/forms';
     FeedbackAccordianComponent,
     SummarisationComponent,
     NoFeedbacksComponent,
-    BatchSummarizationComponent
+    BatchSummarizationComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

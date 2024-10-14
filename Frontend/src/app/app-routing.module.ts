@@ -5,10 +5,12 @@ import { ViewFeedbacksComponent } from './components/view-feedbacks/view-feedbac
 import { UploadCSVComponent } from './components/upload-csv/upload-csv.component';
 import { SummarisationComponent } from './components/summarisation/summarisation.component';
 import { BatchSummarizationComponent } from './components/batch-summarization/batch-summarization.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home/upload-csv', pathMatch: 'full' },
   {path: "home", component : HomeComponent},
+  {path: "login", component : LoginComponent},
 
   {
     path: 'home',

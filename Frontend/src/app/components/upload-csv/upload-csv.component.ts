@@ -20,7 +20,7 @@ export class UploadCSVComponent {
     ngOnInit(): void {
         if (localStorage.getItem('csvData')) {
             this.csvData = JSON.parse(localStorage.getItem('csvData'));
-            this.displayedData = this.csvData; // Initialize displayedData with csvData
+            this.displayedData = this.csvData;
         }
     }
 
@@ -36,6 +36,8 @@ export class UploadCSVComponent {
         if (this.csvFile) {
             this.uploadService.uploadFile(this.csvFile).subscribe({
                 next: (res) => {
+                  console.log(res);
+
                     this.csvData = res;
                     this.displayedData = this.csvData; // Reset displayedData after upload
                     localStorage.setItem('csvData', JSON.stringify(this.csvData));
@@ -60,7 +62,12 @@ export class UploadCSVComponent {
     resetFile() {
         this.csvFile = null;
         this.csvData = null;
-        this.displayedData = null; // Reset displayed data too
+        this.displayedData = null;
+        const fileInput = document.getElementById('formFile') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = ''; // Clear the input
+        }
+
         localStorage.removeItem('csvData');
     }
 

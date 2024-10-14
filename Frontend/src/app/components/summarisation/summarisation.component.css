@@ -218,3 +218,13 @@ form-text {
     transform: rotate(-360deg);
   }
 }
+
+
+.btn-link {
+  transition: color 0.3s, transform 0.3s;
+}
+
+.btn-link:hover {
+  color: #007bff;
+  transform: scale(1.1);
+}

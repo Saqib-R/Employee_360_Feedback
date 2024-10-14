@@ -1,0 +1,9 @@
+<!-- login.component.html -->
+<div class="login-container">
+  <div class="login-form">
+    <h1>Welcome!</h1>
+    <p>Please enter your name to continue</p>
+    <input type="text" [(ngModel)]="userName" placeholder="Your Name" class="form-control" />
+    <button (click)="onSubmit()" class="btn btn-primary">Submit</button>
+  </div>
+</div>

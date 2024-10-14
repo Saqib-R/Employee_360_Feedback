@@ -7,5 +7,10 @@ import { UploadService } from './services/upload.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  ngOnInit(): void {
+    window.addEventListener('beforeunload', (event) => {
+      localStorage.removeItem('csvData');
+    });
+  }
 
 }

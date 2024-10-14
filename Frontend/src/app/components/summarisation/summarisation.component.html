@@ -28,20 +28,20 @@
   <div class="container mt-3 mb-4 p-4 bg-white rounded shadow position-relative">
   <!-- Main Section -->
   <div class="row align-items-center mb-4 border-bottom pb-3">
-    <div class="col-9">
+    <div class="col">
       <h5 class="text-primary fw-bold">
-        Summarization for  
+        Summarization for
         <span class="text-muted fs-5 fw-bold shadow-none">
           {{feedbackQuestionNo[questionNo]}}
-        </span> 
+        </span>
         <span class="text-muted fs-5 fw-medium shadow-none">
             {{ feedbackQuestion[questionNo] }}
         </span>
       </h5>
     </div>
-    <div class="col-3 text-end">
+    <!-- <div class="col-3 text-end">
       <button type="button" class="badge btn-primary text-dark px-3 py-2" (click)="reSummarize()">Re-Generate Summary</button>
-    </div>
+    </div> -->
   </div>
 
   <!-- Summarization Response Section -->
@@ -70,7 +70,7 @@
       <div class="col-md-12 mb-4">
         <div class="card mt-3 shadow border-light rounded">
 
-          <div class="card-body accordion-item bg-transparent border-bottom py-2 " style="width: 100%; margin: auto;" 
+          <div class="card-body accordion-item bg-transparent border-bottom py-2 " style="width: 100%; margin: auto;"
           type="button" data-bs-toggle="collapse" (click)="toggleIcon()" [attr.data-bs-target]="'#faqAccountCollapse0'" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse0'">
             <h2 class="accordion-header py-1 d-flex justify-content-between align-items-center" [attr.id]="'faqAccountHeading0'">
               <button class="accordion-button collapsed bg-transparent fw-bold shadow-none link-primary" >
@@ -150,15 +150,50 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <!-- <tr>
                     <td>
-                      <div *ngIf="loading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
+                      <div *ngIf="GenLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
                         <span>Loading summaries...</span>
                         <span  class="loader text-primary"></span>
+                      </div>
+                      <div *ngIf="!GenLoading" style="justify-content: start;">
+                        <p>{{ text || 'Summary Response will be loaded here' }}</p>
+                      </div>
+                    </td>
+                  </tr> -->
+
+                  <tr>
+                    <td>
+                      <div *ngIf="GenLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
+                        <span>Loading summaries...</span>
+                        <span class="loader text-primary"></span>
                       </div>  <!-- Loading message -->
-                      <div *ngIf="!loading" style="justify-content: start;">
-                        <p>{{ summaries[0] || 'Summary Response will be loaded here' }}</p>
-                      </div>                    
+
+                      <div *ngIf="!GenLoading" style="justify-content: start;">
+                        <p>{{ text || 'Summary Response will be loaded here' }}</p>
+                        <div class="d-flex align-items-center">
+                          <!-- Copy Button -->
+                          <button
+                            class="btn btn-link text-muted"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Copy summary"
+                            (click)="copyToClipboard(text)">
+                            <i class="bi" [ngClass]="isCopied ? 'bi-check2' : 'bi-clipboard'" style="font-size: 1.1rem;"></i>
+                          </button>
+
+                          <!-- Re-Generate Button -->
+                          <button
+                            class="btn btn-link text-muted"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Re-Generate Summary">
+                            <i class="bi bi-arrow-repeat" (click)="reSummarize()" style="font-size: 1.1rem;"></i>
+                          </button>
+                        </div>
+                      </div>
+
+
                     </td>
                   </tr>
 
@@ -172,7 +207,7 @@
       <!-- <div class="col-md-6 mb-4" >
         <div class="card shadow border-light rounded" style="min-height: 250px; height: 350px;">
           <div class="card-body">
-            
+
             <div class="table-responsive" style="height: 100%;">
               <table class="table table-striped table-bordered" style="height: 93%;">
                 <thead class="table-light">
@@ -189,7 +224,7 @@
                       <div *ngIf="loading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
                         <span>Loading summaries...</span>
                         <span  class="loader text-primary"></span>
-                      </div>  
+                      </div>
                       <div *ngIf="!loading" class="d-flex" style="justify-content: start;">
                         <p>{{ summaries[1] || 'Summary Response will be loaded here' }}</p>
                       </div>
@@ -227,13 +262,21 @@
                 <tbody>
                   <tr>
                     <td>
-                      <div *ngIf="loading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
+                      <div *ngIf="CustLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
                         <span>Loading summaries...</span>
                         <span  class="loader text-primary"></span>
-                      </div>  <!-- Loading message -->
-                      <div *ngIf="!loading" style="justify-content: start;">
-                        <p>{{ customSummary || 'Summary Response will be loaded here' }}</p>
-                      </div>                    
+                      </div>
+                      <div *ngIf="!CustLoading" style="justify-content: start;">
+                        <p>{{ cusText || 'Summary Response will be loaded here' }}</p>
+                        <button
+                            class="btn btn-link text-muted"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Copy summary"
+                            (click)="copyToClipboard(text)">
+                            <i class="bi" [ngClass]="isCopied ? 'bi-check2' : 'bi-clipboard'" style="font-size: 1.1rem;"></i>
+                        </button>
+                      </div>
                     </td>
                   </tr>
 
@@ -287,4 +330,3 @@
  </div>
 
  <app-no-feedbacks *ngIf="!data"></app-no-feedbacks>
-
