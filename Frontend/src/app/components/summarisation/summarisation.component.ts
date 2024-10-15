@@ -122,6 +122,7 @@ export class SummarisationComponent {
       return;
     }
     this.CustLoading = true;
+    this.prompt = '';
     this.summarizeService.customSummarizeFeedback(this?.data?.[this.questionNo], this.prompt).subscribe({
       next: (response) => {
         this.customSummary = response.summary;

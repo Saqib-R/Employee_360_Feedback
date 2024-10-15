@@ -33,26 +33,34 @@ export class UploadCSVComponent {
     }
 
     onSubmit() {
-        if (this.csvFile) {
-            this.uploadService.uploadFile(this.csvFile).subscribe({
-                next: (res) => {
+      if (this.csvFile) {
+          this.uploadService.uploadFile(this.csvFile).subscribe({
+              next: (res) => {
                   console.log(res);
 
-                    this.csvData = res;
-                    this.displayedData = this.csvData; // Reset displayedData after upload
-                    localStorage.setItem('csvData', JSON.stringify(this.csvData));
-                },
-                error: (err) => {
-                    console.error(err);
-                },
-                complete : () => {
+                  this.csvData = res;
+                  setTimeout(() => {
                     this.toastr.success('File Uploaded', 'Success...👍', {
-                        timeOut: 500000,
+                        timeOut: 5000,
                     });
-                }
-            });
-        }
-    }
+                }, 10);
+                  this.displayedData = this.csvData;
+                  localStorage.setItem('csvData', JSON.stringify(this.csvData));
+              },
+              error: (err) => {
+                  console.error(err);
+                  setTimeout(() => {
+                    this.toastr.error('Failed to upload file', 'Error...👍', {
+                        timeOut: 5000,
+                    });
+                }, 10);
+
+              },
+
+          });
+      }
+  }
+
 
     showData() {
         this.displayedData = this.csvData;
