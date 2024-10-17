@@ -1,58 +1,9 @@
 subject,level,job_title,function_code,question,summary,start_timestamp,end_timestamp,duration
-Jane Doe,Level 4,Senior Analyst,IR,question1,"Jane's dedication and persistence truly paid off with her successful leadership of a major project. Achieving a 20% increase in sales is a significant accomplishment, reflecting her strategic thinking and effective execution. Her ability to exceed expectations highlights her commitment to success and positions her as an invaluable asset to any team.",2024-10-15 11:38:06.871,2024-10-15 11:38:19.933,13.061266
-,,,,question2,"Jane is a proactive and dedicated team member who consistently seeks growth and excellence. Her drive to learn and ask for more from the firm not only elevates her own performance but also inspires her teammates to be creative and focused. Even when multiple priorities arise, Jane manages to handle them effectively. Additionally, her commitment to continuous feedback and self-improvement demonstrates her desire for personal and professional development.",2024-10-15 11:38:19.933,2024-10-15 11:39:39.531,79.598122
-,,,,question3,"To help Jane grow into a future leader, focusing on building her confidence and public speaking skills is crucial. Here are some suggestions:
-
-1. **Public Speaking Workshops**: Enroll in workshops or courses that offer practical exercises and feedback.
-
-2. **Practice Regularly**: Encourage Jane to practice speaking in front of small groups to build comfort.
-
-3. **Join a Group**: Consider joining organizations like Toastmasters, which provide a supportive environment for improving public speaking.
-
-4. **Feedback and Reflection**: After each presentation, seek constructive feedback and reflect on areas for improvement.
-
-5. **Visualization Techniques**: Use visualization to imagine successful speaking scenarios, which can help reduce anxiety.
-
-6. **Mindfulness and Breathing Exercises**: These techniques",2024-10-15 11:39:39.532,2024-10-15 11:39:43.052,3.51987
-,,,,question4,"To support Jane in preparing for a leadership role with a focus on strategic thinking and networking within CustomerOrg, here are some steps she can take:
-
-1. **Understand Organizational Goals**: 
-   - Gain a deep understanding of CustomerOrg's mission, vision, and long-term goals.
-   - Align her work and initiatives with these objectives to demonstrate strategic alignment.
-
-2. **Develop Strategic Thinking Skills**:
-   - Engage in courses or workshops on strategic planning and critical thinking.
-   - Practice by analyzing case studies or scenarios to enhance her ability to think ahead.
-
-3. **Build Relationships**:
-   - Network actively with team members across different departments to understand their roles and challenges.
-   - Attend cross-functional meetings or informal gatherings to build rapport and learn",2024-10-15 11:39:43.052,2024-10-15 11:40:39.676,56.624377
-John Smith,Level 3,Assistant Managing Director,CS,question1,"That's impressive! It sounds like John is doing an excellent job. If you're considering ways to recognize his achievements, you might think about offering a bonus, a promotion, or even public recognition within the company. Celebrating his success can motivate him and inspire others on the team.",2024-10-15 11:40:39.677,2024-10-15 11:41:41.686,62.009363
-,,,,question2,That's great to hear! John's commitment to prioritizing customers and fostering teamwork reflects well on CustomerOrg's core values. It sounds like he's making a positive impact.,2024-10-15 11:41:41.687,2024-10-15 11:41:51.962,10.274126
-,,,,question3,"To enhance his project management skills for handling larger accounts, John might consider the following steps:
-
-1. **Training and Certification**: Enroll in courses or obtain certifications such as PMP (Project Management Professional) or PRINCE2.
-
-2. **Time Management**: Learn effective time management techniques to prioritize tasks and meet deadlines.
-
-3. **Communication Skills**: Improve communication skills to effectively liaise with team members and clients.
-
-4. **Software Proficiency**: Familiarize himself with project management tools like Asana, Trello, or Microsoft Project.
-
-5. **Risk Management**: Develop strategies to identify and mitigate potential risks in projects.
-
-6. **Leadership Skills**: Enhance leadership abilities to motivate and guide teams efficiently.
-
-7. **",2024-10-15 11:41:51.962,2024-10-15 11:47:00.155,308.193177
-,,,,question4,"Absolutely, focusing on strategic thinking and leadership skills can significantly help John advance in his career. Here are some steps he might consider:
-
-1. **Set Clear Goals**: Define what “the next level” looks like for him and set specific objectives to achieve it.
-
-2. **Develop Strategic Thinking**:
-   - **Understand the Bigger Picture**: Encourage him to look beyond immediate tasks and understand the long-term vision of his organization.
-   - **Analyze Trends**: Stay informed about industry trends and how they impact the business.
-   - **Problem Solving**: Practice approaching challenges with innovative solutions.
-
-3. **Enhance Leadership Skills**:
-   - **Communication**: Work on clear, persuasive communication both verbally and in writing.
-   -",2024-10-15 11:47:00.155,2024-10-15 11:47:02.884,2.729225
+Jane Doe,Level 4,Senior Analyst,IR,question1,Jane's persistence led to a 20% sales increase project success.,2024-10-17 12:01:38.136,2024-10-17 12:01:42.856,4.719838
+,,,,question2,"Jane drives learning, encourages creativity, manages priorities, and seeks feedback.",2024-10-17 12:01:42.856,2024-10-17 12:01:48.859,6.00303
+,,,,question3,Confidence and public speaking boost Jane's future leadership success.,2024-10-17 12:01:48.859,2024-10-17 12:01:50.827,1.968593
+,,,,question4,Jane should network and think strategically for future leadership role.,2024-10-17 12:01:50.827,2024-10-17 12:01:51.727,0.89963
+John Smith,Level 3,Assistant Managing Director,CS,question1,"John consistently exceeds sales targets, attracting high-profile clients successfully.",2024-10-17 12:01:51.727,2024-10-17 12:01:53.115,1.387839
+,,,,question2,"John exemplifies CustomerOrg's values: prioritizes customers, collaborates with team effectively.",2024-10-17 12:01:53.115,2024-10-17 12:02:01.285,8.170529
+,,,,question3,John should improve project management skills for handling larger accounts.,2024-10-17 12:02:01.285,2024-10-17 12:02:06.433,5.14773
+,,,,question4,John needs strategic thinking and leadership skills for career advancement.,2024-10-17 12:02:06.434,2024-10-17 12:02:08.001,1.567298

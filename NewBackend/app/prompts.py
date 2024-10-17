@@ -43,8 +43,12 @@ def exp_summarize_feedback(feedbacks, prompt):
 def cust_summarize_feedback(feedbacks, user_prompt):
     if not feedbacks:
         return "No feedback provided."
+    
+    if not user_prompt:
+        return "No prompt provided."
 
     prompt = f"{user_prompt}\n\n" + "\n".join(feedbacks)
+    print(user_prompt)
 
     try:
         res = client.chat.completions.create(

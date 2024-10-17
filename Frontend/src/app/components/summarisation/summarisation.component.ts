@@ -118,13 +118,14 @@ export class SummarisationComponent {
   submitPrompt() {
     console.log('Prompt submitted: ', this.prompt);
     if (this?.data?.[this.questionNo].length === 0 || !this.prompt) {
+      console.log('Please provide feedbacks and a prompt.', 'Validation Error');
       this.toastr.error('Please provide feedbacks and a prompt.', 'Validation Error');
       return;
     }
     this.CustLoading = true;
-    this.prompt = '';
     this.summarizeService.customSummarizeFeedback(this?.data?.[this.questionNo], this.prompt).subscribe({
       next: (response) => {
+        this.prompt = '';
         this.customSummary = response.summary;
         console.log(response);
         localStorage.setItem("cusSummary", response.summary);
@@ -147,7 +148,6 @@ export class SummarisationComponent {
         this.submitPrompt();
         this.prompt = '';
     }
-
   }
 
   // Adjusting textarea height dynamically

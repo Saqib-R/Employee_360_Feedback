@@ -1,29 +1,33 @@
 <!-- login.component.html -->
-<div class="container login-container mt-5 d-flex justify-content-center align-items-center gap-2" style="min-height: 80vh;">
-  <div class="login-text col-md-6 d-flex flex-column justify-content-center p-5">
-    <h1>Welcome Back!</h1>
-    <p>
+<div class="container login-container mt-5 d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class=" col-md-6 d-flex flex-column justify-content-center p-5" style="width: 100%; margin-left: auto; margin-right: auto;">
+    <h1 class="text-center">Welcome Back!</h1>
+    <p class="text-center">
       We’re glad to see you again! Please log in to your account to continue
       accessing your personalized feedback and growth insights.
     </p>
-    <p>
+    <p class="text-center">
       Enter your name below to get started. Let's continue your journey towards personal
       and professional development!
     </p>
   </div>
-  <div class="login-form col-md-6 d-flex justify-content-center align-items-center">
-    <div class="card shadow p-5 w-100">
+  <div class="login-form col-md-6 d-flex justify-content-center align-items-center mt-2">
+    <div class="card  p-5 w-100">
       <h2 class="text-center mb-4">Login</h2>
       <p class="text-center text-muted mb-4">Please enter your name to continue</p>
       <div class="form-group">
         <input type="text"
                [(ngModel)]="userName"
-               placeholder="Your Name"
+               placeholder="Enter your name..."
                class="form-control form-control-lg"
+               (keydown)="handleKeyDown($event)"
                required />
       </div>
-      <div class="text-center">
-        <button (click)="onSubmit()" class="btn btn-primary btn-lg btn-block">Login</button>
+      <div class="text-center mt-2">
+        <button (click)="onLogin()" class="btn btn-primary btn-lg btn-block d-flex justify-content-center align-items-center" style="width: 6rem;">
+          <i class="bi bi-person-circle me-2"></i> <!-- Bootstrap icon -->
+          Login
+        </button>
       </div>
     </div>
   </div>
