@@ -2,7 +2,7 @@
     <div class="container d-flex flex-row justify-content-between align-items-center">
         <div style="padding: 1rem;">
             <a class="navbar-brand text-white fs-3" routerLink="/home/upload-csv">
-              <!-- <img src="https://res.cloudinary.com/dnamivbjx/image/upload/f_auto,q_auto/v1/samples/animals/aydu9rok2cgf4wzaorzu" alt="logo" width="50" height="30" alt="Profile" class="img-fluid rounded-circle"  loading="lazy" /> -->
+              <!-- <img src="assets/images/i3.jpeg" alt="logo" width="50" height="30" class="img-fluid rounded-circle" loading="lazy" /> -->
               Employee 360 Feedback
             </a>
         </div>
@@ -13,7 +13,7 @@
           </div>
 
           <div class="d-flex flex-row gap-2 align-items-center" *ngIf="userName">
-            <h4 class="text-center mt-1">Welcome, {{ userName | titlecase }}!</h4>
+            <h4 class="text-center mt-2">Welcome, {{ userName | titlecase }}!</h4>
             <button class="btn btn-danger" (click)="onLogout()">Logout</button>
           </div>
         </div>

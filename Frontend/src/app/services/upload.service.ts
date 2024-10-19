@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, finalize, Observable, throwError } from 'rxjs';
 import { endpoints } from './api_endpoints';
 import { ToastrService } from 'ngx-toastr';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 export class UploadService {
   http: HttpClient = inject(HttpClient);
   toastr : ToastrService = inject(ToastrService);
+  sharedService : SharedService = inject(SharedService);
 
 
   // View-Feedback-API
@@ -155,6 +157,51 @@ export class UploadService {
           this.toastr.clear();
         }
       })
+    );
+  }
+
+
+  // Employee-Overview-API
+  getEmpSummarizedOverview () : Observable<any> {
+    const loadingToast = this.toastr.info('Fetching Data...', 'Please wait', {
+      disableTimeOut: true,
+      closeButton: false,
+      positionClass: 'toast-top-center'
+    });
+    let userName : string;
+    this.sharedService.loggedIn.subscribe(data => {
+      userName = data;
+    })
+
+
+    return this.http.get(endpoints.EMP_SUMMARIZED_API+`?manager=${userName}`).pipe(
+      catchError(error => {
+        if (loadingToast) {
+          this.toastr.clear();
+        }
+        this.toastr.error('Failed to Upload File', 'Error');
+        console.log(error);
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        if (loadingToast) {
+          this.toastr.clear();
+        }
+      })
+    );
+  }
+
+  // Employee-Overview-API
+  getAllFeedbacks () : Observable<any> {
+
+    return this.http.get(endpoints.GET_FEEDBACKS_API).pipe(
+      catchError(error => {
+
+        this.toastr.error('Failed to Upload File', 'Error');
+        console.log(error);
+        return throwError(() => error);
+      }),
+
     );
   }
 

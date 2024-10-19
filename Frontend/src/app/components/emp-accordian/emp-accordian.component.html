@@ -1,0 +1,33 @@
+<div class="card mb-4 bg-white rounded shadow hover-card" (click)="goToEmployeeDetail(emp_data?.emp_id)">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="accordion-item bg-transparent border-bottom py-3">
+        <h2 class="accordion-header border-bottom w-100" [attr.id]="'faqAccountHeading' + index">
+          <button class="accordion-button collapsed bg-transparent fw-bold shadow-none d-flex align-items-end mb-3"
+            type="button" data-bs-toggle="collapse" (click)="toggleIcon(index)"
+            [attr.data-bs-target]="'#faqAccountCollapse' + index" aria-expanded="false"
+            [attr.aria-controls]="'faqAccountCollapse' + index">
+            <!-- Header Section -->
+            <div class="row align-items-center w-100">
+              <div class="col-2">
+                <img src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250" alt="Profile" class="img-fluid rounded-circle">
+              </div>
+              <!-- Employee Details -->
+              <div class="col-7">
+                <h4>{{emp_data?.subject}}</h4>
+                <div class="d-flex flex-row gap-1 align-items-center">
+                  <span class="badge bg-secondary">{{emp_data?.job_title}}</span>
+                  <span class="badge bg-light text-dark">{{emp_data?.level}}</span>
+                  <span class="badge bg-dark-subtle text-dark">{{emp_data?.function_code}}</span>
+                </div>
+              </div>
+              <div class="col-3 text-end">
+                <i class="transition-icon bi bi-arrow-90deg-right" ></i>
+              </div>
+            </div>
+          </button>
+        </h2>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,7 +13,7 @@ export class UploadCSVComponent {
     uploadService: UploadService = inject(UploadService);
     csvFile: File | null = null;
     csvData: any[] | null = null;
-    displayedData: any[] | null = null; // Separate variable for filtered data
+    displayedData: any[] | null = null;
     searchTerm: string = '';
     toastr: ToastrService = inject(ToastrService);
 
@@ -44,19 +44,21 @@ export class UploadCSVComponent {
                         timeOut: 5000,
                     });
                 }, 10);
+                const fileInput = document.getElementById('formFile') as HTMLInputElement;
+                if (fileInput) {
+                  fileInput.value = ''; // Clear the input
+                }
                   this.displayedData = this.csvData;
                   localStorage.setItem('csvData', JSON.stringify(this.csvData));
               },
               error: (err) => {
                   console.error(err);
                   setTimeout(() => {
-                    this.toastr.error('Failed to upload file', 'Error...👍', {
+                    this.toastr.error('Failed to upload file', 'Error...👎', {
                         timeOut: 5000,
                     });
                 }, 10);
-
               },
-
           });
       }
   }
@@ -73,9 +75,8 @@ export class UploadCSVComponent {
         this.displayedData = null;
         const fileInput = document.getElementById('formFile') as HTMLInputElement;
         if (fileInput) {
-          fileInput.value = ''; // Clear the input
+          fileInput.value = '';
         }
-
         localStorage.removeItem('csvData');
     }
 

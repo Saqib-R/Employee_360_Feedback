@@ -1,0 +1,46 @@
+<section class="container bsb-faq-3 py-3 py-md-3 py-xl-5" style="margin-top: -0.4rem;">
+  <div *ngIf="!isLoading" class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
+        <h2 class="mb-2 display-5 text-center fs-2">Employee Performance Feedback Summary</h2>
+        <hr class="w-50 mx-auto border-dark-subtle">
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Option -->
+  <div *ngIf="!isLoading" class="d-flex justify-content-center mb-4">
+    <form class="d-flex gap-3" role="search" (ngSubmit)="onSearchChange()">
+      <div style="flex-grow: 1;">
+        <input
+          class="form-control"
+          type="search"
+          placeholder="Search employee..."
+          aria-label="Search"
+          id="search"
+          list="suggestions"
+          [(ngModel)]="searchTerm"
+          name="search"
+          (input)="onSearchChange()">
+        <datalist id="suggestions">
+        </datalist>
+      </div>
+      <button class="btn btn-outline-success" id="view-feedback-btn" type="submit">Search</button>
+    </form>
+  </div>
+
+  <!-- Employee Feedbacks Card Component -->
+  <div *ngIf="!isLoading" class="container">
+    <div class="row g-3"> <!-- Add row for the grid layout -->
+      <div *ngFor="let item of displayedData; let i = index" class="col-md-6"> <!-- Use col-md-6 for two columns -->
+        <app-emp-accordian [emp_data]="item" [index]="i"></app-emp-accordian>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner (optional) -->
+  <div *ngIf="isLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center" style="min-height: 80vh;">
+    <span>Loading summaries...</span>
+    <span class="loader text-primary"></span>
+  </div>
+</section>

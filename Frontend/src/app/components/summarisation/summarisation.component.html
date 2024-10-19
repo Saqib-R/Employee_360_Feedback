@@ -170,7 +170,7 @@
                       </div>  <!-- Loading message -->
 
                       <div *ngIf="!GenLoading" style="justify-content: start;">
-                        <p>{{ text || 'Summary Response will be loaded here' }}</p>
+                        <p>{{ text || 'Error while fetching response from the model. \nPlease try again later.' }}</p>
                         <div class="d-flex align-items-center">
                           <!-- Copy Button -->
                           <button
@@ -267,7 +267,7 @@
                         <span  class="loader text-primary"></span>
                       </div>
                       <div *ngIf="!CustLoading" style="justify-content: start;">
-                        <p>{{ cusText || 'Summary Response will be loaded here' }}</p>
+                        <p>{{ cusText || 'Error while fetching response from the model. \nPlease try again later.' }}</p>
                         <button
                             class="btn btn-link text-muted"
                             data-bs-toggle="tooltip"

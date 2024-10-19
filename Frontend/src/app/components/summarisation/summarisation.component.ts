@@ -198,17 +198,17 @@ export class SummarisationComponent {
   }
 
   private typeGeneratedSummary() {
-    for (let i = 0; i < this.summaries[0].length; i++) {
+    for (let i = 0; i < this.summaries[0]?.length; i++) {
         setTimeout(() => {
-            this.text += this.summaries[0].charAt(i);
+            this.text += this.summaries[0]?.charAt(i);
         }, i * 20); // Adjust the delay based on the index
     }
 }
 
 private typeCusSummary() {
-    for (let i = 0; i < this.customSummary.length; i++) {
+    for (let i = 0; i < this.customSummary?.length; i++) {
         setTimeout(() => {
-            this.cusText += this.customSummary.charAt(i);
+            this.cusText += this.customSummary?.charAt(i);
         }, i * 20); // Adjust the delay based on the index
     }
 }

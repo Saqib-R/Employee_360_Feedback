@@ -17,6 +17,9 @@ import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
+import { EmployeeOverviewComponent } from './components/employee-overview/employee-overview.component';
+import { EmpAccordianComponent } from './components/emp-accordian/emp-accordian.component';
+import { EmpAccordianCardComponent } from './components/emp-accordian-card/emp-accordian-card.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { LoginComponent } from './components/login/login.component';
     SummarisationComponent,
     NoFeedbacksComponent,
     BatchSummarizationComponent,
-    LoginComponent
+    LoginComponent,
+    EmployeeOverviewComponent,
+    EmpAccordianComponent,
+    EmpAccordianCardComponent
   ],
   imports: [
     BrowserModule,

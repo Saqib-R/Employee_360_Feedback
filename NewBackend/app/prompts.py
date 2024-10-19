@@ -9,7 +9,11 @@ OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION")
 AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT") 
 AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 
-client = AzureOpenAI()
+client = AzureOpenAI(
+    api_key=AZURE_OPENAI_API_KEY,
+    api_version=OPENAI_API_VERSION,
+    azure_endpoint=AZURE_OPENAI_ENDPOINT
+)
 
 # client = AzureOpenAI(api_key=AZURE_OPENAI_API_KEY, endpoint=AZURE_OPENAI_ENDPOINT, api_version=OPENAI_API_VERSION)
 
@@ -43,16 +47,15 @@ def exp_summarize_feedback(feedbacks, prompt):
 def cust_summarize_feedback(feedbacks, user_prompt):
     if not feedbacks:
         return "No feedback provided."
-    
+
     if not user_prompt:
         return "No prompt provided."
 
     prompt = f"{user_prompt}\n\n" + "\n".join(feedbacks)
-    print(user_prompt)
 
     try:
         res = client.chat.completions.create(
-            model="gpt-4o", 
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
@@ -62,9 +65,16 @@ def cust_summarize_feedback(feedbacks, user_prompt):
             top_p=0.9,
             frequency_penalty=0.5
         )
-        summary = res.choices[0].message.content.strip()  
+        
+        summary = res.choices[0].message.content.strip()
 
     except Exception as e:
-        return f"Error during summarization: {str(e)}"
+        # Check if the error message is related to authentication
+        if "The key provided is currently Inactive" in str(e):
+            print(f"Error during summarization: {str(e)}")
+            return "Error: The API key provided is currently inactive. Please contact the Admin for further details.", 401
+        else:
+            return f"Error during summarization: {str(e)}", 500  
 
     return summary
+

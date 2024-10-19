@@ -6,11 +6,15 @@ import { UploadCSVComponent } from './components/upload-csv/upload-csv.component
 import { SummarisationComponent } from './components/summarisation/summarisation.component';
 import { BatchSummarizationComponent } from './components/batch-summarization/batch-summarization.component';
 import { LoginComponent } from './components/login/login.component';
+import { EmployeeOverviewComponent } from './components/employee-overview/employee-overview.component';
+import { EmpAccordianCardComponent } from './components/emp-accordian-card/emp-accordian-card.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home/upload-csv', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   {path: "home", component : HomeComponent},
   {path: "login", component : LoginComponent},
+  {path: 'employee-overview', component: EmployeeOverviewComponent},
+  { path: 'employee/:id', component: EmpAccordianCardComponent },
 
   {
     path: 'home',

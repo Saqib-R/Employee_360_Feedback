@@ -1,0 +1,268 @@
+<div class="container mt-3 p-4 bg-white rounded shadow">
+  <div class="mb-3">
+    <button
+      class="btn btn-outline-secondary"
+      (click)="goBack()">
+      <i class="bi bi-arrow-left"></i> Back
+    </button>
+  </div>
+  <!-- Header Section -->
+  <div
+    class="container mb-3 px-4 py-2 bg-light-subtle rounded shadow d-flex gap-3 align-items-center w-100"
+  >
+    <div class="col-1">
+      <img
+        src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
+        width="200"
+        height="200"
+        alt="Profile"
+        class="img-fluid rounded-circle"
+      />
+    </div>
+    <div class="col-9">
+      <h4>{{ employee?.subject }}</h4>
+      <div class="d-flex flex-row gap-1 align-items-center">
+        <span class="badge bg-secondary">{{ employee?.job_title }}</span>
+        <span class="badge bg-light text-dark">{{ employee?.level }}</span>
+        <span class="badge bg-dark-subtle text-dark">{{
+          employee?.function_code
+        }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content p-3 border">
+    <!-- Rating Section -->
+    <!-- <div class="d-flex justify-content-between align-items-center">
+      <div class="text-primary">
+        Jane meets the business need by making effective decisions and
+        demonstrating good judgment in escalating issues appropriately.
+      </div>
+      <div>
+        <span class="text-warning">★ ★ ★ ★ ☆</span>
+      </div>
+    </div>
+    <p class="small text-muted">
+      (Met: 3/5 | Not Met: 1/5 | Insufficient Data: 1/5)
+    </p> -->
+
+    <div id="business-need" class="tab-pane active">
+      <div class="accordion" id="feedbackAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button
+              class="accordion-button p-4"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="true"
+              aria-controls="collapseOne"
+            >
+              1. Please provide a few examples of this individual's greatest
+              achievements and/or contributions this year from your perspective.
+            </button>
+          </h2>
+          <div
+            id="collapseOne"
+            class="accordion-collapse collapse show"
+            aria-labelledby="headingOne"
+            data-bs-parent="#feedbackAccordion"
+          >
+            <div class="accordion-body">
+              <p class="d-flex align-items-center gap-2">
+                <i class="bi bi-list-nested fs-4"></i>
+                <span class="fs-5">Original Feedbacks</span>
+              </p>
+              <div class="feedback-list">
+                <p
+                  *ngFor="
+                    let item of employee?.questions?.question1;
+                    let i = index;
+                    let last = last
+                  "
+                  [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+                  style="margin-left: 7px"
+                  class="d-flex align-items-center gap-2 text-sm-start pb-1"
+                >
+                  <i
+                    class="bi bi-arrow-right-short"
+                    style="font-size: 1.5rem"
+                  ></i>
+                  <span>
+                    {{ item }}
+                  </span>
+                </p>
+              </div>
+
+              <div class="alert alert-success mt-3">
+                <strong>Summary:</strong> {{ employee?.ratings?.question1 }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button
+              class="accordion-button collapsed p-4"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
+            >
+              2. How has this individual demonstrated CustomerOrg's cultural
+              values, according to the Career Framework? Please provide a few
+              examples.
+            </button>
+          </h2>
+          <div
+            id="collapseTwo"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingTwo"
+            data-bs-parent="#feedbackAccordion"
+          >
+            <div class="accordion-body">
+              <p class="d-flex align-items-center gap-2">
+                <i class="bi bi-list-nested fs-4"></i>
+                <span class="fs-5">Original Feedbacks</span>
+              </p>
+              <div class="feedback-list">
+                <p
+                  *ngFor="
+                    let item of employee?.questions?.question2;
+                    let i = index;
+                    let last = last
+                  "
+                  [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+                  style="margin-left: 7px"
+                  class="d-flex align-items-center gap-2 text-sm-start pb-1"
+                >
+                  <i
+                    class="bi bi-arrow-right-short"
+                    style="font-size: 1.5rem"
+                  ></i>
+                  <span>
+                    {{ item }}
+                  </span>
+                </p>
+              </div>
+
+              <div class="alert alert-success mt-3">
+                <strong>Summary:</strong> {{ employee?.ratings?.question2 }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingThree">
+            <button
+              class="accordion-button collapsed p-4"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseThree"
+              aria-expanded="false"
+              aria-controls="collapseThree"
+            >
+              3. What skills or capabilities can this individual build or expand
+              upon that would allow the individual to contribute even more value
+              in the future?
+            </button>
+          </h2>
+          <div
+            id="collapseThree"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingThree"
+            data-bs-parent="#feedbackAccordion"
+          >
+            <div class="accordion-body">
+              <p class="d-flex align-items-center gap-2">
+                <i class="bi bi-list-nested fs-4"></i>
+                <span class="fs-5">Original Feedbacks</span>
+              </p>
+              <div class="feedback-list">
+                <p
+                  *ngFor="
+                    let item of employee?.questions?.question3;
+                    let i = index;
+                    let last = last
+                  "
+                  [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+                  style="margin-left: 7px"
+                  class="d-flex align-items-center gap-2 text-sm-start pb-1"
+                >
+                  <i
+                    class="bi bi-arrow-right-short"
+                    style="font-size: 1.5rem"
+                  ></i>
+                  <span>
+                    {{ item }}
+                  </span>
+                </p>
+              </div>
+
+              <div class="alert alert-success mt-3">
+                <strong>Summary:</strong> {{ employee?.ratings?.question3 }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingFour">
+            <button
+              class="accordion-button collapsed p-4"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseFour"
+              aria-expanded="false"
+              aria-controls="collapseFour"
+            >
+              4. What skills should this individual focus on developing in the
+              future to progress to the next level (if applicable)? Please refer
+              to the Career Framework to review the expected results and
+              behaviors at the next level.
+            </button>
+          </h2>
+          <div
+            id="collapseFour"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingFour"
+            data-bs-parent="#feedbackAccordion"
+          >
+            <div class="accordion-body">
+              <p class="d-flex align-items-center gap-2">
+                <i class="bi bi-list-nested fs-4"></i>
+                <span class="fs-5">Original Feedbacks</span>
+              </p>
+              <div class="feedback-list">
+                <p
+                  *ngFor="
+                    let item of employee?.questions?.question4;
+                    let i = index;
+                    let last = last
+                  "
+                  [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+                  style="margin-left: 7px"
+                  class="d-flex align-items-center gap-2 text-sm-start pb-1"
+                >
+                  <i
+                    class="bi bi-arrow-right-short"
+                    style="font-size: 1.5rem"
+                  ></i>
+                  <span>
+                    {{ item }}
+                  </span>
+                </p>
+              </div>
+
+              <div class="alert alert-success mt-3">
+                <strong>Summary:</strong> {{ employee?.ratings?.question4 }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

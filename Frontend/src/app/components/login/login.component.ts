@@ -18,20 +18,23 @@ export class LoginComponent {
 
   onLogin() {
     if(this.userName) {
-      this.sharedService.loggedInInfo(this.userName);
       if (this.userName?.toLowerCase() === 'rohit') {
+        this.sharedService.loggedInInfo(this.userName);
         this.router.navigate(['/home/upload-csv']);
         this.toastr.success('You\'re now logged in', 'Success...👍', {
           timeOut: 1000,
       });
-      } else if(this.userName?.toLowerCase() === 'saqib') {
-        this.router.navigate(['/home/employee-overview']);
+      } else if(this.userName?.toLowerCase() === 'saqib' || this.userName?.toLowerCase() === 'tiju') {
+        this.sharedService.loggedInInfo(this.userName);
+        this.router.navigate(['/employee-overview']);
         this.toastr.success("Login success!");
       }
+      else{
+        this.userName = '';
+        this.toastr.error("Please enter a valid username");
+      }
     }
-    else{
-      this.toastr.error("Please enter a valid username");
-    }
+
   }
 
   handleKeyDown(event: KeyboardEvent) {
