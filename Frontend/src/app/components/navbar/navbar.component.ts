@@ -26,6 +26,10 @@ export class NavbarComponent {
 
   onLogout() {
     this.userName = '';
+    localStorage.removeItem('csvData');
+    localStorage.removeItem('summary');
+    localStorage.removeItem('QueNo');
+    localStorage.removeItem('concatenatedResults');
     this.router.navigate(['/login']);
     this.toastr.success("Logout success!")
   }

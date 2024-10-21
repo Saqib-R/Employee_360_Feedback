@@ -19,47 +19,55 @@ export class EmployeeOverviewComponent {
 
 
   ngOnInit(): void {
-    this.uploadService.getEmpSummarizedOverview().subscribe({
-      next: (res) => {
-        setTimeout(() => {
-          this.toastr.success('Data Fetched Successfully', 'Success...👍', {
-            timeOut: 5000,
+    const conRes = JSON.parse(localStorage.getItem('concatenatedResults'));
+    if(conRes && conRes.length > 0) {
+      this.concatenatedResults = conRes;
+      this.displayedData = conRes;
+    }
+    else{
+      this.uploadService.getEmpSummarizedOverview().subscribe({
+        next: (res) => {
+          setTimeout(() => {
+            this.toastr.success('Data Fetched Successfully', 'Success...👍', {
+              timeOut: 5000,
+            });
+          }, 10);
+
+          this.summCsvData = res;
+          // console.log("SUMMARIZED DATA.....",res);
+
+          // Now call the second API
+          this.uploadService.getAllFeedbacks().subscribe({
+            next: (res) => {
+              this.feedbackData = res;
+              // console.log("FEEDBACK DARA....",res);
+
+              this.concatenateData(this.summCsvData, this.feedbackData);
+              this.displayedData = this.concatenatedResults;
+              localStorage.setItem('concatenatedResults', JSON.stringify(this.concatenatedResults));
+
+            },
+            error: (err) => {
+              console.error(err);
+              setTimeout(() => {
+                this.toastr.error('Failed to fetch additional data', 'Error...👎', {
+                  timeOut: 5000,
+                });
+              }, 10);
+            }
           });
-        }, 10);
+        },
+        error: (err) => {
+          console.error(err);
+          setTimeout(() => {
+            this.toastr.error('Failed to fetch employees data', 'Error...👎', {
+              timeOut: 5000,
+            });
+          }, 10);
+        }
+      });
+    }
 
-        this.summCsvData = res;
-        localStorage.setItem('summCsvData', JSON.stringify(this.summCsvData));
-        // console.log("SUMMARIZED DATA.....",res);
-
-        // Now call the second API
-        this.uploadService.getAllFeedbacks().subscribe({
-          next: (res) => {
-            this.feedbackData = res;
-            // console.log("FEEDBACK DARA....",res);
-
-            this.concatenateData(this.summCsvData, this.feedbackData);
-            this.displayedData = this.concatenatedResults;
-
-          },
-          error: (err) => {
-            console.error(err);
-            setTimeout(() => {
-              this.toastr.error('Failed to fetch additional data', 'Error...👎', {
-                timeOut: 5000,
-              });
-            }, 10);
-          }
-        });
-      },
-      error: (err) => {
-        console.error(err);
-        setTimeout(() => {
-          this.toastr.error('Failed to fetch employees data', 'Error...👎', {
-            timeOut: 5000,
-          });
-        }, 10);
-      }
-    });
   }
 
   concatenateData(firstApiResponse: any[], secondApiResponse: any[]): void {

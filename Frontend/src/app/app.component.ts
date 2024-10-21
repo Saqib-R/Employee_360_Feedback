@@ -10,7 +10,9 @@ export class AppComponent {
   ngOnInit(): void {
     window.addEventListener('beforeunload', (event) => {
       localStorage.removeItem('csvData');
-      localStorage.removeItem('summCsvData')
+      localStorage.removeItem('summary');
+      localStorage.removeItem('QueNo');
+      localStorage.removeItem('concatenatedResults');
     });
   }
 
