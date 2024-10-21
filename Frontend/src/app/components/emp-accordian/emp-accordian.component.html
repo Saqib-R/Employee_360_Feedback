@@ -10,7 +10,8 @@
             <!-- Header Section -->
             <div class="row align-items-center w-100">
               <div class="col-2">
-                <img src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250" alt="Profile" class="img-fluid rounded-circle">
+                <img [src]="'https://eu.ui-avatars.com/api/?name=' + emp_data?.subject + '&size=250'"
+                alt="Profile" class="img-fluid rounded-circle">
               </div>
               <!-- Employee Details -->
               <div class="col-7">
