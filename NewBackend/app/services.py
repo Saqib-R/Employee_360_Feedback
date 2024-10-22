@@ -48,7 +48,7 @@ def summarize_feedback():
     if not feedbacks:
         return jsonify({"error": "No feedback provided"}), 400
 
-    prompt = "Provide a comprehensive summary in only 100 words of the following feedbacks, focusing on leadership, project         management skills, and the overall impact and contributions on the team and company:\n\n" + "\n".join(feedbacks)
+    prompt = "Provide a comprehensive summary in only 100 words of the following feedbacks, focusing on leadership, project management skills, and the overall impact and contributions on the team and company:\n\n" + "\n".join(feedbacks)
 
     try:
         summary = cust_summarize_feedback(feedbacks, prompt)

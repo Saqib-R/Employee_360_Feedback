@@ -6,7 +6,7 @@
         <h2 class="accordion-header border-bottom w-100" [attr.id]="'faqAccountHeading' + index">
           <button class="accordion-button collapsed bg-transparent fw-bold shadow-none d-flex align-items-end mb-3" type="button" data-bs-toggle="collapse" (click)="toggleIcon(index)" [attr.data-bs-target]="'#faqAccountCollapse' + index" aria-expanded="false" [attr.aria-controls]="'faqAccountCollapse' + index">
             <!-- Header Section -->
-            <div class="row align-items-center w-100">
+            <div class="row align-items-center w-100 px-2">
               <div class="col-1">
                 <img [src]="'https://eu.ui-avatars.com/api/?name=' + emp_data?.subject + '&size=250'"
                 width="200" height="200" alt="Profile" class="img-fluid rounded-circle">

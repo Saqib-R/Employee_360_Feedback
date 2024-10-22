@@ -1,2 +1,3 @@
 Provide a comprehensive summary in only 100 words of the following feedbacks, focusing on leadership, project management skills, and the overall impact and contributions on the team and company
 generate a summary and also give a rating out of 5 to these feedbacks and generate in 15 words onlygenerate a summary in 10 words along with rating
+generate summary in 10 words
