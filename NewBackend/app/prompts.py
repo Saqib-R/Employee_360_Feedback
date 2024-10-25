@@ -5,13 +5,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 # Initialize Azure OpenAI client
-OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION") 
+AZURE_OPENAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION") 
 AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT") 
 AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 
 client = AzureOpenAI(
     api_key=AZURE_OPENAI_API_KEY,
-    api_version=OPENAI_API_VERSION,
+    api_version=AZURE_OPENAI_API_VERSION,
     azure_endpoint=AZURE_OPENAI_ENDPOINT
 )
 
@@ -22,7 +22,7 @@ def exp_summarize_feedback(feedbacks, prompt):
         return "No feedback provided."
 
     summaries = []
-    full_prompt = f"{prompt}:\n\n" + "\n".join(feedbacks)
+    full_prompt = f"{prompt}:\n\n" + + "\n".join(f"[{i+1}] {feedback}" for i, feedback in enumerate(feedbacks))
 
     try:
         res = client.chat.completions.create(
@@ -32,7 +32,7 @@ def exp_summarize_feedback(feedbacks, prompt):
                 {"role": "user", "content": full_prompt}
             ],
             temperature=0.7,
-            max_tokens=150,
+            # max_tokens=150,
             top_p=0.9,
             frequency_penalty=0.5
         )
@@ -51,7 +51,12 @@ def cust_summarize_feedback(feedbacks, user_prompt):
     if not user_prompt:
         return "No prompt provided."
 
-    prompt = f"{user_prompt}\n\n" + "\n".join(feedbacks)
+    prompt = (
+        f"{user_prompt}\n\n"
+        "Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)') as appropriate to highlight relevant examples, without requiring a sequential order:\n\n"
+        + "\n".join(f"[{i+1}] {feedback}" for i, feedback in enumerate(feedbacks))
+    )
+
 
     try:
         res = client.chat.completions.create(
@@ -61,7 +66,7 @@ def cust_summarize_feedback(feedbacks, user_prompt):
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=150,
+            # max_tokens=150,
             top_p=0.9,
             frequency_penalty=0.5
         )

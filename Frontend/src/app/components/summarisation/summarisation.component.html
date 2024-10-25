@@ -91,26 +91,228 @@
                 <i class="transition-icon" [ngClass]="{'bi-chevron-down': !isCollapsed, 'bi-chevron-up': isCollapsed}"></i>
               </div>
             </h2>
-            <div [attr.id]="'faqAccountCollapse0'" class="accordion-collapse collapse" style="margin-left: 1rem;" [attr.aria-labelledby]="'faqAccountHeading0'">
+            <div *ngIf="questionNo !== 'all'" [attr.id]="'faqAccountCollapse0'" class="accordion-collapse collapse" style="margin-left: 1rem;" [attr.aria-labelledby]="'faqAccountHeading0'">
               <div class="accordion-body">
                 <p *ngFor="let item of data?.[questionNo]; let i = index; let last = last"
                 [ngClass]="{'border-bottom': !last, 'pb-1' : !last}"
                   style="margin-left: 7px;"
                   class="d-flex align-items-center gap-2 text-sm-start pb-1">
-                  <i class="bi bi-arrow-right-short" style="font-size: 1.5rem;"></i>
+                  <!-- <i class="bi bi-dash" style="font-size: 1.5rem;"></i> -->
                   <span>
+                    <strong>{{i+1}} - </strong>
                     {{item}}
                   </span>
                 </p>
-
-
-                <!-- <div class="text-end mt-3">
-                  <button class="btn btn-primary btn-summarize">
-                    <i class="bi bi-arrow-repeat"></i> Summarize
-                  </button>
-                </div> -->
               </div>
             </div>
+
+
+            <!-- IF all -->
+            <div *ngIf="questionNo === 'all'" [attr.id]="'faqAccountCollapse0'" class="accordion-collapse collapse" style="margin-left: 1rem;" [attr.aria-labelledby]="'faqAccountHeading0'">
+              <div class="accordion-body">
+                <div class="tab-content p-3 border">
+
+
+                  <div id="business-need" class="tab-pane active">
+                    <div class="accordion" id="feedbackAccordion">
+
+                      <div class="accordion-item ">
+                        <h2 class="accordion-header" id="headingOne">
+                          <button
+                            class="accordion-button p-4 fw-bold fs-6"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne"
+                            aria-expanded="true"
+                            aria-controls="collapseOne"
+                          >
+                            1. Please provide a few examples of this individual's greatest
+                            achievements and/or contributions this year from your perspective.
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseOne"
+                          class="accordion-collapse collapse show"
+                          aria-labelledby="headingOne"
+                          data-bs-parent="#feedbackAccordion"
+                        >
+                          <div class="accordion-body">
+                            <div class="feedback-list">
+                              <p
+                                *ngFor="
+                                  let item of data?.question1;
+                                  let i = index;
+                                  let last = last
+                                "
+                                [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+                                style="margin-left: 7px"
+                                class="d-flex align-items-center gap-2 text-sm-start pb-1"
+                              >
+                                <!-- <i
+                                  class="bi bi-arrow-right-short"
+                                  style="font-size: 1.5rem"
+                                ></i> -->
+                                <span>
+                                  <strong>{{i+1}} - </strong>
+                                   {{ item }}
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="accordion-item ">
+                        <h2 class="accordion-header" id="headingTwo">
+                          <button
+                            class="accordion-button collapsed p-4 fw-bold fs-6"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo"
+                            aria-expanded="false"
+                            aria-controls="collapseTwo"
+                          >
+                            2. How has this individual demonstrated CustomerOrg's cultural
+                            values, according to the Career Framework? Please provide a few
+                            examples.
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseTwo"
+                          class="accordion-collapse collapse"
+                          aria-labelledby="headingTwo"
+                          data-bs-parent="#feedbackAccordion"
+                        >
+                          <div class="accordion-body">
+                            <div class="feedback-list">
+                              <p
+                                *ngFor="
+                                  let item of data?.question2;
+                                  let i = index;
+                                  let last = last
+                                "
+                                [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+                                style="margin-left: 7px"
+                                class="d-flex align-items-center gap-2 text-sm-start pb-1"
+                              >
+                                <!-- <i
+                                  class="bi bi-arrow-right-short"
+                                  style="font-size: 1.5rem"
+                                ></i> -->
+                                <span>
+                                  <strong>{{i + data?.question1.length + 1}} - </strong>
+                                  {{ item }}
+                                </span>
+                              </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="accordion-item ">
+                        <h2 class="accordion-header " id="headingThree">
+                          <button
+                            class="accordion-button collapsed p-4 fw-bold fs-6"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree"
+                            aria-expanded="false"
+                            aria-controls="collapseThree"
+                          >
+                            3. What skills or capabilities can this individual build or expand
+                            upon that would allow the individual to contribute even more value
+                            in the future?
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseThree"
+                          class="accordion-collapse collapse"
+                          aria-labelledby="headingThree"
+                          data-bs-parent="#feedbackAccordion"
+                        >
+                          <div class="accordion-body">
+                            <div class="feedback-list">
+                              <p
+                                *ngFor="
+                                  let item of data?.question3;
+                                  let i = index;
+                                  let last = last
+                                "
+                                [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+                                style="margin-left: 7px"
+                                class="d-flex align-items-center gap-2 text-sm-start pb-1"
+                              >
+                                <!-- <i
+                                  class="bi bi-arrow-right-short"
+                                  style="font-size: 1.5rem"
+                                ></i> -->
+                                <span>
+                                  <strong>{{i + data?.question1.length + data?.question2.length + 1}} - </strong>
+                                  {{ item }}
+                                </span>
+                              </p>
+                            </div>
+
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="accordion-item ">
+                        <h2 class="accordion-header fw-bold" id="headingFour">
+                          <button
+                            class="accordion-button collapsed p-4 fw-bold fs-6"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseFour"
+                            aria-expanded="false"
+                            aria-controls="collapseFour"
+                          >
+                            4. What skills should this individual focus on developing in the
+                            future to progress to the next level (if applicable)? Please refer
+                            to the Career Framework to review the expected results and
+                            behaviors at the next level.
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseFour"
+                          class="accordion-collapse collapse"
+                          aria-labelledby="headingFour"
+                          data-bs-parent="#feedbackAccordion"
+                        >
+                          <div class="accordion-body">
+
+                            <div class="feedback-list">
+                              <p
+                                *ngFor="
+                                  let item of data?.question4;
+                                  let i = index;
+                                  let last = last
+                                "
+                                [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+                                style="margin-left: 7px"
+                                class="d-flex align-items-center gap-2 text-sm-start pb-1"
+                              >
+                                <!-- <i
+                                  class="bi bi-arrow-right-short"
+                                  style="font-size: 1.5rem"
+                                ></i> -->
+                                <span>
+                                  <strong>{{i + data?.question1.length + data?.question2.length + data?.question3.length + 1}} - </strong>
+                                   {{ item }}
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <!-- <div class="card-body">
@@ -157,17 +359,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- <tr>
-                    <td>
-                      <div *ngIf="GenLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
-                        <span>Loading summaries...</span>
-                        <span  class="loader text-primary"></span>
-                      </div>
-                      <div *ngIf="!GenLoading" style="justify-content: start;">
-                        <p>{{ text || 'Summary Response will be loaded here' }}</p>
-                      </div>
-                    </td>
-                  </tr> -->
 
                   <tr>
                     <td>
@@ -177,7 +368,9 @@
                       </div>  <!-- Loading message -->
 
                       <div *ngIf="!GenLoading" style="justify-content: start;">
-                        <p>{{ text || 'Error while fetching response from the model. \nPlease try again later.' }}</p>
+                        <p style="text-wrap: wrap;">{{ text || 'Error while fetching response from the model. \nPlease try again later.' }}</p>
+                        <!-- <p *ngFor="let paragraph of summaries[0].split('\n')" [innerHTML]="formatText(paragraph)"></p> -->
+
                         <div class="d-flex align-items-center">
                           <!-- Copy Button -->
                           <button
@@ -199,51 +392,82 @@
                           </button>
                         </div>
                       </div>
-
-
                     </td>
                   </tr>
-
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
-      <!-- Third Table (Summary 2) -->
-      <!-- <div class="col-md-6 mb-4" >
-        <div class="card shadow border-light rounded" style="min-height: 250px; height: 350px;">
-          <div class="card-body">
 
-            <div class="table-responsive" style="height: 100%;">
+      <div class="col-md-12 d-flex justify-content-center my-3">
+        <button class="btn btn-primary px-4 py-2" (click)="getExpecSummary()">
+          <i class="bi bi-file-earmark-text-fill me-2"></i> Generate Expectation Summary
+        </button>
+      </div>
+
+      <!-- Third Table (Summary 2) -->
+      <div *ngIf="ExpecSummary" class="col-md-12 mb-4" >
+        <div class="card shadow border-light rounded " >
+          <div class="card-body">
+            <!-- <h6 class="card-title text-success mb-3">
+              <i class="fas fa-lightbulb text-warning me-2"></i> Summary 1
+              Response
+            </h6> -->
+            <div class="table-responsive " style="height: 100%;">
               <table class="table table-striped table-bordered" style="height: 93%;">
                 <thead class="table-light">
                   <tr>
                     <th scope="col" class="d-flex align-items-center gap-1">
                       <i class="bi bi-lightbulb text-warning me-2"></i>
-                      <span class="text-success">Response 2</span>
+                      <span class="text-success">Summary against {{data?.job_title}} expectations.</span>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
+
                   <tr>
                     <td>
-                      <div *ngIf="loading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
+                      <div *ngIf="ExpSumLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
                         <span>Loading summaries...</span>
-                        <span  class="loader text-primary"></span>
-                      </div>
-                      <div *ngIf="!loading" class="d-flex" style="justify-content: start;">
-                        <p>{{ summaries[1] || 'Summary Response will be loaded here' }}</p>
+                        <span class="loader text-primary"></span>
+                      </div>  <!-- Loading message -->
+
+                      <div *ngIf="!ExpSumLoading" style="justify-content: start;">
+                        <!-- <p>{{ ExpecSummary || 'Error while fetching response from the model. \nPlease try again later.' }}</p> -->
+
+                        <app-expectation-summary *ngFor="let item of summaryKeys" [key]="item" [summary]="ExpecSummary.summaries[item]" [rating]="ExpecSummary.ratings[item]"></app-expectation-summary>
+                        <div class="d-flex align-items-center">
+                          <!-- Copy Button -->
+                          <button
+                            class="btn btn-link text-muted"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Copy summary"
+                            (click)="copyToClipboard(text)">
+                            <i class="bi" [ngClass]="isCopied ? 'bi-check2' : 'bi-clipboard'" style="font-size: 1.1rem;"></i>
+                          </button>
+
+                          <!-- Re-Generate Button -->
+                          <!-- <button
+                            class="btn btn-link text-muted"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Re-Generate Summary">
+                            <i class="bi bi-arrow-repeat" (click)="reSummarize()" style="font-size: 1.1rem;"></i>
+                          </button> -->
+                        </div>
                       </div>
                     </td>
                   </tr>
-
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
+
     </div>
 
      <!-- Summarization Response Section -->

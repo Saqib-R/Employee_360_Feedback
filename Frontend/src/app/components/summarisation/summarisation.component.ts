@@ -23,7 +23,8 @@ export class SummarisationComponent {
     'question1' : "Question - 1:-",
     'question2': "Question - 2:-",
     'question3': "Question - 3:-",
-    'question4': "Question - 4:-"
+    'question4': "Question - 4:-",
+    'all': "All question's feedbacks"
   };
 
   promptInput: string = '';
@@ -43,8 +44,13 @@ export class SummarisationComponent {
   customSummary: string | null = null;
   text = '';
   cusText = '';
+  expText = ''
   private index = 0;
   isCopied = false;
+  ExpSumLoading: boolean ;
+  ExpecSummary: any | null = null;
+  summaryKeys : any;
+
 
 
   ngOnInit(): void {
@@ -80,16 +86,20 @@ export class SummarisationComponent {
         localStorage.setItem('QueNo', this.questionNo) ;
         localStorage.removeItem('summary')
         localStorage.removeItem('cusSummary');
+        localStorage.removeItem('expeSummary')
       }
 
     // Check if we have a valid summary in local storage
     const storedSummary = JSON.parse(localStorage?.getItem('summary'));
     const custSummary = localStorage.getItem('cusSummary');
+    const expecSummary = localStorage.getItem('expeSummary');
+
     if (storedSummary) {
         this.summaries = storedSummary;
         this.text = storedSummary;
         this.customSummary = custSummary;
         this.cusText = custSummary;
+        this.ExpecSummary = expecSummary
         // this.typeGeneratedSummary();
     } else {
         // If no summary in local storage, make the API call
@@ -100,6 +110,8 @@ export class SummarisationComponent {
                     this.toastr.success('Response Generated', 'Success...👍', {
                         timeOut: 50000,
                     });
+                    console.log(res);
+
                     this.GenLoading = false;
                     this.summaries = res?.summaries;
                     localStorage.setItem('summary', JSON.stringify(res?.summaries));
@@ -203,70 +215,77 @@ export class SummarisationComponent {
             this.text += this.summaries[0]?.charAt(i);
         }, i * 20); // Adjust the delay based on the index
     }
-}
+  }
 
-private typeCusSummary() {
-    for (let i = 0; i < this.customSummary?.length; i++) {
+  private typeCusSummary() {
+      for (let i = 0; i < this.customSummary?.length; i++) {
+          setTimeout(() => {
+              this.cusText += this.customSummary?.charAt(i);
+          }, i * 20); // Adjust the delay based on the index
+      }
+  }
+
+  private typeExpecSummary() {
+      for (let i = 0; i < this.ExpecSummary?.length; i++) {
+          setTimeout(() => {
+              this.expText += this.ExpecSummary?.charAt(i);
+          }, i * 10); // Adjust the delay based on the index
+      }
+  }
+
+  ngAfterViewInit() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+  }
+
+  copyToClipboard(text) {
+    if (text) {
+      navigator.clipboard.writeText(text).then(() => {
+        this.isCopied = true;
+
         setTimeout(() => {
-            this.cusText += this.customSummary?.charAt(i);
-        }, i * 20); // Adjust the delay based on the index
+          this.isCopied = false;
+        }, 2000);
+      }).catch(err => {
+        console.error('Could not copy text: ', err);
+      });
     }
-}
+  }
 
-ngAfterViewInit() {
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-}
 
-copyToClipboard(text) {
-  if (text) {
-    navigator.clipboard.writeText(text).then(() => {
-      this.isCopied = true;
+  getExpecSummary() {
+    if (this?.data?.[this.questionNo].length === 0 ) {
+      console.log('Please provide feedbacks .', 'Validation Error');
+      this.toastr.error('Something went wrong.', 'Validation Error');
+      return;
+    }
+    this.ExpSumLoading = true;
+    this.summarizeService.expSummarizeFeedback(this?.data?.[this.questionNo], this.data?.job_title).subscribe({
+      next: (response) => {
+        this.ExpecSummary = response;
+        console.log(response);
+        localStorage.setItem("expeSummary", response.summaries);
+        this.summaryKeys = Array.from(
+          new Map(Object.keys(this.ExpecSummary.summaries).map(key => [key.toLowerCase(), key])).values()
+        );
 
-      setTimeout(() => {
-        this.isCopied = false;
-      }, 2000);
-    }).catch(err => {
-      console.error('Could not copy text: ', err);
+        this.toastr.success('Summary generated successfully!', 'Success');
+        this.expText = '';
+        this.ExpSumLoading = false;
+        this.typeExpecSummary();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Failed to generate summary.', 'Error');
+        this.CustLoading = false;
+      }
     });
   }
-}
 
-// showNotification(message: string) {
-//   // You can implement a simple notification UI here.
-//   const notification = document.createElement('div');
-//   notification.innerText = message;
-//   notification.className = 'notification';
+  formatText(text: string): string {
+    return text.replace(/\**(.*?)\**/g, '<b class="fw-bold">$1</b>');
+  }
 
-//   // Style the notification
-//   Object.assign(notification.style, {
-//     position: 'fixed',
-//     bottom: '20px',
-//     right: '20px',
-//     padding: '10px 20px',
-//     backgroundColor: '#007bff',
-//     color: '#fff',
-//     borderRadius: '5px',
-//     transition: 'opacity 0.5s',
-//     opacity: 0,
-//     zIndex: 1000,
-//   });
-
-//   document.body.appendChild(notification);
-
-//   // Show the notification
-//   setTimeout(() => {
-//     notification.style.opacity = '1';
-//   }, 0);
-
-//   // Remove the notification after 2 seconds
-//   setTimeout(() => {
-//     notification.style.opacity = '0';
-//     setTimeout(() => {
-//       document.body.removeChild(notification);
-//     }, 500);
-//   }, 2000);
-// }
 
 
 }

@@ -20,6 +20,7 @@ import { LoginComponent } from './components/login/login.component';
 import { EmployeeOverviewComponent } from './components/employee-overview/employee-overview.component';
 import { EmpAccordianComponent } from './components/emp-accordian/emp-accordian.component';
 import { EmpAccordianCardComponent } from './components/emp-accordian-card/emp-accordian-card.component';
+import { ExpectationSummaryComponent } from './components/summarisation/expectation-summary/expectation-summary.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { EmpAccordianCardComponent } from './components/emp-accordian-card/emp-a
     LoginComponent,
     EmployeeOverviewComponent,
     EmpAccordianComponent,
-    EmpAccordianCardComponent
+    EmpAccordianCardComponent,
+    ExpectationSummaryComponent
   ],
   imports: [
     BrowserModule,

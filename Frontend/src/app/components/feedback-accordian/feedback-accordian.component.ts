@@ -21,8 +21,24 @@ export class FeedbackAccordianComponent {
   }
 
   sendData(data,question) {
-    this.sharedService.empData(data);
-    this.sharedService.queNo(question);
-    this.router.navigate(['/home/summarisation'])
+    if(question === "all") {
+      const allFeedback = [
+        ...data.question1,
+        ...data.question2,
+        ...data.question3,
+        ...data.question4
+      ];
+
+      // Adding the concatenated feedback to a new key 'all'
+      data.all = allFeedback;
+      this.sharedService.empData(data);
+      this.sharedService.queNo(question);
+      this.router.navigate(['/home/summarisation'])
+    }else{
+      this.sharedService.empData(data);
+      this.sharedService.queNo(question);
+      this.router.navigate(['/home/summarisation'])
+    }
+
   }
 }

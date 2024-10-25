@@ -5,7 +5,8 @@ const BASE_URL : string = API_URL;
 // ENDPOINTS
 export const endpoints = {
     VIEW_FEEDBACK_API: BASE_URL + "upload",
-    VIEW_SUMMARY_API: BASE_URL + "summarize",
+    VANILLA_SUMMARY_API: BASE_URL + "vanilla_summarize_feedback",
+    EXP_SUMMARY_API: BASE_URL + "expectations_summarize",
     EXPORT_SUMMARY_API: BASE_URL + "upload_feedback",
     DOWNLOAD_SUMMARY_CSV_API: BASE_URL + "download_feedback",
     CUSTOM_SUMMARY_API: BASE_URL + "custom_summarize",

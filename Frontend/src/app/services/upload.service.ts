@@ -53,7 +53,35 @@ export class UploadService {
       positionClass: 'toast-top-center'
     });
 
-    return this.http.post(endpoints.VIEW_SUMMARY_API, {feedbacks}).pipe(
+    return this.http.post(endpoints.VANILLA_SUMMARY_API, {feedbacks}).pipe(
+
+      catchError(error => {
+        if (loadingToast) {
+          this.toastr.clear();
+        }
+        this.toastr.error('Failed to Summarize Data', 'Error');
+
+        console.log(error);
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        if (loadingToast) {
+          this.toastr.clear();
+        }
+      })
+    );
+  }
+
+
+  // Expectaions-Summarize-Feedback-API
+  expSummarizeFeedback (feedbacks: string[], role : string) : Observable<any> {
+    const loadingToast = this.toastr.info('Generating summarized response...', 'Please wait', {
+      disableTimeOut: true,
+      closeButton: false,
+      positionClass: 'toast-top-center'
+    });
+
+    return this.http.post(endpoints.EXP_SUMMARY_API, {feedbacks, role}).pipe(
 
       catchError(error => {
         if (loadingToast) {
