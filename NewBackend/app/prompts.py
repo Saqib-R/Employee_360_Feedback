@@ -22,7 +22,7 @@ def exp_summarize_feedback(feedbacks, prompt):
         return "No feedback provided."
 
     summaries = []
-    full_prompt = f"{prompt}:\n\n" + + "\n".join(f"[{i+1}] {feedback}" for i, feedback in enumerate(feedbacks))
+    full_prompt = f"{prompt}:\n\n" + "\n".join(f"[{i+1}] {feedback}" for i, feedback in enumerate(feedbacks))
 
     try:
         res = client.chat.completions.create(

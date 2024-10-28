@@ -131,6 +131,96 @@ def vanilla_summarize_feedback():
     return jsonify({"summaries": [summary]})
 
 
+# def upload_feedback():
+#     if 'file' not in request.files:
+#         return jsonify({"error": "No file provided"}), 400
+
+#     file = request.files['file']
+#     if file.filename == '':
+#         return jsonify({"error": "No selected file"}), 400
+
+#     use_custom_prompt = request.form.get('use_custom_prompt', type=int)
+
+#     if use_custom_prompt == 2:
+#         custom_prompts = load_custom_prompts()
+#         if not custom_prompts:
+#             return jsonify({"error": "No custom prompt available. Please provide one or use the prebuilt prompt."}), 400
+#         current_prompt = custom_prompts[-1].strip()
+#     elif use_custom_prompt == 1:
+#         current_prompt = "Summarize the following feedback comprehensively, focusing on key achievements, contributions, strengths, weakness, area of improvement and skills. Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)') as appropriate to highlight relevant examples, without requiring a sequential order:\n\n"
+#     else:
+#         return jsonify({"error": "Invalid parameter for prompt selection."}), 400
+    
+#     print(use_custom_prompt,current_prompt)
+
+#     if file and allowed_file(file.filename):
+#         filename = secure_filename(file.filename)
+#         file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+#         file.save(file_path)
+
+#         df = pd.read_csv(file_path)
+#         summaries = []
+#         grouped = df.groupby('subject')
+
+#         for employee, group in grouped:
+#             level = group['level'].iloc[0]
+#             job_title = group['job_title'].iloc[0]
+#             function_code = group['function_code'].iloc[0]
+#             manager = group['manager'].iloc[0]
+#             emp_id = int(group['emp_id'].iloc[0])  # Convert to standard int
+
+#             for idx, question in enumerate(['question1', 'question2', 'question3', 'question4']):
+#                 feedbacks = group[question].dropna().tolist()
+                
+#                 start_time = datetime.now()
+#                 summary = exp_summarize_feedback(feedbacks, current_prompt)  
+#                 final_summary = ' '.join(summary)
+#                 end_time = datetime.now()
+                
+#                 duration = (end_time - start_time).total_seconds() 
+#                 str_timestamp = start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+#                 end_timestamp = end_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+
+#                 if idx == 0:
+#                     summaries.append({
+#                         "subject": employee,
+#                         "level": level,
+#                         "job_title": job_title,
+#                         "function_code": function_code,
+#                         "manager": manager,
+#                         "emp_id": emp_id,  # Already converted
+#                         "question": question,
+#                         "summary": final_summary,
+#                         "start_timestamp": str_timestamp,
+#                         "end_timestamp": end_timestamp,
+#                         "duration": duration
+#                     })
+#                 else:
+#                     summaries.append({
+#                         "subject": "", 
+#                         "level": "",   
+#                         "job_title": "",
+#                         "function_code": "",
+#                         "manager": "", 
+#                         "emp_id": None,  # Set to None for JSON serialization
+#                         "question": question,
+#                         "summary": final_summary,
+#                         "start_timestamp": str_timestamp,
+#                         "end_timestamp": end_timestamp,
+#                         "duration": duration
+#                     })
+
+#         output_filename = 'summarized_feedback.csv'
+#         output_path = os.path.join(current_app.config['UPLOAD_FOLDER'], output_filename)
+
+#         output_df = pd.DataFrame(summaries)
+#         output_df.to_csv(output_path, index=False)
+
+#         return jsonify({"message": "Summarization complete", "summaries": summaries}), 200
+
+#     return jsonify({"error": "Invalid file type"}), 400
+
+
 def upload_feedback():
     if 'file' not in request.files:
         return jsonify({"error": "No file provided"}), 400
@@ -140,18 +230,14 @@ def upload_feedback():
         return jsonify({"error": "No selected file"}), 400
 
     use_custom_prompt = request.form.get('use_custom_prompt', type=int)
-
-    if use_custom_prompt == 2:
-        custom_prompts = load_custom_prompts()
-        if not custom_prompts:
-            return jsonify({"error": "No custom prompt available. Please provide one or use the prebuilt prompt."}), 400
-        current_prompt = custom_prompts[-1].strip()
-    elif use_custom_prompt == 1:
-        current_prompt = "Summarize the following feedback comprehensively, focusing on key achievements, contributions, strengths, weakness, area of improvement and skills. Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)') as appropriate to highlight relevant examples, without requiring a sequential order:\n\n"
-    else:
-        return jsonify({"error": "Invalid parameter for prompt selection."}), 400
+    custom_prompts = load_custom_prompts() if use_custom_prompt == 2 else []
     
-    print(use_custom_prompt,current_prompt)
+    if use_custom_prompt == 2 and not custom_prompts:
+        return jsonify({"error": "No custom prompt available. Please provide one or use the prebuilt prompt."}), 400
+    current_prompt = custom_prompts[-1].strip() if use_custom_prompt == 2 else (
+        "Summarize the following feedback comprehensively in a paragraph, focusing on key achievements, contributions, strengths, weaknesses, areas of improvement, and skills. "
+        "Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)').\n\n"
+    )
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
@@ -167,20 +253,71 @@ def upload_feedback():
             job_title = group['job_title'].iloc[0]
             function_code = group['function_code'].iloc[0]
             manager = group['manager'].iloc[0]
-            emp_id = int(group['emp_id'].iloc[0])  # Convert to standard int
+            emp_id = int(group['emp_id'].iloc[0])  
+
+            # Step 1: Get and group expectations by attribute
+            chroma_expectations = get_query_expectations(job_title)
+            attribute_expectations = {}
+            for expectation in chroma_expectations:
+                if isinstance(expectation, str) and ", " in expectation:
+                    parts = expectation.split(", ")
+                    attribute = parts[1].split(": ")[1]  
+                    expectation_text = parts[3].split(": ")[1]  
+
+                    if attribute not in attribute_expectations:
+                        attribute_expectations[attribute] = []
+                    attribute_expectations[attribute].append(expectation_text)
+
+            # Step 2: Create a combined prompt for all attributes
+            expectations_prompt = "\n".join(
+                f"{attr}:\n" + "\n".join(expectations)
+                for attr, expectations in attribute_expectations.items()
+            )
 
             for idx, question in enumerate(['question1', 'question2', 'question3', 'question4']):
                 feedbacks = group[question].dropna().tolist()
                 
                 start_time = datetime.now()
-                summary = exp_summarize_feedback(feedbacks, current_prompt)  
-                final_summary = ' '.join(summary)
-                end_time = datetime.now()
+                feedback_summary = exp_summarize_feedback(feedbacks, current_prompt)  
+                feedback_summary_text = ' '.join(feedback_summary)
                 
-                duration = (end_time - start_time).total_seconds() 
+                # Create a comprehensive prompt with all attributes and their expectations
+                combined_prompt = (
+                    f"Summarize feedback for each attribute listed below as they apply to the role '{job_title}'. "
+                    "For each attribute, provide a structured response in 2-3 sentences that captures key skills, strengths, achievements, "
+                    "and areas for growth relevant to the attribute’s expectations. Focus on concise, varied phrasing and avoid repetitive language. "
+                    "Organize each attribute summary clearly under its attribute name and ensure a unique summary style for each.\n\n"
+                    "Attributes and Expectations:\n\n"
+                    + "\n".join([f"{attribute}:\n- " + "\n- ".join(expectations) for attribute, expectations in attribute_expectations.items()])
+                    + "\n\nFeedback:\n"
+                    + "\n".join(feedbacks)
+                )
+
+
+                # Generate expectation summary using the combined prompt
+                try:
+                    res = client.chat.completions.create(
+                        model="gpt-4o",
+                        messages=[
+                            {"role": "system", "content": "You are a helpful assistant."},
+                            {"role": "user", "content": combined_prompt}
+                        ],
+                        temperature=0.7,
+                        max_tokens=1500,
+                        top_p=0.9,
+                        frequency_penalty=0.5
+                    )
+                    expectations_summary = res.choices[0].message.content.strip()
+                except Exception as e:
+                    print(f"Error generating expectations summary: {e}")
+                    expectations_summary = "Error in summarization."
+
+                end_time = datetime.now()
+                duration = (end_time - start_time).total_seconds()
                 str_timestamp = start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
                 end_timestamp = end_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
 
+                # Store feedback and expectation summaries for each question
                 if idx == 0:
                     summaries.append({
                         "subject": employee,
@@ -188,9 +325,10 @@ def upload_feedback():
                         "job_title": job_title,
                         "function_code": function_code,
                         "manager": manager,
-                        "emp_id": emp_id,  # Already converted
+                        "emp_id": emp_id,  
                         "question": question,
-                        "summary": final_summary,
+                        "feedback_summary": feedback_summary_text,
+                        "expectation_summary": expectations_summary,
                         "start_timestamp": str_timestamp,
                         "end_timestamp": end_timestamp,
                         "duration": duration
@@ -202,9 +340,10 @@ def upload_feedback():
                         "job_title": "",
                         "function_code": "",
                         "manager": "", 
-                        "emp_id": None,  # Set to None for JSON serialization
+                        "emp_id": None, 
                         "question": question,
-                        "summary": final_summary,
+                        "feedback_summary": feedback_summary_text,
+                        "expectation_summary": expectations_summary,
                         "start_timestamp": str_timestamp,
                         "end_timestamp": end_timestamp,
                         "duration": duration
@@ -212,7 +351,6 @@ def upload_feedback():
 
         output_filename = 'summarized_feedback.csv'
         output_path = os.path.join(current_app.config['UPLOAD_FOLDER'], output_filename)
-
         output_df = pd.DataFrame(summaries)
         output_df.to_csv(output_path, index=False)
 
@@ -292,7 +430,8 @@ def get_summarized_feedback():
         
         if pd.notna(question_number):
             employees[emp_id]['questions'][question_number] = {
-                'summary': row['summary'],
+                'summary': row['feedback_summary'],
+                'expec_summary': row['expectation_summary'],
                 'start_time': row['start_timestamp'] if pd.notna(row['start_timestamp']) else None,
                 'end_time': row['end_timestamp'] if pd.notna(row['end_timestamp']) else None,
                 'duration': row['duration'] if pd.notna(row['duration']) else None
@@ -327,8 +466,6 @@ def get_feedback_data():
         # Convert the grouped DataFrame to a dictionary format
         result = grouped_data.to_dict(orient='records')
         return jsonify(result)
-
-
 
 
 

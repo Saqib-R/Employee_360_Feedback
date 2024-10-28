@@ -34,13 +34,13 @@ export class EmployeeOverviewComponent {
           }, 10);
 
           this.summCsvData = res;
-          // console.log("SUMMARIZED DATA.....",res);
+          console.log("SUMMARIZED DATA.....",res);
 
           // Now call the second API
           this.uploadService.getAllFeedbacks().subscribe({
             next: (res) => {
               this.feedbackData = res;
-              // console.log("FEEDBACK DARA....",res);
+              console.log("FEEDBACK DARA....",res);
 
               this.concatenateData(this.summCsvData, this.feedbackData);
               this.displayedData = this.concatenatedResults;
@@ -87,7 +87,7 @@ export class EmployeeOverviewComponent {
         function_code: firstItem.function_code,
         job_title: firstItem.job_title,
         level: firstItem.level,
-        subject: secondItem ? secondItem.subject : 'N/A', // Get subject from second API
+        subject: firstItem ? firstItem.subject : 'N/A', // Get subject from second API
         questions: {
           question1: secondItem ? secondItem.question1 : ['N/A'],
           question2: secondItem ? secondItem.question2 : ['N/A'],
@@ -99,6 +99,12 @@ export class EmployeeOverviewComponent {
           question2: firstItem.questions.question2.summary || 'N/A',
           question3: firstItem.questions.question3.summary || 'N/A',
           question4: firstItem.questions.question4.summary || 'N/A',
+        },
+        expSumm: {
+          question1: firstItem.questions.question1.expec_summary || 'N/A',
+          question2: firstItem.questions.question2.expec_summary || 'N/A',
+          question3: firstItem.questions.question3.expec_summary || 'N/A',
+          question4: firstItem.questions.question4.expec_summary || 'N/A',
         },
       };
     });

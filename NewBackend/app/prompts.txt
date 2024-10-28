@@ -7,3 +7,7 @@ generate a summary of 30 words only
 generate a summary of 30 words 
 generate a summary of minimum possible words please highlight important areas
 consider all the feedbacks and give 5 words that describe Jane only 5 words
+give 5 words only for alex based on his feedbacks whether its positive or negative
+generate a summary in 10 words
+generate a summary in 12 words only
+generate a summary of 15 words

@@ -92,7 +92,7 @@ export class SummarisationComponent {
     // Check if we have a valid summary in local storage
     const storedSummary = JSON.parse(localStorage?.getItem('summary'));
     const custSummary = localStorage.getItem('cusSummary');
-    const expecSummary = localStorage.getItem('expeSummary');
+    const expecSummary = JSON.parse(localStorage.getItem('expeSummary'));
 
     if (storedSummary) {
         this.summaries = storedSummary;
@@ -100,6 +100,11 @@ export class SummarisationComponent {
         this.customSummary = custSummary;
         this.cusText = custSummary;
         this.ExpecSummary = expecSummary
+        console.log("EXPEC SUMMARY FROM LOCAL STORAGE",this.ExpecSummary);
+        this.summaryKeys = null;
+        this.summaryKeys = Array.from(
+          new Map(Object.keys(this.ExpecSummary.summaries).map(key => [key.toLowerCase(), key])).values()
+        );
         // this.typeGeneratedSummary();
     } else {
         // If no summary in local storage, make the API call
@@ -264,7 +269,7 @@ export class SummarisationComponent {
       next: (response) => {
         this.ExpecSummary = response;
         console.log(response);
-        localStorage.setItem("expeSummary", response.summaries);
+        localStorage.setItem("expeSummary", JSON.stringify(this.ExpecSummary));
         this.summaryKeys = Array.from(
           new Map(Object.keys(this.ExpecSummary.summaries).map(key => [key.toLowerCase(), key])).values()
         );

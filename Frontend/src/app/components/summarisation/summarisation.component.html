@@ -437,7 +437,7 @@
                       <div *ngIf="!ExpSumLoading" style="justify-content: start;">
                         <!-- <p>{{ ExpecSummary || 'Error while fetching response from the model. \nPlease try again later.' }}</p> -->
 
-                        <app-expectation-summary *ngFor="let item of summaryKeys" [key]="item" [summary]="ExpecSummary.summaries[item]" [rating]="ExpecSummary.ratings[item]"></app-expectation-summary>
+                        <app-expectation-summary *ngFor="let item of summaryKeys" [key]="item" [summary]="ExpecSummary.summaries[item]" ></app-expectation-summary>
                         <div class="d-flex align-items-center">
                           <!-- Copy Button -->
                           <button
