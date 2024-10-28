@@ -26,6 +26,7 @@ client = AzureOpenAI(
 )
 
 
+# Service to upload CSV and read all employee data
 def upload_file():
     if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
         os.makedirs(current_app.config['UPLOAD_FOLDER'])
@@ -60,6 +61,7 @@ def upload_file():
         return jsonify(result)
 
 
+# Service to generate vanilla summary of feedbacks
 def vanilla_summarize_feedback():
     data = request.json
     feedbacks = data.get('feedbacks', [])
@@ -131,6 +133,7 @@ def vanilla_summarize_feedback():
     return jsonify({"summaries": [summary]})
 
 
+# Function for batch summarization
 # def upload_feedback():
 #     if 'file' not in request.files:
 #         return jsonify({"error": "No file provided"}), 400
@@ -359,6 +362,7 @@ def upload_feedback():
     return jsonify({"error": "Invalid file type"}), 400
 
 
+# Function to download the batch summarized feedback csv file
 def download_feedback():
     output_filename = 'summarized_feedback.csv'
     output_path = os.path.join(current_app.config['UPLOAD_FOLDER'], output_filename)
@@ -369,6 +373,7 @@ def download_feedback():
     return jsonify({"error": "File not found"}), 404
 
 
+# Function to generate custom summary based on user prompt 
 def custom_summarize():
     data = request.get_json()
 
@@ -386,6 +391,7 @@ def custom_summarize():
     return jsonify({"summary": summary})
 
 
+# Function  to get the employees summarized feedback data for managerial view
 def get_summarized_feedback():
     # Get the manager's name from the request
     manager_name = request.args.get('manager')
@@ -441,6 +447,7 @@ def get_summarized_feedback():
     return jsonify(list(employees.values()))
 
 
+# Function to get original feedbacks data of employees
 def get_feedback_data():
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], 'newEmpData.csv')
 
@@ -468,8 +475,7 @@ def get_feedback_data():
         return jsonify(result)
 
 
-
-# NEW SUMMARIZATION WITH EXPECTATIONS TECHNIQUE
+# Function to generate summary against expectaion (Includes RAG [ChromaDB])
 # Function to generate a summary and rate feedback based on expectations
 def generate_summary_and_rating_for_attribute(feedback_list, expectations_list, attribute=None, role=None):
     try:
