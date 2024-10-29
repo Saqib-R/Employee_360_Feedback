@@ -12,7 +12,6 @@ from openai import AzureOpenAI
 
 
 load_dotenv()
-# Initialize Azure OpenAI client
 AZURE_OPENAI_API_KEY = os.getenv('AZURE_OPENAI_API_KEY')
 AZURE_OPENAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION")
 AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
@@ -45,15 +44,15 @@ def upload_file():
         
         # Group by emp_id and aggregating questions into lists
         grouped_data = data.groupby('emp_id').agg({
-            'subject': 'first',      # Keep the first subject for each emp_id
-            'level': 'first',        # Keep the first level for each emp_id
-            'job_title': 'first',    # Keep the first job title for each emp_id
-            'function_code': 'first',# Keep the first function code for each emp_id
-            'manager': 'first',      # Keep the first manager for each emp_id
-            'question1': lambda x: list(x),  # Aggregate question1 responses into a list
-            'question2': lambda x: list(x),  # Aggregate question2 responses into a list
-            'question3': lambda x: list(x),  # Aggregate question3 responses into a list
-            'question4': lambda x: list(x)   # Aggregate question4 responses into a list
+            'subject': 'first',      
+            'level': 'first',        
+            'job_title': 'first',    
+            'function_code': 'first',
+            'manager': 'first',      
+            'question1': lambda x: list(x),  
+            'question2': lambda x: list(x),  
+            'question3': lambda x: list(x),  
+            'question4': lambda x: list(x)   
         }).reset_index()
         
         # Convert the grouped DataFrame to a dictionary format
@@ -238,9 +237,9 @@ def upload_feedback():
     if use_custom_prompt == 2 and not custom_prompts:
         return jsonify({"error": "No custom prompt available. Please provide one or use the prebuilt prompt."}), 400
     current_prompt = custom_prompts[-1].strip() if use_custom_prompt == 2 else (
-        "Summarize the following feedback comprehensively in a paragraph, focusing on key achievements, contributions, strengths, weaknesses, areas of improvement, and skills. "
-        "Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)').\n\n"
-    )
+            "Summarize the following feedback comprehensively in a paragraph, focusing on key achievements, contributions, strengths, weaknesses, areas of improvement, and skills. "
+            "Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)').\n\n"
+        )
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
@@ -398,7 +397,6 @@ def get_summarized_feedback():
 
     filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], 'summarized_feedback.csv')
     
-    # Read the summarized_feedback CSV file
     try:
         df = pd.read_csv(filepath)
     except Exception as e:
@@ -413,9 +411,7 @@ def get_summarized_feedback():
 
     employees = {}
 
-    # Iterate over each row in the filtered DataFrame
     for _, row in df.iterrows():
-        # Convert emp_id to int to avoid float representation
         emp_id = int(row['emp_id']) if pd.notna(row['emp_id']) else None
         subject = row['subject']
         level = row['level']
@@ -423,7 +419,6 @@ def get_summarized_feedback():
         function_code = row['function_code']
         question_number = row['question']
 
-        # Only initialize a new employee entry if the subject is found
         if emp_id is not None and emp_id not in employees:
             employees[emp_id] = {
                 'emp_id': emp_id,
@@ -459,15 +454,15 @@ def get_feedback_data():
         
         # Group by emp_id and aggregating questions into lists
         grouped_data = data.groupby('emp_id').agg({
-            'subject': 'first',      # Keep the first subject for each emp_id
-            'level': 'first',        # Keep the first level for each emp_id
-            'job_title': 'first',    # Keep the first job title for each emp_id
-            'function_code': 'first',# Keep the first function code for each emp_id
-            'manager': 'first',      # Keep the first manager for each emp_id
-            'question1': lambda x: list(x),  # Aggregate question1 responses into a list
-            'question2': lambda x: list(x),  # Aggregate question2 responses into a list
-            'question3': lambda x: list(x),  # Aggregate question3 responses into a list
-            'question4': lambda x: list(x)   # Aggregate question4 responses into a list
+            'subject': 'first',    
+            'level': 'first',        
+            'job_title': 'first',    
+            'function_code': 'first',
+            'manager': 'first',      
+            'question1': lambda x: list(x),  
+            'question2': lambda x: list(x),  
+            'question3': lambda x: list(x),  
+            'question4': lambda x: list(x)   
         }).reset_index()
         
         # Convert the grouped DataFrame to a dictionary format
@@ -496,12 +491,6 @@ def generate_summary_and_rating_for_attribute(feedback_list, expectations_list, 
             "Feedback:\n" + "\n".join(feedback_list)
         )
 
-
-        
-        # Log the prompt for debugging purposes
-        # print(f"Summarization prompt: {prompt}")
-        
-        # Example of the call to the GPT or other model (assumed to be OpenAI's GPT here)
         res = client.chat.completions.create(
             model="gpt-4o",
             messages=[
@@ -514,10 +503,8 @@ def generate_summary_and_rating_for_attribute(feedback_list, expectations_list, 
             frequency_penalty=0.5
         )
         
-        # Extract the summary and return it
         summary = res.choices[0].message.content.strip()
 
-        # Generate a rating based on the summary (can be more sophisticated later)
         rating = generate_rating_from_summary(summary)
         
         # Return the summary and rating
