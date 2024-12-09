@@ -1,6 +1,6 @@
 import os
 from flask import current_app
-
+import csv
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'csv'}
@@ -25,3 +25,110 @@ def load_custom_prompts():
         with open(prompt_file_path, 'r') as file:
             return file.readlines()
     return []
+
+
+
+# def update_or_create_csv(emp_data, summary, csv_path, status="not approved"):
+#     """
+#     Updates or creates a CSV file to store employee data and summaries.
+#     Ensures no duplicate rows for the same employee ID.
+#     """
+#     file_exists = os.path.exists(csv_path)
+    
+#     # Define the headers for the CSV file
+#     headers = ['emp_id', 'subject', 'job_title', 'manager', 'function_code', 'level', 'summary', 'status']
+
+#     # Load existing data if the file exists
+#     rows = []
+#     if file_exists:
+#         with open(csv_path, 'r') as csvfile:
+#             reader = csv.DictReader(csvfile)
+#             rows = list(reader)
+    
+#     # Ensure emp_id is a string for comparison
+#     emp_id = str(emp_data.get('emp_id'))  # Convert emp_id to string
+    
+#     # Prepare the new row
+#     new_row = {
+#         'emp_id': emp_id,
+#         'subject': emp_data.get('subject'),
+#         'job_title': emp_data.get('job_title'),
+#         'manager': emp_data.get('manager'),
+#         'function_code': emp_data.get('function_code'),
+#         'level': emp_data.get('level'),
+#         'summary': summary,
+#         'status': status
+#     }
+
+#     # Filter out any existing rows with the same emp_id
+#     rows = [row for row in rows if row['emp_id'] != emp_id]
+    
+#     # Add the new or updated row
+#     rows.append(new_row)
+
+#     # Debugging: Print rows to verify updates
+#     print(f"Updated rows: {rows}")
+
+#     # Write the updated data back to the CSV file
+#     with open(csv_path, 'w', newline='') as csvfile:
+#         writer = csv.DictWriter(csvfile, fieldnames=headers)
+#         writer.writeheader()
+#         writer.writerows(rows)
+
+#     print(f"Data successfully written to {csv_path}")
+
+
+import csv
+import os
+
+def update_or_create_csv(emp_data, summary, csv_path, status="not approved"):
+    """
+    Updates or creates a CSV file to store employee data and summaries.
+    Ensures no duplicate rows for the same employee ID and handles commas in text fields.
+    """
+    # print("SUMMARY", summary)
+    file_exists = os.path.exists(csv_path)
+    
+    # Define the headers for the CSV file
+    headers = ['emp_id', 'subject', 'job_title', 'manager', 'function_code', 'level', 'summary', 'status']
+
+    # Load existing data if the file exists
+    rows = []
+    if file_exists:
+        with open(csv_path, 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            rows = list(reader)
+    
+    # Ensure emp_id is a string for comparison
+    emp_id = str(emp_data.get('emp_id'))  # Convert emp_id to string
+    
+    # Prepare the new row
+    new_row = {
+        'emp_id': emp_id,
+        'subject': emp_data.get('subject'),
+        'job_title': emp_data.get('job_title'),
+        'manager': emp_data.get('manager'),
+        'function_code': emp_data.get('function_code'),
+        'level': emp_data.get('level'),
+        'summary': summary,
+        'status': status
+    }
+
+    # Filter out any existing rows with the same emp_id
+    rows = [row for row in rows if row['emp_id'] != emp_id]
+    
+    # Add the new or updated row
+    rows.append(new_row)
+
+    # Write the updated data back to the CSV file
+    with open(csv_path, 'w', newline='') as csvfile:
+        writer = csv.DictWriter(
+            csvfile,
+            fieldnames=headers,
+            quotechar='"',
+            quoting=csv.QUOTE_ALL
+        )
+        writer.writeheader()
+        writer.writerows(rows)
+
+    print(f"Data successfully written to {csv_path}")

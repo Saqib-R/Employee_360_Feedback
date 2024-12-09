@@ -19,16 +19,14 @@ export class EmpAccordianCardComponent {
 
   ngOnInit() {
     this.employee = this.employeeService.getEmployeeData();
-    if(this.employee) {
+    // if(this.employee) {
 
-      this.attributeQ1 = this.parseFeedbackText(this.employee?.expSumm?.question1);
-      this.attributeQ2 = this.parseFeedbackText(this.employee?.expSumm?.question2);
-      this.attributeQ3 = this.parseFeedbackText(this.employee?.expSumm?.question3);
-      this.attributeQ4 = this.parseFeedbackText(this.employee?.expSumm?.question4);
+    //   this.attributeQ1 = this.parseFeedbackText(this.employee?.expSumm?.question1);
+    //   this.attributeQ2 = this.parseFeedbackText(this.employee?.expSumm?.question2);
+    //   this.attributeQ3 = this.parseFeedbackText(this.employee?.expSumm?.question3);
+    //   this.attributeQ4 = this.parseFeedbackText(this.employee?.expSumm?.question4);
 
-    }
-
-
+    // }
   }
 
   goBack() {
@@ -37,23 +35,23 @@ export class EmpAccordianCardComponent {
 
 
 
-  parseFeedbackText(text: string) {
-    // Use regex to split by headings and capture content
-    const sections = text.split(/(?<=\*\*)\s*|\*\*\s*/).filter(Boolean);
+  // parseFeedbackText(text: string) {
+  //   // Use regex to split by headings and capture content
+  //   const sections = text.split(/(?<=\*\*)\s*|\*\*\s*/).filter(Boolean);
 
-    const parsedAttributes = [];
-    for (let i = 0; i < sections.length; i++) {
-      if (i % 2 === 0) { // This is the heading
-        parsedAttributes.push({
-          attribute: sections[i].trim().replace(/\*\*/g, ''), // Remove asterisks
-          content: sections[i + 1] ? sections[i + 1].trim() : '' // Get the next item as content
-        });
-      }
-    }
-    console.log(parsedAttributes);
+  //   const parsedAttributes = [];
+  //   for (let i = 0; i < sections.length; i++) {
+  //     if (i % 2 === 0) { // This is the heading
+  //       parsedAttributes.push({
+  //         attribute: sections[i].trim().replace(/\*\*/g, ''), // Remove asterisks
+  //         content: sections[i + 1] ? sections[i + 1].trim() : '' // Get the next item as content
+  //       });
+  //     }
+  //   }
+  //   console.log(parsedAttributes);
 
-    return parsedAttributes;
-  }
+  //   return parsedAttributes;
+  // }
 
 
 

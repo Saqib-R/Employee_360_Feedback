@@ -1,0 +1,96 @@
+<div class="parent-wrapper" style="background-color: #f4f6f9; padding: 30px;">
+  <div class="container-fluid bg-white rounded shadow-lg p-5">
+    <!-- Header Section -->
+    <div class="text-center mb-5">
+      <h2 class="fw-bold text-primary">
+        <i class="bi bi-lightbulb-fill"></i> Expectations Manager
+      </h2>
+      <p class="text-muted">Define and customize job roles and expectations effortlessly.</p>
+    </div>
+
+    <!-- Step 1: Job Role Selection -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-4">
+        <h5 class="fw-bold text-secondary mb-3">
+          <i class="bi bi-briefcase-fill"></i> Step 1: Select Job Role
+        </h5>
+        <p class="text-muted">Choose a job role to start managing expectations.</p>
+        <select
+          class="form-select form-select-lg"
+          [(ngModel)]="selectedJobRole"
+          (change)="onJobRoleChange()"
+        >
+          <option [value]="null" disabled>Select Job Role</option>
+          <option *ngFor="let role of jobRoles" [value]="role">{{ role }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Step 2: Manage Expectations -->
+    <div
+      *ngIf="selectedJobRole"
+      class="card border-0 shadow-sm mb-4"
+    >
+      <div class="card-body p-4">
+        <h5 class="fw-bold text-secondary mb-3">
+          <i class="bi bi-list-check"></i> Step 2: Manage Expectations for {{ selectedJobRole }}
+        </h5>
+        <p class="text-muted">Enter or generate expectations for the selected job role.</p>
+        <textarea
+          class="form-control mb-3"
+          [(ngModel)]="expectations"
+          placeholder="Enter expectations here"
+          rows="4"
+        ></textarea>
+        <div class="d-flex justify-content-center gap-3">
+          <button class="btn btn-primary btn-lg" (click)="generateWithAI()">
+            <i class="bi bi-magic"></i> Generate with AI
+          </button>
+          <button class="btn btn-secondary btn-lg" (click)="saveExpectations()">
+            <i class="bi bi-save"></i> Save
+          </button>
+        </div>
+        <div class="mt-4 text-center">
+          <label for="uploadCsv" class="form-label">Upload Expectations via CSV</label>
+          <input
+            type="file"
+            class="form-control w-50 mx-auto"
+            (change)="onFileUpload($event)"
+            id="uploadCsv"
+            accept=".csv"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Custom Prompt -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-4">
+        <h5 class="fw-bold text-secondary mb-3">
+          <i class="bi bi-chat-dots-fill"></i> Step 3: Custom Prompt
+        </h5>
+        <p class="text-muted">Craft custom prompts to suit your needs.</p>
+        <input
+          type="text"
+          class="form-control form-control-lg mb-3"
+          [(ngModel)]="customPromptTitle"
+          placeholder="Enter prompt title"
+        />
+        <textarea
+          class="form-control mb-3"
+          [(ngModel)]="customPromptContent"
+          placeholder="Enter custom prompt content"
+          rows="4"
+        ></textarea>
+        <div class="d-flex justify-content-center gap-3">
+          <button class="btn btn-primary btn-lg" (click)="generateCustomAI()">
+            <i class="bi bi-magic"></i> Generate with AI
+          </button>
+          <button class="btn btn-secondary btn-lg" (click)="saveCustomPrompt()">
+            <i class="bi bi-save"></i> Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

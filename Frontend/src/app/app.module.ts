@@ -21,6 +21,12 @@ import { EmployeeOverviewComponent } from './components/employee-overview/employ
 import { EmpAccordianComponent } from './components/emp-accordian/emp-accordian.component';
 import { EmpAccordianCardComponent } from './components/emp-accordian-card/emp-accordian-card.component';
 import { ExpectationSummaryComponent } from './components/summarisation/expectation-summary/expectation-summary.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { HrFeedbackOverviewComponent } from './components/hr-overview/hr-feedback-overview/hr-feedback-overview.component';
+import { HrFeedbackAccordianComponent } from './components/hr-overview/hr-feedback-accordian/hr-feedback-accordian.component';
+import { HrFeedbackAccCardComponent } from './components/hr-overview/hr-feedback-acc-card/hr-feedback-acc-card.component';
+import { ExpConfigComponent } from './components/exp-config/exp-config.component';
+import { ChatBotComponent } from './components/chat-bot/chat-bot.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +43,12 @@ import { ExpectationSummaryComponent } from './components/summarisation/expectat
     EmployeeOverviewComponent,
     EmpAccordianComponent,
     EmpAccordianCardComponent,
-    ExpectationSummaryComponent
+    ExpectationSummaryComponent,
+    HrFeedbackOverviewComponent,
+    HrFeedbackAccordianComponent,
+    HrFeedbackAccCardComponent,
+    ExpConfigComponent,
+    ChatBotComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +57,8 @@ import { ExpectationSummaryComponent } from './components/summarisation/expectat
     AppRoutingModule,
     CommonModule,
     ToastrModule.forRoot(),
-    FormsModule
+    FormsModule,
+    NgSelectModule
   ],
   providers: [
     UploadService

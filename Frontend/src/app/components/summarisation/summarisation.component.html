@@ -341,13 +341,10 @@
       </div>
 
       <!-- Second Table (Summary 1) -->
-      <div class="col-md-12 mb-4" >
+      <!-- <div class="col-md-12 mb-4" >
         <div class="card shadow border-light rounded " >
           <div class="card-body">
-            <!-- <h6 class="card-title text-success mb-3">
-              <i class="fas fa-lightbulb text-warning me-2"></i> Summary 1
-              Response
-            </h6> -->
+
             <div class="table-responsive " style="height: 100%;">
               <table class="table table-striped table-bordered" style="height: 93%;">
                 <thead class="table-light">
@@ -365,14 +362,12 @@
                       <div *ngIf="GenLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
                         <span>Loading summaries...</span>
                         <span class="loader text-primary"></span>
-                      </div>  <!-- Loading message -->
+                      </div>
 
                       <div *ngIf="!GenLoading" style="justify-content: start;">
                         <p style="text-wrap: wrap;">{{ text || 'Error while fetching response from the model. \nPlease try again later.' }}</p>
-                        <!-- <p *ngFor="let paragraph of summaries[0].split('\n')" [innerHTML]="formatText(paragraph)"></p> -->
 
                         <div class="d-flex align-items-center">
-                          <!-- Copy Button -->
                           <button
                             class="btn btn-link text-muted"
                             data-bs-toggle="tooltip"
@@ -382,7 +377,6 @@
                             <i class="bi" [ngClass]="isCopied ? 'bi-check2' : 'bi-clipboard'" style="font-size: 1.1rem;"></i>
                           </button>
 
-                          <!-- Re-Generate Button -->
                           <button
                             class="btn btn-link text-muted"
                             data-bs-toggle="tooltip"
@@ -399,22 +393,97 @@
             </div>
           </div>
         </div>
+      </div> -->
+
+      <!-- New Design -->
+      <div class="col-md-12 mb-4">
+        <div class="card shadow border-light rounded">
+          <div class="card-body">
+            <div class="table-responsive" style="height: 100%;">
+              <table class="table table-striped table-bordered" style="height: 93%;">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col" class="d-flex align-items-center gap-1">
+                      <i class="bi bi-lightbulb text-warning me-2"></i>
+                      <span class="text-success">Generated Summary</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <!-- Loading Indicator -->
+                      <div *ngIf="GenLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
+                        <span>Loading summaries...</span>
+                        <span class="loader text-primary"></span>
+                      </div>
+
+                      <!-- Summary Content -->
+                      <div *ngIf="!GenLoading" style="justify-content: start;">
+                        <p style="text-wrap: wrap;">
+                          {{ text || 'Error while fetching response from the model. \nPlease try again later.' }}
+                        </p>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex align-items-center gap-2">
+                          <!-- Copy Summary Button -->
+                          <button
+                            class="btn btn-link text-muted"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Copy summary"
+                            (click)="copyToClipboard(text)">
+                            <i
+                              class="bi"
+                              [ngClass]="isCopied ? 'bi-check2' : 'bi-clipboard'"
+                              style="font-size: 1.1rem;"></i>
+                          </button>
+
+                          <!-- Re-Generate Summary Button -->
+                          <button
+                            class="btn d-flex align-items-center gap-1 bg-warning text-white"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Re-Generate Summary"
+                            (click)="reSummarize()">
+                            <i class="bi bi-arrow-repeat" style="font-size: 1.1rem;"></i>
+                            <span>Try Again</span>
+
+                          </button>
+
+                          <!-- Approve Button -->
+                          <button
+                            class="btn d-flex align-items-center gap-1 bg-success text-white"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Approve Summary"
+                            (click)="approveFeedback()">
+                            <i class="bi bi-check-circle" style="font-size: 1.1rem;"></i>
+                            <span>Approve</span>
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="col-md-12 d-flex justify-content-center my-3">
+      <!-- NEW DESIGN END -->
+
+      <!-- <div class="col-md-12 d-flex justify-content-center my-3">
         <button class="btn btn-primary px-4 py-2" (click)="getExpecSummary()">
           <i class="bi bi-file-earmark-text-fill me-2"></i> Generate Expectation Summary
         </button>
-      </div>
+      </div> -->
 
       <!-- Third Table (Summary 2) -->
-      <div *ngIf="ExpecSummary" class="col-md-12 mb-4" >
+      <!-- <div *ngIf="ExpecSummary" class="col-md-12 mb-4" >
         <div class="card shadow border-light rounded " >
           <div class="card-body">
-            <!-- <h6 class="card-title text-success mb-3">
-              <i class="fas fa-lightbulb text-warning me-2"></i> Summary 1
-              Response
-            </h6> -->
             <div class="table-responsive " style="height: 100%;">
               <table class="table table-striped table-bordered" style="height: 93%;">
                 <thead class="table-light">
@@ -432,14 +501,13 @@
                       <div *ngIf="ExpSumLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center">
                         <span>Loading summaries...</span>
                         <span class="loader text-primary"></span>
-                      </div>  <!-- Loading message -->
+                      </div>
 
                       <div *ngIf="!ExpSumLoading" style="justify-content: start;">
-                        <!-- <p>{{ ExpecSummary || 'Error while fetching response from the model. \nPlease try again later.' }}</p> -->
+
 
                         <app-expectation-summary *ngFor="let item of summaryKeys" [key]="item" [summary]="ExpecSummary.summaries[item]" ></app-expectation-summary>
                         <div class="d-flex align-items-center">
-                          <!-- Copy Button -->
                           <button
                             class="btn btn-link text-muted"
                             data-bs-toggle="tooltip"
@@ -448,15 +516,6 @@
                             (click)="copyToClipboard(text)">
                             <i class="bi" [ngClass]="isCopied ? 'bi-check2' : 'bi-clipboard'" style="font-size: 1.1rem;"></i>
                           </button>
-
-                          <!-- Re-Generate Button -->
-                          <!-- <button
-                            class="btn btn-link text-muted"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            title="Re-Generate Summary">
-                            <i class="bi bi-arrow-repeat" (click)="reSummarize()" style="font-size: 1.1rem;"></i>
-                          </button> -->
                         </div>
                       </div>
                     </td>
@@ -466,7 +525,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
     </div>
 
@@ -538,7 +597,6 @@
   <!-- Prompt Input Section -->
   <div class="row mt-4" style="position: sticky; bottom: 0">
     <div class="col-12">
-      <!-- <h6>Provide a Custom Prompt:</h6> -->
       <div class="chat-input-group">
         <textarea
           class="form-control prompt-textarea"

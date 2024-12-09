@@ -1,60 +1,344 @@
-<div class="container" style="margin-top: -0.5rem; ">
-  <div class="d-flex flex-row justify-content-between align-items-center " style="width: 100%;">
-    <h2 style="font-size: 1.1rem; margin-bottom: 5px;">Upload CSV File</h2>
-    <div class="d-flex flex-column justify-content-center">
-      <div >
-        <form class="d-flex gap-3" role="search" (ngSubmit)="onSearchChange()">
-          <div style="display: col; gap: 5px;">
-              <input class="form-control me-2" type="search" placeholder="Search employee..." aria-label="Search" id="search" placeholder="Search by name..." list="suggestions" [(ngModel)]="searchTerm"  name="search"
-              (input)="onSearchChange()">
-              <datalist id="suggestions">
-              </datalist>
+<div class="container py-4 px-4 bg-white shadow-sm rounded">
+  <!-- Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary fs-4 mb-0">Upload Employee Feedbacks</h2>
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#expectationsModal"
+    >
+      Upload Expectations
+    </button>
+  </div>
+
+  <!-- Search Section -->
+  <div class="mb-4">
+    <label for="search" class="form-label fw-semibold">Search Employee</label>
+    <div class="input-group">
+      <input
+        type="search"
+        class="form-control rounded-start"
+        id="search"
+        placeholder="Type employee name..."
+        list="suggestions"
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()"
+      />
+      <datalist id="suggestions"></datalist>
+      <button class="btn btn-primary rounded-end" type="button" (click)="onSearchChange()">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- File Upload Section -->
+  <div class="p-4 bg-light rounded border">
+    <h5 class="text-secondary mb-3">Upload Feedback File</h5>
+    <form enctype="multipart/form-data">
+      <div class="row g-3 align-items-center">
+        <!-- File Input -->
+        <div class="col-md-8">
+          <label for="formFile" class="form-label text-muted">Select Employee Feedback File</label>
+          <input
+            class="form-control"
+            type="file"
+            id="formFile"
+            (change)="onFileChange($event)"
+            accept=".csv"
+          />
+        </div>
+
+        <!-- Upload & Reset Buttons -->
+        <div class="col-md-4 d-flex gap-3 mt-5">
+          <button
+            type="button"
+            class="btn btn-primary w-100"
+            (click)="onSubmit()"
+            [disabled]="!csvFile"
+          >
+            <i class="bi bi-cloud-upload-fill me-2"></i> Upload
+          </button>
+          <button type="button" class="btn btn-outline-secondary w-100" (click)="resetFile()">
+            <i class="bi bi-x-circle-fill me-2"></i> Reset
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+  <!-- Modal for Managing Expectations -->
+  <div
+  class="modal fade"
+  id="manageExpectationsModal"
+  tabindex="-1"
+  aria-labelledby="manageExpectationsModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="manageExpectationsModalLabel">Manage Expectations Data</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <!-- Description -->
+        <p class="text-muted">
+          Use the options below to either select an existing expectations dataset or upload a new file.
+        </p>
+
+        <!-- Options Section -->
+        <div class="d-flex flex-column gap-3">
+          <!-- Select Existing Expectations -->
+          <div>
+            <label class="form-label fw-semibold" for="existingExpectationsDropdown">
+              Select Existing Expectations
+            </label>
+            <div class="input-group position-relative">
+              <span class="input-group-text">
+                <i class="bi bi-folder2"></i>
+              </span>
+              <input
+                type="text"
+                id="existingExpectationsDropdown"
+                class="form-control"
+                [(ngModel)]="searchCollTerm"
+                placeholder="Search for expectations..."
+                (focus)="toggleDropdown(true)"
+                (input)="filterOptions()"
+              />
+              <!-- Dropdown Options -->
+              <div *ngIf="isDropdownOpen" class="dropdown-menu show">
+                <button
+                  *ngFor="let option of filteredCollOptions"
+                  class="dropdown-item"
+                  (click)="selectOption(option.name)"
+                >
+                  {{ option?.name }}
+                </button>
+              </div>
+            </div>
           </div>
-          <button class="btn btn-outline-success" id="view-feedback-btn" type="submit">Search</button>
-        </form>
+
+          <!-- Upload New Expectations -->
+          <div>
+            <label class="form-label fw-semibold">Upload New Expectations File</label>
+            <button
+              class="btn btn-outline-primary w-100"
+              data-bs-toggle="modal"
+              data-bs-target="#expectationsModal"
+            >
+              <i class="bi bi-cloud-upload me-2"></i>Upload New File
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- NEW DESIGN -->
+  <!-- <div class="container mt-0" style="width: 700px;">
+    <div class="card p-4 shadow">
+      <div class="d-flex justify-content-between mb-3 " >
+        <button style="width: 45%;"
+          class="btn btn-custom shadow-sm"
+          (click)="openModal('feedbackModal')"
+        >
+          <i class="bi bi-upload me-2"></i> Upload Feedback Data
+        </button>
+        <button style="width: 45%;"
+          class="btn btn-custom shadow-sm"
+          (click)="openModal('expectationsModal')"
+        >
+          <i class="bi bi-upload me-2 "></i> Upload Expectations Data
+        </button>
+      </div>
+
+      <div class="input-group mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-search"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search employee..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+        />
+      </div>
+
+      <div class="input-group position-relative">
+        <span class="input-group-text">
+          <i class="bi bi-folder2"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="searchCollTerm"
+          [placeholder]="'Select or Search collection...'"
+          (focus)="toggleDropdown(true)"
+          (input)="filterOptions()"
+        />
+      </div>
+
+      <div
+        *ngIf="isDropdownOpen && filteredCollOptions.length > 0"
+        class="dropdown-list position-absolute bg-white text-black border shadow mt-1"
+        style="z-index: 1000;"
+      >
+        <div
+          *ngFor="let option of filteredCollOptions"
+          class="dropdown-item p-2"
+          (click)="selectOption(option)"
+        >
+          {{ option.name }}
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <!-- NEW DESIGN -->
+
+  <!-- Feedback Modal -->
+  <div class="modal fade" style="margin-top: 15rem" id="feedbackModal" tabindex="-1"
+    aria-labelledby="feedbackModalLabel" aria-hidden="true" [@fadeInOut]="'in'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="feedbackModalLabel">
+            Upload Employee Feedback
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="closeModal('feedbackModal')"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Upload Area -->
+          <div class="upload-area" style="cursor: pointer">
+            <label for="feedbackFile" class="upload-label" *ngIf="!csvFile" style="cursor: pointer">
+              <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
+              <p class="upload-text">
+                Drag and drop a file here, or click to select a file
+              </p>
+              <input type="file" accept=".csv" class="form-control d-none" id="feedbackFile"
+                (change)="onFileChange($event)" />
+            </label>
+
+            <!-- Show file name if selected -->
+            <div class="file-name-display" *ngIf="csvFile">
+              <i class="bi bi-file-earmark-fill"></i>
+              <span>{{ csvFile?.name }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal('feedbackModal')">
+            Close
+          </button>
+          <button type="button" (click)="onSubmit()" class="btn btn-primary" [disabled]="!csvFile">
+            Upload
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <form enctype="multipart/form-data" style="width: 100%;">
-
-    <!-- UPLOAD CSV SECTION -->
-    <div class="mb-3 d-flex justify-content-between align-items-center w-100">
-      <div class="d-flex flex-row justify-content-between align-items-center " style="width: 100%;">
-        <div class="d-flex flex-column gap-0">
-          <label for="formFile" class="form-label" style="font-size: small;">Choose CSV File</label>
-          <input class="form-control w-100" type="file" id="formFile" (change)="onFileChange($event)" accept=".csv">
+  <!-- Expectations Modal -->
+  <div class="modal fade" style="margin-top: 15rem" id="expectationsModal" tabindex="-1"
+    aria-labelledby="expectationsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="expectationsModalLabel">Upload Expectations Data</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="d-flex gap-1 align-items-center mt-4" style="margin-left: 5rem;">
-          <button type="button" (click)="onSubmit()" class="btn btn-primary" [disabled]="!csvFile">Upload</button>
-          <button type="button" class="btn btn-danger ms-2" (click)="resetFile()">Reset</button>
-          <!-- <button type="button" class="btn btn-secondary ms-2" (click)="showData()">Show Data</button> -->
+        <div class="modal-body w-100">
+          <!-- Loader / Success Message Section -->
+          <div *ngIf="isLoading" class="d-flex justify-content-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Success Message Section -->
+          <div *ngIf="uploadSuccess" class="alert alert-success text-center" role="alert">
+            <div class="bouncy-icon-container">
+              <i class="bi bi-check-circle bouncy-icon" style="font-size: 50px;"></i>
+            </div>
+
+            <p class="mt-3">File uploaded successfully!</p>
+
+            <p class="mt-2">Do you want to continue embedding the data you uploaded?</p>
+
+          </div>
+
+
+          <!-- <div *ngIf="uploadSuccess" class="d-flex justify-content-center mt-2">
+            <button type="button" class="btn btn-secondary" (click)="wantToContinue(false)">Cancel</button>
+            <button type="button" class="btn btn-primary ms-2" (click)="wantToContinue(true)">Continue</button>
+          </div> -->
+
+          <!-- Upload Area (only visible when not loading or showing success) -->
+          <div *ngIf="!isLoading && !uploadSuccess" class="upload-area " style="cursor: pointer;">
+            <label for="expectationsFile" class="upload-label" style="cursor: pointer !important">
+              <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
+              <p class="upload-text" *ngIf="!expecFile">Drag and drop a file here, or click to select a file</p>
+              <p class="upload-text" *ngIf="expecFile">Selected file: {{ expecFile.name }}</p>
+              <input type="file" accept=".csv" class="form-control d-none" id="expectationsFile"
+                (change)="onExpecFileChange($event)" />
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button *ngIf="!uploadSuccess" type="button" class="btn btn-secondary"
+            (click)="closeModal('expectationsModal')">Close</button>
+          <button *ngIf="!uploadSuccess" type="button" class="btn btn-primary"
+            (click)="expecFileSubmit()">Upload</button>
+          <button *ngIf="uploadSuccess" type="button" class="btn btn-secondary"
+            (click)="wantToContinue(false)">Cancel</button>
+          <button *ngIf="uploadSuccess" type="button" class="btn btn-primary ms-2"
+            (click)="wantToContinue(true)">Continue</button>
+
         </div>
       </div>
-
     </div>
+  </div>
 
-  </form>
-
-
-<!-- FEEDBACKS ACCORDIAN -->
-<section *ngIf="displayedData" class="bsb-faq-3 py-3 py-md-3 py-xl-5" style="margin-top: -0.4rem;">
-  <div class="container">
-    <div class="row justify-content-md-center">
-      <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
-        <h2 class="mb-2 display-5 text-center fs-2">All Employee Feedbacks</h2>
-        <!-- <p class="text-secondary text-center lead fs-4">Welcome to our FAQ page, your one-stop resource for answers to commonly asked questions.</p>
+  <!-- FEEDBACKS ACCORDIAN -->
+  <section *ngIf="displayedData" class="bsb-faq-3 py-3 py-md-3 py-xl-5" style="margin-top: -0.4rem">
+    <div class="container">
+      <div class="row justify-content-md-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
+          <h2 class="mb-2 display-5 text-center fs-2">
+            All Employee Feedbacks
+          </h2>
+          <!-- <p class="text-secondary text-center lead fs-4">Welcome to our FAQ page, your one-stop resource for answers to commonly asked questions.</p>
         <p class="mb-5 text-center">Whether you're a new customer looking to learn more about what we offer or a long-time user seeking clarification on specific topics, this page has clear and concise information about our products and services.</p> -->
-        <hr class="w-50 mx-auto border-dark-subtle">
+          <hr class="w-50 mx-auto border-dark-subtle" />
+        </div>
       </div>
     </div>
-  </div>
 
-  <!--  EMPLOYEE FEEDBACKS CARD COMPONENT  -->
+    <!--  EMPLOYEE FEEDBACKS CARD COMPONENT  -->
     <div *ngIf="displayedData" class="p-3 bg-white rounded shadow-sm">
-      <app-feedback-accordian *ngFor="let item of displayedData; let i = index" [emp_data]="item" [index]="i"></app-feedback-accordian>
-
+      <app-feedback-accordian *ngFor="let item of displayedData; let i = index" [emp_data]="item"
+        [index]="i"></app-feedback-accordian>
     </div>
-
-</section>
+  </section>
 </div>

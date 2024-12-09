@@ -1,0 +1,38 @@
+<div class="card feedback-card border-0 shadow-lg mb-4" style="cursor: pointer;" (click)="goToEmployeeDetail(emp_data?.emp_id)">
+  <div class="card-body p-4">
+    <!-- Header -->
+    <div class="d-flex align-items-center">
+      <!-- Profile Image -->
+      <div class="me-3">
+        <img
+          [src]="'https://eu.ui-avatars.com/api/?name=' + emp_data?.subject + '&size=250'"
+          alt="Profile"
+          class="rounded-circle img-fluid"
+          style="width: 60px; height: 60px;"
+        >
+      </div>
+      <!-- Employee Details -->
+      <div class="flex-grow-1">
+        <h5 class="fw-bold mb-1">{{ emp_data?.subject }}</h5>
+        <div class="d-flex flex-wrap align-items-center gap-2 text-muted">
+          <span class="badge bg-primary">{{ emp_data?.job_title }}</span>
+          <span class="badge bg-light text-dark">{{ emp_data?.level }}</span>
+          <span class="badge bg-secondary">{{ emp_data?.function_code }}</span>
+        </div>
+      </div>
+      <!-- Status and Action Icon -->
+      <div class="text-end d-flex align-items-center gap-1">
+        <div
+          class="status-badge px-3 py-2 rounded fw-bold text-white"
+          [ngClass]="{
+            'bg-success': emp_data?.status === 'approved',
+            'bg-danger': emp_data?.status === 'not approved'
+          }"
+        >
+          {{ emp_data?.status === 'approved' ? 'Approved' : 'Not Approved' }}
+        </div>
+        <i class="bi bi-arrow-right-circle-fill text-muted fs-4"></i>
+      </div>
+    </div>
+  </div>
+</div>

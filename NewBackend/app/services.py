@@ -1,14 +1,15 @@
 import os
 import pandas as pd
 from flask import jsonify, request, current_app, send_file
-from .utils import allowed_file, load_custom_prompts, save_custom_prompt, load_prebuilt_prompt
+from .utils import allowed_file, load_custom_prompts, save_custom_prompt, load_prebuilt_prompt,update_or_create_csv
 from .prompts import exp_summarize_feedback, cust_summarize_feedback
 from datetime import datetime
-from .faiss_embeddings import query_faiss
 from .query_expectations import get_query_expectations
+from .embedding_service import create_and_store_embeddings_from_csv, list_collections
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from openai import AzureOpenAI
+import json
 
 
 load_dotenv()
@@ -60,6 +61,51 @@ def upload_file():
         return jsonify(result)
 
 
+# Service to Upload Expectation Data give by user
+def uploadExpectationData():
+    if not os.path.exists(current_app.config['EXPECTATION_FOLDER']):
+        os.makedirs(current_app.config['EXPECTATION_FOLDER'])
+
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'})
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'})
+    
+    if file and allowed_file(file.filename):
+        filepath = os.path.join(current_app.config['EXPECTATION_FOLDER'], file.filename)
+        file.save(filepath)
+        return jsonify({"path":filepath})
+
+
+# Service to store the embeddings of user's expectation data
+def storeExpectationData():
+    if not os.path.exists(current_app.config['EXPECTATION_FOLDER']):
+        os.makedirs(current_app.config['EXPECTATION_FOLDER'])
+
+    # Parse the JSON request data
+    data = request.get_json()
+
+    # Check if 'path' is in the request data
+    if not data or 'path' not in data:
+        return jsonify({'error': 'No file part or path provided'})
+
+    path = data['path']
+
+    # Validate the path
+    if path == '':
+        return jsonify({'error': 'No path provided'})
+    print(path)
+    file_name = os.path.basename(path)
+    
+    # filepath = os.path.join(current_app.config['EXPECTATION_FOLDER'], path)
+    res = create_and_store_embeddings_from_csv([path])
+    if(res == "Failed to save embeddings."):
+        return jsonify({"error" : "Failed to store embedding. Please try again"})
+    else:
+        return jsonify({"data": res})
+
 # Service to generate vanilla summary of feedbacks
 def vanilla_summarize_feedback():
     data = request.json
@@ -81,7 +127,7 @@ def vanilla_summarize_feedback():
     # )
 
     prompt = (
-    "Summarize the following feedback comprehensively in a paragraph, focusing on key achievements, contributions, strengths, weakness, area of improvement and skills. Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)') as appropriate to highlight relevant examples, without requiring a sequential order:\n\n"
+    "Summarize the following feedback comprehensively in a paragraph in 100 words only, focusing on key achievements, contributions, strengths, weakness, area of improvement and skills. Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)') as appropriate to highlight relevant examples, without requiring a sequential order:\n\n"
     + "\n".join(f"[{i+1}] {feedback}" for i, feedback in enumerate(feedbacks))
     )
 
@@ -132,7 +178,21 @@ def vanilla_summarize_feedback():
     return jsonify({"summaries": [summary]})
 
 
+# Get all collections
+def get_collections():
+    collections_list = list_collections()
+    return jsonify(collections_list)
+
+existing_collection = "expectations_embeddings"
+# Select collection
+def select_collection():
+    global existing_collection
+    existing_collection = request.json.get('collection_name')
+    print(existing_collection)
+    return jsonify(collection_name=existing_collection)
+
 # Function for batch summarization
+
 # def upload_feedback():
 #     if 'file' not in request.files:
 #         return jsonify({"error": "No file provided"}), 400
@@ -142,18 +202,14 @@ def vanilla_summarize_feedback():
 #         return jsonify({"error": "No selected file"}), 400
 
 #     use_custom_prompt = request.form.get('use_custom_prompt', type=int)
-
-#     if use_custom_prompt == 2:
-#         custom_prompts = load_custom_prompts()
-#         if not custom_prompts:
-#             return jsonify({"error": "No custom prompt available. Please provide one or use the prebuilt prompt."}), 400
-#         current_prompt = custom_prompts[-1].strip()
-#     elif use_custom_prompt == 1:
-#         current_prompt = "Summarize the following feedback comprehensively, focusing on key achievements, contributions, strengths, weakness, area of improvement and skills. Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)') as appropriate to highlight relevant examples, without requiring a sequential order:\n\n"
-#     else:
-#         return jsonify({"error": "Invalid parameter for prompt selection."}), 400
+#     custom_prompts = load_custom_prompts() if use_custom_prompt == 2 else []
     
-#     print(use_custom_prompt,current_prompt)
+#     if use_custom_prompt == 2 and not custom_prompts:
+#         return jsonify({"error": "No custom prompt available. Please provide one or use the prebuilt prompt."}), 400
+#     current_prompt = custom_prompts[-1].strip() if use_custom_prompt == 2 else (
+#             "Summarize the following feedback comprehensively in a paragraph, focusing on key achievements, contributions, strengths, weaknesses, areas of improvement, and skills. "
+#             "Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)').\n\n"
+#         )
 
 #     if file and allowed_file(file.filename):
 #         filename = secure_filename(file.filename)
@@ -169,20 +225,71 @@ def vanilla_summarize_feedback():
 #             job_title = group['job_title'].iloc[0]
 #             function_code = group['function_code'].iloc[0]
 #             manager = group['manager'].iloc[0]
-#             emp_id = int(group['emp_id'].iloc[0])  # Convert to standard int
+#             emp_id = int(group['emp_id'].iloc[0])  
+
+#             # Step 1: Get and group expectations by attribute
+#             chroma_expectations = get_query_expectations(job_title)
+#             attribute_expectations = {}
+#             for expectation in chroma_expectations:
+#                 if isinstance(expectation, str) and ", " in expectation:
+#                     parts = expectation.split(", ")
+#                     attribute = parts[1].split(": ")[1]  
+#                     expectation_text = parts[3].split(": ")[1]  
+
+#                     if attribute not in attribute_expectations:
+#                         attribute_expectations[attribute] = []
+#                     attribute_expectations[attribute].append(expectation_text)
+
+#             # Step 2: Create a combined prompt for all attributes
+#             expectations_prompt = "\n".join(
+#                 f"{attr}:\n" + "\n".join(expectations)
+#                 for attr, expectations in attribute_expectations.items()
+#             )
 
 #             for idx, question in enumerate(['question1', 'question2', 'question3', 'question4']):
 #                 feedbacks = group[question].dropna().tolist()
                 
 #                 start_time = datetime.now()
-#                 summary = exp_summarize_feedback(feedbacks, current_prompt)  
-#                 final_summary = ' '.join(summary)
-#                 end_time = datetime.now()
+#                 feedback_summary = exp_summarize_feedback(feedbacks, current_prompt)  
+#                 feedback_summary_text = ' '.join(feedback_summary)
                 
-#                 duration = (end_time - start_time).total_seconds() 
+#                 # Create a comprehensive prompt with all attributes and their expectations
+#                 combined_prompt = (
+#                     f"Summarize feedback for each attribute listed below as they apply to the role '{job_title}'. "
+#                     "For each attribute, provide a structured response in 2-3 sentences that captures key skills, strengths, achievements, "
+#                     "and areas for growth relevant to the attribute’s expectations. Focus on concise, varied phrasing and avoid repetitive language. "
+#                     "Organize each attribute summary clearly under its attribute name and ensure a unique summary style for each.\n\n"
+#                     "Attributes and Expectations:\n\n"
+#                     + "\n".join([f"{attribute}:\n- " + "\n- ".join(expectations) for attribute, expectations in attribute_expectations.items()])
+#                     + "\n\nFeedback:\n"
+#                     + "\n".join(feedbacks)
+#                 )
+
+
+#                 # Generate expectation summary using the combined prompt
+#                 try:
+#                     res = client.chat.completions.create(
+#                         model="gpt-4o",
+#                         messages=[
+#                             {"role": "system", "content": "You are a helpful assistant."},
+#                             {"role": "user", "content": combined_prompt}
+#                         ],
+#                         temperature=0.7,
+#                         max_tokens=1500,
+#                         top_p=0.9,
+#                         frequency_penalty=0.5
+#                     )
+#                     expectations_summary = res.choices[0].message.content.strip()
+#                 except Exception as e:
+#                     print(f"Error generating expectations summary: {e}")
+#                     expectations_summary = "Error in summarization."
+
+#                 end_time = datetime.now()
+#                 duration = (end_time - start_time).total_seconds()
 #                 str_timestamp = start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
 #                 end_timestamp = end_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
 
+#                 # Store feedback and expectation summaries for each question
 #                 if idx == 0:
 #                     summaries.append({
 #                         "subject": employee,
@@ -190,9 +297,10 @@ def vanilla_summarize_feedback():
 #                         "job_title": job_title,
 #                         "function_code": function_code,
 #                         "manager": manager,
-#                         "emp_id": emp_id,  # Already converted
+#                         "emp_id": emp_id,  
 #                         "question": question,
-#                         "summary": final_summary,
+#                         "feedback_summary": feedback_summary_text,
+#                         "expectation_summary": expectations_summary,
 #                         "start_timestamp": str_timestamp,
 #                         "end_timestamp": end_timestamp,
 #                         "duration": duration
@@ -204,9 +312,10 @@ def vanilla_summarize_feedback():
 #                         "job_title": "",
 #                         "function_code": "",
 #                         "manager": "", 
-#                         "emp_id": None,  # Set to None for JSON serialization
+#                         "emp_id": None, 
 #                         "question": question,
-#                         "summary": final_summary,
+#                         "feedback_summary": feedback_summary_text,
+#                         "expectation_summary": expectations_summary,
 #                         "start_timestamp": str_timestamp,
 #                         "end_timestamp": end_timestamp,
 #                         "duration": duration
@@ -214,14 +323,12 @@ def vanilla_summarize_feedback():
 
 #         output_filename = 'summarized_feedback.csv'
 #         output_path = os.path.join(current_app.config['UPLOAD_FOLDER'], output_filename)
-
 #         output_df = pd.DataFrame(summaries)
 #         output_df.to_csv(output_path, index=False)
 
 #         return jsonify({"message": "Summarization complete", "summaries": summaries}), 200
 
 #     return jsonify({"error": "Invalid file type"}), 400
-
 
 def upload_feedback():
     if 'file' not in request.files:
@@ -237,9 +344,10 @@ def upload_feedback():
     if use_custom_prompt == 2 and not custom_prompts:
         return jsonify({"error": "No custom prompt available. Please provide one or use the prebuilt prompt."}), 400
     current_prompt = custom_prompts[-1].strip() if use_custom_prompt == 2 else (
-            "Summarize the following feedback comprehensively in a paragraph, focusing on key achievements, contributions, strengths, weaknesses, areas of improvement, and skills. "
-            "Retain essential keywords and themes, and refer to feedback sources by including their feedback numbers in parentheses (e.g., '(1)', '(3)').\n\n"
-        )
+        "Summarize feedback comprehensively for all attributes and expectations listed below. "
+        "For each attribute, provide a concise summary that highlights key strengths, skills, and areas of growth. "
+        "Organize the summary by attributes and keep it structured."
+    )
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
@@ -247,18 +355,27 @@ def upload_feedback():
         file.save(file_path)
 
         df = pd.read_csv(file_path)
-        summaries = []
+
+        csv_path = os.path.join(current_app.config['CSV_FILE_PATH'])
+
         grouped = df.groupby('subject')
 
         for employee, group in grouped:
-            level = group['level'].iloc[0]
-            job_title = group['job_title'].iloc[0]
-            function_code = group['function_code'].iloc[0]
-            manager = group['manager'].iloc[0]
-            emp_id = int(group['emp_id'].iloc[0])  
+            emp_data = {
+                "emp_id": int(group['emp_id'].iloc[0]),
+                "subject": employee,
+                "job_title": group['job_title'].iloc[0],
+                "manager": group['manager'].iloc[0],
+                "function_code": group['function_code'].iloc[0],
+                "level": group['level'].iloc[0]
+            }
 
-            # Step 1: Get and group expectations by attribute
-            chroma_expectations = get_query_expectations(job_title)
+            all_feedbacks = []
+            for question in ['question1', 'question2', 'question3', 'question4']:
+                feedbacks = group[question].dropna().tolist()
+                all_feedbacks.extend(feedbacks)
+
+            chroma_expectations = get_query_expectations(emp_data['job_title'], existing_collection)
             attribute_expectations = {}
             for expectation in chroma_expectations:
                 if isinstance(expectation, str) and ", " in expectation:
@@ -270,93 +387,44 @@ def upload_feedback():
                         attribute_expectations[attribute] = []
                     attribute_expectations[attribute].append(expectation_text)
 
-            # Step 2: Create a combined prompt for all attributes
             expectations_prompt = "\n".join(
                 f"{attr}:\n" + "\n".join(expectations)
                 for attr, expectations in attribute_expectations.items()
             )
 
-            for idx, question in enumerate(['question1', 'question2', 'question3', 'question4']):
-                feedbacks = group[question].dropna().tolist()
-                
-                start_time = datetime.now()
-                feedback_summary = exp_summarize_feedback(feedbacks, current_prompt)  
-                feedback_summary_text = ' '.join(feedback_summary)
-                
-                # Create a comprehensive prompt with all attributes and their expectations
-                combined_prompt = (
-                    f"Summarize feedback for each attribute listed below as they apply to the role '{job_title}'. "
-                    "For each attribute, provide a structured response in 2-3 sentences that captures key skills, strengths, achievements, "
-                    "and areas for growth relevant to the attribute’s expectations. Focus on concise, varied phrasing and avoid repetitive language. "
-                    "Organize each attribute summary clearly under its attribute name and ensure a unique summary style for each.\n\n"
-                    "Attributes and Expectations:\n\n"
-                    + "\n".join([f"{attribute}:\n- " + "\n- ".join(expectations) for attribute, expectations in attribute_expectations.items()])
-                    + "\n\nFeedback:\n"
-                    + "\n".join(feedbacks)
+            combined_prompt = (
+                f"Summarize the given feedbacks for the role '{emp_data['job_title']}'. "
+                "The summary should directly reflect the feedback provided, without introducing new information or balancing positive and negative observations. "
+                "Each point of feedback must be integrated clearly, with specific feedback referenced using numbered citations (e.g., (1), (2)) for traceability. "
+                "Use the expectations for each attribute to provide context for the feedback. "
+                "Ensure the language is professional, concise, and accurately represents the feedback as it is, whether positive, negative, or neutral. "
+                "Avoid generalizations or assumptions not explicitly mentioned in the feedback. And give the summary in a single paragraph format.\n\n"
+                "Attributes and Expectations:\n\n"
+                + "\n".join([f"{attribute}:\n- " + "\n- ".join(expectations) for attribute, expectations in attribute_expectations.items()])
+                + "\n\nFeedback:\n"
+                + "\n".join([f"[Feedback {i+1}]: {feedback}" for i, feedback in enumerate(feedbacks)])
+            )
+
+            try:
+                res = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=[
+                        {"role": "system", "content": "You are an expert in analyzing and summarizing detailed feedback into a clear and concise narrative."},
+                        {"role": "user", "content": combined_prompt}
+                    ],
+                    temperature=0.7,
+                    max_tokens=1000,
+                    top_p=0.9,
+                    frequency_penalty=0.5
                 )
+                expectation_summary = res.choices[0].message.content.strip()
+            except Exception as e:
+                print(f"Error generating expectations summary: {e}")
+                expectation_summary = "Error in summarization."
 
+            update_or_create_csv(emp_data, expectation_summary, csv_path)
 
-                # Generate expectation summary using the combined prompt
-                try:
-                    res = client.chat.completions.create(
-                        model="gpt-4o",
-                        messages=[
-                            {"role": "system", "content": "You are a helpful assistant."},
-                            {"role": "user", "content": combined_prompt}
-                        ],
-                        temperature=0.7,
-                        max_tokens=1500,
-                        top_p=0.9,
-                        frequency_penalty=0.5
-                    )
-                    expectations_summary = res.choices[0].message.content.strip()
-                except Exception as e:
-                    print(f"Error generating expectations summary: {e}")
-                    expectations_summary = "Error in summarization."
-
-                end_time = datetime.now()
-                duration = (end_time - start_time).total_seconds()
-                str_timestamp = start_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-                end_timestamp = end_time.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-
-                # Store feedback and expectation summaries for each question
-                if idx == 0:
-                    summaries.append({
-                        "subject": employee,
-                        "level": level,
-                        "job_title": job_title,
-                        "function_code": function_code,
-                        "manager": manager,
-                        "emp_id": emp_id,  
-                        "question": question,
-                        "feedback_summary": feedback_summary_text,
-                        "expectation_summary": expectations_summary,
-                        "start_timestamp": str_timestamp,
-                        "end_timestamp": end_timestamp,
-                        "duration": duration
-                    })
-                else:
-                    summaries.append({
-                        "subject": "", 
-                        "level": "",   
-                        "job_title": "",
-                        "function_code": "",
-                        "manager": "", 
-                        "emp_id": None, 
-                        "question": question,
-                        "feedback_summary": feedback_summary_text,
-                        "expectation_summary": expectations_summary,
-                        "start_timestamp": str_timestamp,
-                        "end_timestamp": end_timestamp,
-                        "duration": duration
-                    })
-
-        output_filename = 'summarized_feedback.csv'
-        output_path = os.path.join(current_app.config['UPLOAD_FOLDER'], output_filename)
-        output_df = pd.DataFrame(summaries)
-        output_df.to_csv(output_path, index=False)
-
-        return jsonify({"message": "Summarization complete", "summaries": summaries}), 200
+        return jsonify({"message": "Summarization complete. Data saved to CSV."}), 200
 
     return jsonify({"error": "Invalid file type"}), 400
 
@@ -389,57 +457,40 @@ def custom_summarize():
 
     return jsonify({"summary": summary})
 
+# Function  to get the employees summarized feedback data for managerial view
+def get_hr_summarized_feedback():
+    filepath = os.path.join(current_app.config['CSV_FILE_PATH'])
+    try:
+        df = pd.read_csv(filepath, encoding='cp1252')        
+        data = df.to_dict(orient='records')        
+        return jsonify({"status": "success", "data": data}), 200    
+    except FileNotFoundError:
+        return jsonify({"status": "error", "message": "CSV file not found"}), 404
+    
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 # Function  to get the employees summarized feedback data for managerial view
 def get_summarized_feedback():
-    # Get the manager's name from the request
     manager_name = request.args.get('manager')
 
-    filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], 'summarized_feedback.csv')
+    filepath = os.path.join(current_app.config['CSV_FILE_PATH'])
     
     try:
-        df = pd.read_csv(filepath)
+        df = pd.read_csv(filepath, encoding='cp1252')        
     except Exception as e:
-        return jsonify({'error': f'Error reading the CSV file: {str(e)}'})
+        return jsonify({'error': f'Error reading the CSV file: {str(e)}'}), 500
 
-    # Fill forward the employee details to the empty rows
-    df.fillna(method='ffill', inplace=True)
-
-    # Filter by manager name if provided
     if manager_name:
         df = df[df['manager'].str.lower() == manager_name.lower()]
 
-    employees = {}
+    df = df[df['status'].str.lower() == 'approved']
 
-    for _, row in df.iterrows():
-        emp_id = int(row['emp_id']) if pd.notna(row['emp_id']) else None
-        subject = row['subject']
-        level = row['level']
-        job_title = row['job_title']
-        function_code = row['function_code']
-        question_number = row['question']
+    data = df.to_dict(orient='records')        
 
-        if emp_id is not None and emp_id not in employees:
-            employees[emp_id] = {
-                'emp_id': emp_id,
-                'subject': subject,
-                'function_code': function_code,
-                'job_title': job_title,
-                'level': level,
-                'questions': {}
-            }
-        
-        if pd.notna(question_number):
-            employees[emp_id]['questions'][question_number] = {
-                'summary': row['feedback_summary'],
-                'expec_summary': row['expectation_summary'],
-                'start_time': row['start_timestamp'] if pd.notna(row['start_timestamp']) else None,
-                'end_time': row['end_timestamp'] if pd.notna(row['end_timestamp']) else None,
-                'duration': row['duration'] if pd.notna(row['duration']) else None
-            }
-
-    # Convert the employee dictionary to a list of values (to get the desired JSON structure)
-    return jsonify(list(employees.values()))
+    # Return the filtered data
+    return jsonify({"status": "success", "data": data}), 200
 
 
 # Function to get original feedbacks data of employees
@@ -532,46 +583,234 @@ def generate_rating_from_summary(summary):
 
 
 # Main function to handle summarization and rating generation
+# def expectations_summarize():
+#     data = request.json
+#     feedbacks = data.get('feedbacks', [])
+#     role = data.get('role')
+#     # collection_name = data.get('collection_name')
+#     # print("REQUEST DATA...\n", data)
+
+#     if not feedbacks:
+#         return jsonify({"error": "No feedback provided"}), 400
+    
+#     # Step 1: Query expectations for the role (e.g., Vice President) from ChromaDB
+#     chroma_expectations = get_query_expectations(role, existing_collection)
+#     # print("CHROMA EXPECTATIONS DATA...\n", chroma_expectations)
+    
+#     # Step 2: Group expectations by attributes
+#     attribute_expectations = {}
+#     for index, expectation in enumerate(chroma_expectations):
+#         # Ensure the data is in the expected format
+#         if isinstance(expectation, str) and ", " in expectation:
+#             # Extracting the attribute and expectation
+#             parts = expectation.split(", ")
+#             attribute = parts[1].split(": ")[1]  # Get the attribute
+#             expectation_text = parts[3].split(": ")[1]  # Get the expectation
+
+#             if attribute not in attribute_expectations:
+#                 attribute_expectations[attribute] = []
+#             attribute_expectations[attribute].append(expectation_text)
+#         else:
+#             print(f"Unexpected format for expectation: {expectation}")
+
+#     # print("ATTRIBUTE EXPECTATIONS DATA...\n", attribute_expectations)
+
+#     summaries = {}
+#     ratings = {}
+    
+#     # Step 3: Summarize feedback for each attribute by passing both feedback and expectations
+#     for attribute, expectations_list in attribute_expectations.items():
+#         # Pass all feedback along with each attribute's expectations into the summarization
+#         summary, rating = generate_summary_and_rating_for_attribute(feedbacks, expectations_list, attribute, role)
+#         summaries[attribute] = summary
+#         ratings[attribute] = rating
+
+#     # Return only the summaries and ratings by attributes (no general category)
+#     return jsonify({"summaries": summaries, "ratings": ratings})
+
+
 def expectations_summarize():
     data = request.json
     feedbacks = data.get('feedbacks', [])
-    role = data.get('role')
-    # print("REQUEST DATA...\n", data)
+    empDetail = data.get('empDetail')
 
-    if not feedbacks:
-        return jsonify({"error": "No feedback provided"}), 400
+    if not feedbacks or not empDetail:
+        return jsonify({"error": "Missing feedbacks or employee details."}), 400
     
-    # Step 1: Query expectations for the role (e.g., Vice President) from ChromaDB
-    chroma_expectations = get_query_expectations(role)
-    # print("CHROMA EXPECTATIONS DATA...\n", chroma_expectations)
+    # Extract job role(e.g. Analyst, VP, etc)
+    job_title = empDetail.get('job_title')
     
-    # Step 2: Group expectations by attributes
+
+    csv_path = os.path.join(current_app.config['CSV_FILE_PATH'])
+
+    # Getting the expectations data from RAG(ChromaDB)
+    chroma_expectations = get_query_expectations(job_title, existing_collection)
+
+    # Preparing the attributes and expectations key value pair from the data that we have extracted
     attribute_expectations = {}
     for index, expectation in enumerate(chroma_expectations):
-        # Ensure the data is in the expected format
         if isinstance(expectation, str) and ", " in expectation:
-            # Extracting the attribute and expectation
             parts = expectation.split(", ")
-            attribute = parts[1].split(": ")[1]  # Get the attribute
-            expectation_text = parts[3].split(": ")[1]  # Get the expectation
-
+            attribute = parts[1].split(": ")[1]
+            expectation_text = parts[3].split(": ")[1]
             if attribute not in attribute_expectations:
                 attribute_expectations[attribute] = []
             attribute_expectations[attribute].append(expectation_text)
-        else:
-            print(f"Unexpected format for expectation: {expectation}")
-
-    # print("ATTRIBUTE EXPECTATIONS DATA...\n", attribute_expectations)
-
-    summaries = {}
-    ratings = {}
     
-    # Step 3: Summarize feedback for each attribute by passing both feedback and expectations
-    for attribute, expectations_list in attribute_expectations.items():
-        # Pass all feedback along with each attribute's expectations into the summarization
-        summary, rating = generate_summary_and_rating_for_attribute(feedbacks, expectations_list, attribute, role)
-        summaries[attribute] = summary
-        ratings[attribute] = rating
+    # Prompt(Combined with feedbacks and expectations data)
+    prompt = (
+        f"Summarize the given feedbacks for the role '{job_title}'. "
+        "The summary should directly reflect the feedback provided, without introducing new information or balancing positive and negative observations. "
+        "Each point of feedback must be integrated clearly, with specific feedback referenced using numbered citations (e.g., (1), (2)) for traceability. "
+        "Use the expectations for each attribute to provide context for the feedback. "
+        "Ensure the language is professional, concise, and accurately represents the feedback as it is, whether positive, negative, or neutral. "
+        "Avoid generalizations or assumptions not explicitly mentioned in the feedback. And give the summary in a single paragraph format.\n\n"
+        "Attributes and Expectations:\n\n"
+        + "\n".join([f"{attribute}:\n- " + "\n- ".join(expectations) for attribute, expectations in attribute_expectations.items()])
+        + "\n\nFeedback:\n"
+        + "\n".join([f"[Feedback {i+1}]: {feedback}" for i, feedback in enumerate(feedbacks)])
+    )
 
-    # Return only the summaries and ratings by attributes (no general category)
-    return jsonify({"summaries": summaries, "ratings": ratings})
+
+
+    try:
+        res = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are an expert in analyzing and summarizing detailed feedback into a clear and concise narrative."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=1500,
+            top_p=0.9,
+            frequency_penalty=0.5
+        )
+        expectations_summary = res.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"Error generating expectations summary: {e}")
+        expectations_summary = "Error in summarization."
+
+    # Save or update in the CSV
+    update_or_create_csv(empDetail, expectations_summary,csv_path)
+
+    return jsonify({"data": expectations_summary, "status": "Summary generated and saved successfully."})
+
+
+# Function to approve the summary
+def approve_summary():
+    data = request.json
+
+    # if empDetail not in data or summary not in data:
+    #     return jsonify(400, "No data provided")
+    
+    empDetail = data.get('empDetail')
+    summary = data.get('summary')
+
+    # print(data)
+
+    csv_path = os.path.join(current_app.config['CSV_FILE_PATH'])
+
+    update_or_create_csv(empDetail, summary, csv_path, "approved")
+
+    return jsonify({"status": "Summary approved successfully."})
+
+
+# Expectation querying API
+def promptExpec():
+    data = request.json
+
+    # Retrieve query from the incoming data
+    query = data.get("query")
+    if not query:
+        return jsonify({"status": 400, "message": "No query provided"}), 400
+    
+    
+    # Construct the prompt for the OpenAI API
+    # prompt = f"""
+    # Transform the following job role and associated expectations into a valid JSON structure. Follow these rules:
+    # - The output must strictly follow proper JSON syntax.
+    # - All keys and values must use double quotes (") as required by JSON.
+    # - Ensure that there are no parentheses, single quotes, or unstructured data.
+    # - Do not include any comments, explanations, or text outside of the JSON structure.
+    # - The resulting JSON must be valid and parseable using standard JSON parsers.
+
+    # JSON structure format:
+    # {{
+    #     "document_name": "<string>",
+    #     "job_title": "<string>",
+    #     "attributes": [
+    #         {{
+    #             "attribute_name": "<string>",
+    #             "expectations": ["<string>", "<string>", ...]
+    #         }},
+    #         {{
+    #             "attribute_name": "<string>",
+    #             "expectations": ["<string>", "<string>", ...]
+    #         }},
+    #         ...
+    #     ]
+    # }}
+
+    # Here is the data to format:
+    # {attribute_expectations}
+    # """
+
+
+    prompt = f"""
+    Please extract the job role from the given query : {query}
+    Only jo role needs to be extract like vice president, principal, etc without any extra comments, notes and explanation.
+    """
+
+    try:
+        res = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are an expert in analyzing the given data and returning it in a proper format."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.2,
+            max_tokens=100,
+            top_p=0.9,
+            frequency_penalty=0.5
+        )
+    except Exception as e:
+        return jsonify({"status": 500, "message": f"Error generating response: {str(e)}"}), 500
+
+    try:
+        response_content = res.choices[0].message.content.strip()
+        # cleaned_response = response_content.replace("```json", "").replace("```", "").strip()
+        print("OPENAI_RESPONSE",response_content)
+        if not response_content:
+            raise ValueError("Empty response from OpenAI API.")
+    except Exception as e:
+        return jsonify({"status": 500, "message": f"Error parsing response: {str(e)}"}), 500
+    
+
+    # Retrieve relevant data based on the query
+    try:
+        ragData = get_query_expectations(response_content, existing_collection)
+        
+    except Exception as e:
+        return jsonify({"status": 500, "message": f"Error retrieving expectations: {str(e)}"}), 500
+
+    attribute_expectations = {}
+    for index, expectation in enumerate(ragData):
+        if isinstance(expectation, str) and ", " in expectation:
+            parts = expectation.split(", ")
+            attribute = parts[1].split(": ")[1]
+            expectation_text = parts[3].split(": ")[1]
+            if attribute not in attribute_expectations:
+                attribute_expectations[attribute] = []
+            attribute_expectations[attribute].append(expectation_text)
+    
+    print("FORMATTED EXPECTATIONS",attribute_expectations)
+
+    # Return the formatted response to the frontend
+    try:
+        json_data = json.dumps(attribute_expectations, indent=4)
+        json_data = json.loads(json_data)
+
+        # formatted_response = json.loads(attribute_expectations)
+        return jsonify({"status": 200, "data": json_data}), 200
+    except Exception as e:
+        return jsonify({"status": 500, "message": f"Error formatting response: {str(e)}"}), 500

@@ -24,8 +24,6 @@ openai_client = AzureOpenAI(
     azure_endpoint=AZURE_OPENAI_ENDPOINT
 )
 
-
-
 chroma_client = chromadb.PersistentClient(
         path=os.path.join(current_app.config['STORE_NAME']), 
         settings=Settings(),
@@ -33,7 +31,8 @@ chroma_client = chromadb.PersistentClient(
         database=DEFAULT_DATABASE,
     )
 
-collection = chroma_client.get_or_create_collection(name=current_app.config['COLLECTION_NAME'])
+collection = chroma_client.get_or_create_collection(name=current_app.config["COLLECTION_NAME"])
+
 
 
 def get_query_embedding(query):
@@ -47,33 +46,32 @@ def get_query_embedding(query):
         logging.error(f"Error getting embedding for query: {e}")
         return None
 
-def get_query_expectations(role, top_k=30):
-    
-    print("API REQUEST CALL", role)
-    # Construct the query string
-    query_text = role
-    print(query_text)
+# def get_query_expectations(role, collecttion_name, top_k=30):
+#     print(collecttion_name)
 
-    # Get the embedding for the constructed query
-    query_embedding = get_query_embedding(query_text)
-    if query_embedding is None:
-        logging.error("Failed to get query embedding. Exiting query.")
-        return []
+#     # Construct the query string
+#     query_text = role
+#     print(query_text)
 
-    # Query the ChromaDB collection using the embedding
-    try:
-        print("inside query try to capture data")
-        results = collection.query(
-            query_embeddings=[query_embedding],
-            n_results=top_k
-        )
-        # print(results)
-        # return [result for result in enumerate(results['documents'][0]) if role.lower() in result.lower()]
-        return results['documents'][0]
-    except Exception as e:
-        print((f"Error querying ChromaDB: {e}"))
-        logging.error(f"Error querying ChromaDB: {e}")
-        return []
+#     # Get the embedding for the constructed query
+#     query_embedding = get_query_embedding(query_text)
+#     if query_embedding is None:
+#         logging.error("Failed to get query embedding. Exiting query.")
+#         return []
+
+#     # Query the ChromaDB collection using the embedding
+#     try:
+#         results = collection.query(
+#             query_embeddings=[query_embedding],
+#             n_results=top_k
+#         )
+#         print(results)
+#         # return [result for result in enumerate(results['documents'][0]) if role.lower() in result.lower()]
+#         return results['documents'][0]
+#     except Exception as e:
+#         print((f"Error querying ChromaDB: {e}"))
+#         logging.error(f"Error querying ChromaDB: {e}")
+#         return []
 
 # query_string = "Get all the expectations of leadership attribute of vice president"
 # results = get_query_expectations("Managing Director")
@@ -85,7 +83,35 @@ def get_query_expectations(role, top_k=30):
 #     print("No results found.")
 
 
+# NEW METHOD TRYING
+def get_query_expectations(role, collection_name, top_k=30):
+    query_text = role  # Using the role as the query text
+    query_embedding = get_query_embedding(query_text)
+    if query_embedding is None:
+        logging.error("Failed to get query embedding. Exiting query.")
+        return []
 
+    try:
+        results = collection.query(
+            query_embeddings=[query_embedding], 
+            n_results=top_k
+        )
+
+        # Assuming `results['metadatas']` contains metadata for each document
+        filtered_results = []
+        for doc, metadata in zip(results['documents'][0], results['metadatas'][0]):
+            if 'Title' in metadata and role.lower() in metadata['Title'].lower():
+                filtered_results.append(doc)
+
+        print("\nResult", results,"\nFormatted result", filtered_results)
+
+
+        return filtered_results
+    except Exception as e:
+        logging.error(f"Error querying ChromaDB: {e}")
+        return []
+
+# END
 
 
 

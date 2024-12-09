@@ -1,0 +1,189 @@
+<div class="container mt-4 p-5 bg-white rounded shadow">
+  <!-- Back Button -->
+  <div class="mb-4">
+    <button class="btn btn-outline-secondary d-flex align-items-center gap-2" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i> Back to Overview
+    </button>
+  </div>
+
+  <!-- Employee Header -->
+  <div class="container p-4 mb-4 rounded shadow-sm bg-light d-flex gap-4 align-items-center">
+    <!-- Profile Picture -->
+    <div class="profile-picture">
+      <img
+        [src]="'https://eu.ui-avatars.com/api/?name=' + employee?.subject + '&size=250'"
+        alt="Profile Picture"
+        class="img-fluid rounded-circle"
+        style="width: 100px; height: 100px;"
+      />
+    </div>
+    <!-- Employee Details -->
+    <div class="employee-info">
+      <h4 class="fw-bold mb-2">{{ employee?.subject }}</h4>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="badge bg-primary">{{ employee?.job_title }}</span>
+        <span class="badge bg-secondary">{{ employee?.level }}</span>
+        <span class="badge bg-dark-subtle text-dark">{{ employee?.function_code }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Accordion -->
+  <div class="accordion" id="feedbackAccordion">
+    <!-- Feedback Question 1 -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button
+          class="accordion-button p-3 fw-bold"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseOne"
+          aria-expanded="true"
+          aria-controls="collapseOne"
+        >
+          1. Please provide a few examples of this individual's greatest achievements and/or contributions this year from your perspective.
+        </button>
+      </h2>
+      <div
+        id="collapseOne"
+        class="accordion-collapse collapse show"
+        aria-labelledby="headingOne"
+        data-bs-parent="#feedbackAccordion"
+      >
+        <div class="accordion-body">
+          <p class="text-muted fw-bold">Original Feedbacks:</p>
+          <ul class="list-group">
+            <li
+              *ngFor="let item of employee?.questions?.question1; let i = index; let last = last"
+              [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+              class="list-group-item"
+            >
+              <strong>{{ i + 1 }}.</strong> {{ item }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback Question 2 -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo">
+        <button
+          class="accordion-button collapsed p-3 fw-bold"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseTwo"
+          aria-expanded="false"
+          aria-controls="collapseTwo"
+        >
+          2. How has this individual demonstrated CustomerOrg's cultural values, according to the Career Framework? Please provide a few examples.
+        </button>
+      </h2>
+      <div
+        id="collapseTwo"
+        class="accordion-collapse collapse"
+        aria-labelledby="headingTwo"
+        data-bs-parent="#feedbackAccordion"
+      >
+        <div class="accordion-body">
+          <p class="text-muted fw-bold">Original Feedbacks:</p>
+          <ul class="list-group">
+            <li
+              *ngFor="let item of employee?.questions?.question2; let i = index; let last = last"
+              [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+              class="list-group-item"
+            >
+              <strong>{{ i + 1 }}.</strong> {{ item }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback Question 3 -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingThree">
+        <button
+          class="accordion-button collapsed p-3 fw-bold"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseThree"
+          aria-expanded="false"
+          aria-controls="collapseThree"
+        >
+          3. What skills or capabilities can this individual build or expand upon that would allow the individual to contribute even more value in the future?
+        </button>
+      </h2>
+      <div
+        id="collapseThree"
+        class="accordion-collapse collapse"
+        aria-labelledby="headingThree"
+        data-bs-parent="#feedbackAccordion"
+      >
+        <div class="accordion-body">
+          <p class="text-muted fw-bold">Original Feedbacks:</p>
+          <ul class="list-group">
+            <li
+              *ngFor="let item of employee?.questions?.question3; let i = index; let last = last"
+              [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+              class="list-group-item"
+            >
+              <strong>{{ i + 1 }}.</strong> {{ item }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback Question 4 -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingFour">
+        <button
+          class="accordion-button collapsed p-3 fw-bold"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseFour"
+          aria-expanded="false"
+          aria-controls="collapseFour"
+        >
+          4. What skills should this individual focus on developing in the future to progress to the next level (if applicable)?
+        </button>
+      </h2>
+      <div
+        id="collapseFour"
+        class="accordion-collapse collapse"
+        aria-labelledby="headingFour"
+        data-bs-parent="#feedbackAccordion"
+      >
+        <div class="accordion-body">
+          <p class="text-muted fw-bold">Original Feedbacks:</p>
+          <ul class="list-group">
+            <li
+              *ngFor="let item of employee?.questions?.question4; let i = index; let last = last"
+              [ngClass]="{ 'border-bottom': !last, 'pb-1': !last }"
+              class="list-group-item"
+            >
+              <strong>{{ i + 1 }}.</strong> {{ item }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="alert alert-success mt-4">
+    <strong>Summary:</strong>
+    <p>{{ employee?.summary }}</p>
+  </div>
+
+  <!-- Action Buttons -->
+  <div *ngIf="employee?.status !== 'approved'" class="d-flex justify-content-end mt-4 gap-2">
+    <button class="btn btn-success" (click)="approveFeedback()">
+      <i class="bi bi-check-circle"></i> Approve
+    </button>
+    <button class="btn btn-warning" (click)="regenerateSummary(employee, 'all')">
+      <i class="bi bi-arrow-clockwise"></i> Regenerate
+    </button>
+  </div>
+</div>

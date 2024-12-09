@@ -33,7 +33,7 @@ export class EmployeeOverviewComponent {
             });
           }, 10);
 
-          this.summCsvData = res;
+          this.summCsvData = res.data;
           console.log("SUMMARIZED DATA.....",res);
 
           // Now call the second API
@@ -87,33 +87,21 @@ export class EmployeeOverviewComponent {
         function_code: firstItem.function_code,
         job_title: firstItem.job_title,
         level: firstItem.level,
+        status: firstItem.status,
+        manager: firstItem.manager,
         subject: firstItem ? firstItem.subject : 'N/A', // Get subject from second API
+        summary : firstItem.summary || 'N/A',
         questions: {
           question1: secondItem ? secondItem.question1 : ['N/A'],
           question2: secondItem ? secondItem.question2 : ['N/A'],
           question3: secondItem ? secondItem.question3 : ['N/A'],
           question4: secondItem ? secondItem.question4 : ['N/A'],
         },
-        ratings: {
-          question1: firstItem.questions.question1.summary || 'N/A',
-          question2: firstItem.questions.question2.summary || 'N/A',
-          question3: firstItem.questions.question3.summary || 'N/A',
-          question4: firstItem.questions.question4.summary || 'N/A',
-        },
-        expSumm: {
-          question1: firstItem.questions.question1.expec_summary || 'N/A',
-          question2: firstItem.questions.question2.expec_summary || 'N/A',
-          question3: firstItem.questions.question3.expec_summary || 'N/A',
-          question4: firstItem.questions.question4.expec_summary || 'N/A',
-        },
       };
     });
 
     console.log('Concatenated Results:', this.concatenatedResults); // Log final results
   }
-
-
-
 
   onSearchChange() {
     const term = this.searchTerm.toLowerCase();

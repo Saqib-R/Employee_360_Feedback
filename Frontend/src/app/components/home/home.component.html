@@ -1,12 +1,24 @@
-<div class="d-flex flex-column gap-3 mt-1" style="width: 88%; margin: auto;" >
+<div class="d-flex flex-column gap-3 mt-1" style="width: 88%; margin: auto;">
   <div class="d-flex flex-row justify-content-between align-items-center">
-    <div class="nav-links  ">
-      <!-- <a class="nav-item text-black" routerLink="/home" [routerLinkActive]="'active'">Home</a> -->
-      <!-- <a class="nav-item text-black" routerLink="/home/view-feedbacks" routerLinkActive="active">Employee Summary</a> -->
+    <div class="nav-links">
       <a class="nav-item text-black" routerLink="/home/upload-csv" routerLinkActive="active">Feedback Hub</a>
       <a class="nav-item text-black" routerLink="/home/summarisation" routerLinkActive="active">Summary</a>
+      <a class="nav-item text-black" routerLink="/home/hr-feedback-overview" routerLinkActive="active">Summary Overview</a>
       <a class="nav-item text-black" routerLink="/home/batch-summarisation" routerLinkActive="active">Bulk Summary</a>
+      <!-- <a class="nav-item text-black" routerLink="/home/config" routerLinkActive="active">Manage Expectations</a> -->
+      <!-- <a class="nav-item text-black" routerLink="/home/chat" routerLinkActive="active">Query Expectations</a> -->
     </div>
   </div>
   <router-outlet></router-outlet>
+
+  <!-- Floating Chatbot Button -->
+  <button
+    class="chatbot-btn btn btn-primary rounded-circle"
+    (click)="toggleChatbot()"
+  >
+    <i class="bi bi-chat-dots-fill"></i>
+  </button>
+
+  <!-- Chatbot Modal -->
+  <app-chat-bot *ngIf="showChatbot" class="chatbot-modal"></app-chat-bot>
 </div>

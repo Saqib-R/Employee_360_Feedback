@@ -1,46 +1,48 @@
-<section class="container bsb-faq-3 py-3 py-md-3 py-xl-5" style="margin-top: -0.4rem;">
-  <div *ngIf="!isLoading" class="container">
-    <div class="row justify-content-md-center">
-      <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
-        <h2 class="mb-2 display-5 text-center fs-2">Employee Performance Feedback Summary</h2>
-        <hr class="w-50 mx-auto border-dark-subtle">
-      </div>
-    </div>
-  </div>
 
-  <!-- Search Option -->
-  <div *ngIf="!isLoading" class="d-flex justify-content-center mb-4">
-    <form class="d-flex gap-3" role="search" (ngSubmit)="onSearchChange()">
-      <div style="flex-grow: 1;">
+
+
+
+<section class="container-fluid py-5 bg-light" style="min-height: 100vh;">
+  <div class="container">
+    <!-- Section Header -->
+    <div *ngIf="!isLoading" class="text-center mb-5">
+      <h2 class="fw-bold text-primary display-5">Employee Performance Feedback</h2>
+      <p class="text-muted">An overview of employee performance summaries and feedback.</p>
+      <hr class="w-25 mx-auto border-primary">
+    </div>
+
+    <!-- Search Option -->
+    <div *ngIf="!isLoading" class="d-flex justify-content-center mb-5">
+      <form class="d-flex align-items-center gap-3 w-100" role="search" (ngSubmit)="onSearchChange()" style="max-width: 700px;">
         <input
-          class="form-control"
+          class="form-control form-control-lg"
           type="search"
-          placeholder="Search employee..."
+          placeholder="Search employee by name or ID..."
           aria-label="Search"
           id="search"
           list="suggestions"
           [(ngModel)]="searchTerm"
           name="search"
-          (input)="onSearchChange()">
-        <datalist id="suggestions">
-        </datalist>
-      </div>
-      <button class="btn btn-outline-success" id="view-feedback-btn" type="submit">Search</button>
-    </form>
-  </div>
+          (input)="onSearchChange()"
+        >
+        <datalist id="suggestions"></datalist>
+        <button class="btn btn-primary btn-lg px-4 d-flex align-items-center gap-1" id="view-feedback-btn" type="submit">
+          <i class="bi bi-search"></i> <span>Search</span>
+        </button>
+      </form>
+    </div>
 
-  <!-- Employee Feedbacks Card Component -->
-  <div *ngIf="!isLoading" class="container">
-    <div class="row g-3"> <!-- Add row for the grid layout -->
-      <div *ngFor="let item of displayedData; let i = index" class="col-md-6"> <!-- Use col-md-6 for two columns -->
+    <!-- Employee Feedback Cards -->
+    <div *ngIf="!isLoading" class="row g-4">
+      <div *ngFor="let item of displayedData; let i = index" class="col-12 col-md-6 col-lg-6">
         <app-emp-accordian [emp_data]="item" [index]="i"></app-emp-accordian>
       </div>
     </div>
-  </div>
 
-  <!-- Loading Spinner (optional) -->
-  <div *ngIf="isLoading" class="d-flex gap-2 flex-column justify-content-center align-items-center" style="min-height: 80vh;">
-    <span>Loading summaries...</span>
-    <span class="loader text-primary"></span>
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="d-flex flex-column justify-content-center align-items-center" style="min-height: 60vh;">
+      <span class="text-muted mb-2">Loading feedback summaries...</span>
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
   </div>
 </section>

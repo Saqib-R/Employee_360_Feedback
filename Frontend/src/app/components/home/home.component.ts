@@ -7,5 +7,10 @@ import { SharedService } from '../../services/shared.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  
+  showChatbot = false;
+
+  toggleChatbot() {
+    this.showChatbot = !this.showChatbot;
+  }
+
 }

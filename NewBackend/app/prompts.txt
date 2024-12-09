@@ -11,3 +11,9 @@ give 5 words only for alex based on his feedbacks whether its positive or negati
 generate a summary in 10 words
 generate a summary in 12 words only
 generate a summary of 15 words
+give 10 words for this employee based on its feedbacks let it be positive or negative only 10 words
+define this person in single words only based on ites 360 feedbacks
+summarise only weakness and negative point of this employee based on its feedbacks 
+summarise only postive points of this employee based on its feedbacks
+summarise the feedbacks and include only positive things about him and make it shorter
+summarize the feedbacks in 20 words highlighting its posotive strengths

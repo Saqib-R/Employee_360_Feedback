@@ -9,3 +9,253 @@
 h2 {
   margin-bottom: 20px;
 }
+
+/* Upload area container */
+.upload-area {
+  border: 2px dashed rgba(0, 0, 0, 0.2); /* Dotted border */
+  background-color: rgba(0, 0, 0, 0.05); /* Transparent background */
+  border-radius: 8px;
+  min-height: 150px; /* Minimum height */
+  min-width: 100% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect */
+.upload-area:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Upload label styling */
+.upload-label {
+  min-width: 100%;
+  min-height: 100%;
+  cursor: pointer;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Upload icon styling */
+.upload-icon {
+  font-size: 36px;
+  color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 10px;
+}
+
+/* Upload text */
+.upload-text {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Optional: Add styles for smooth modal transition */
+.modal.fade {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal-dialog {
+  transform: translateY(0);
+}
+
+.modal-dialog .modal-content {
+  transition: transform 0.3s ease;
+}
+
+/* Bouncy icon animation */
+.bouncy-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bouncy-icon {
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* The "bounce" distance */
+  }
+}
+
+.upload-btn:hover {
+  background-color: #0056b3 !important; /* Darker blue */
+  transform: translateY(-2px); /* Subtle lift */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+
+/* Custom Dropdown Container */
+.dropdown-container {
+  position: relative;
+  width: 200px;
+  margin: 30px auto;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Label */
+.dropdown-label {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 8px;
+  font-weight: 500;
+  display: block;
+}
+
+/* Dropdown Input Box */
+.dropdown-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 3px;
+  position: relative;
+  background-color: white;
+}
+
+.dropdown-input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  width: 100%;
+  padding: 5px;
+}
+
+.dropdown-icon {
+  font-size: 18px;
+  cursor: pointer;
+  color: #007bff;
+}
+
+/* Dropdown List */
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.dropdown-item {
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #212529;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Selected Option Display */
+.selected-option {
+  margin-top: 15px;
+  font-size: 16px;
+  color: #007bff;
+  font-weight: bold;
+}
+
+/* Placeholder Text */
+.dropdown-input::placeholder {
+  color: #6c757d;
+  font-style: italic;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Card */
+.card {
+  background-color: white;
+  border-radius: 8px;
+}
+
+/* Buttons */
+.btn-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #ddd;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.btn-custom .bi {
+  font-size: 1.2rem;
+}
+
+/* Button hover and active effects */
+.btn-custom:hover,
+.btn-custom:active {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Input and Dropdown */
+.input-group-text {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+}
+
+.form-control {
+  border: 1px solid #ddd;
+  border-radius: 0 4px 4px 0;
+}
+
+.input-group .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: none;
+}
+
+/* Dropdown List */
+.dropdown-list {
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1ab;
+  color: #333;
+}
+
+/* Adjust icon size */
+.input-group-text .bi {
+  font-size: 1.2rem;
+}

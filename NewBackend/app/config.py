@@ -3,6 +3,8 @@ import os
 class Config:
     ALLOWED_EXTENSIONS = {'csv'}
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+    CSV_FILE_PATH = os.path.join(os.path.dirname(__file__), 'employeeDB/employee_summaries.csv')
+    EXPECTATION_FOLDER = os.path.join(os.path.dirname(__file__), 'expectations')
     PROMPT_FILE = os.path.join(os.path.dirname(__file__), 'prompts.txt') 
     INDEX_FILE= os.path.join(os.path.dirname(__file__), "faiss_index.index")
     IDS_FILE = os.path.join(os.path.dirname(__file__), "ids_list.npy")

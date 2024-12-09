@@ -2,6 +2,7 @@ import { Component, inject, Input, input } from '@angular/core';
 import { SharedService } from '../../services/shared.service';
 import { UploadService } from '../../services/upload.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 declare var bootstrap: any;
 
@@ -32,6 +33,7 @@ export class SummarisationComponent {
   sharedService : SharedService = inject(SharedService);
   summarizeService : UploadService = inject(UploadService);
   toastr : ToastrService = inject(ToastrService);
+  router : Router = inject(Router);
   summaries : any;
   isExpanded: boolean = false;
   data: any;
@@ -57,6 +59,7 @@ export class SummarisationComponent {
     this.sharedService.employeeData.subscribe(data =>{
       this.currName = data?.subject;
       this.data = data;
+      console.log(this.data);
     } );
     this.sharedService.questionNu.subscribe(question => {
 
@@ -103,23 +106,31 @@ export class SummarisationComponent {
         console.log("EXPEC SUMMARY FROM LOCAL STORAGE",this.ExpecSummary);
         this.summaryKeys = null;
         this.summaryKeys = Array.from(
-          new Map(Object.keys(this.ExpecSummary.summaries).map(key => [key.toLowerCase(), key])).values()
+          new Map(Object.keys(this?.ExpecSummary.summaries).map(key => [key.toLowerCase(), key])).values()
         );
         // this.typeGeneratedSummary();
     } else {
         // If no summary in local storage, make the API call
         if (this?.data?.[this.questionNo]) {
+          const empDetail = {
+            subject: this.data?.subject,
+            job_title: this.data?.job_title,
+            manager: this.data?.manager,
+            function_code: this.data?.function_code,
+            level: this.data?.level,
+            emp_id: this.data?.emp_id,
+          }
             this.GenLoading = true;
-            this.summarizeService.summarizeFeedback(this?.data?.[this.questionNo]).subscribe({
-                next: (res) => {
+            this.summarizeService.expSummarizeFeedback(this?.data?.[this.questionNo], empDetail).subscribe({
+              next: (res) => {
                     this.toastr.success('Response Generated', 'Success...👍', {
                         timeOut: 50000,
                     });
                     console.log(res);
 
                     this.GenLoading = false;
-                    this.summaries = res?.summaries;
-                    localStorage.setItem('summary', JSON.stringify(res?.summaries));
+                    this.summaries = res?.data;
+                    localStorage.setItem('summary', JSON.stringify(res?.data));
                     this.typeGeneratedSummary();
                 },
                 error: (err) => {
@@ -195,14 +206,22 @@ export class SummarisationComponent {
   reSummarize() {
     if (this?.data?.[this.questionNo]) {
       this.GenLoading = true;
-      this.summarizeService.summarizeFeedback(this?.data?.[this.questionNo]).subscribe({
-          next: (res) => {
+      const empDetail = {
+        subject: this.data?.subject,
+        job_title: this.data?.job_title,
+        manager: this.data?.manager,
+        function_code: this.data?.function_code,
+        level: this.data?.level,
+        emp_id: this.data?.emp_id,
+      }
+      this.summarizeService.expSummarizeFeedback(this?.data?.[this.questionNo], empDetail).subscribe({
+        next: (res) => {
               this.toastr.success('Response Generated', 'Success...👍', {
                   timeOut: 50000,
               });
               this.GenLoading = false;
-              this.summaries = res?.summaries;
-              localStorage.setItem('summary', JSON.stringify(res?.summaries));
+              this.summaries = res?.data;
+              localStorage.setItem('summary', JSON.stringify(res?.data));
               this.text = '';
               this.typeGeneratedSummary();
           },
@@ -215,9 +234,10 @@ export class SummarisationComponent {
   }
 
   private typeGeneratedSummary() {
-    for (let i = 0; i < this.summaries[0]?.length; i++) {
+
+    for (let i = 0; i < this.summaries?.length; i++) {
         setTimeout(() => {
-            this.text += this.summaries[0]?.charAt(i);
+            this.text += this.summaries?.charAt(i);
         }, i * 20); // Adjust the delay based on the index
     }
   }
@@ -264,20 +284,33 @@ export class SummarisationComponent {
       this.toastr.error('Something went wrong.', 'Validation Error');
       return;
     }
+    const empDetail = {
+      subject: this.data?.subject,
+      job_title: this.data?.job_title,
+      manager: this.data?.manager,
+      function_code: this.data?.function_code,
+      level: this.data?.level,
+      emp_id: this.data?.emp_id,
+    }
     this.ExpSumLoading = true;
-    this.summarizeService.expSummarizeFeedback(this?.data?.[this.questionNo], this.data?.job_title).subscribe({
+    this.summarizeService.expSummarizeFeedback(this?.data?.[this.questionNo], empDetail).subscribe({
       next: (response) => {
-        this.ExpecSummary = response;
+        this.ExpecSummary = response.data;
         console.log(response);
         localStorage.setItem("expeSummary", JSON.stringify(this.ExpecSummary));
-        this.summaryKeys = Array.from(
-          new Map(Object.keys(this.ExpecSummary.summaries).map(key => [key.toLowerCase(), key])).values()
-        );
+        this.GenLoading = false;
+        this.summaries = response.data;
+        localStorage.setItem('summary', JSON.stringify(response.data));
+        this.text = '';
+        this.typeGeneratedSummary();
+        // this.summaryKeys = Array.from(
+        //   new Map(Object.keys(this.ExpecSummary.summaries).map(key => [key.toLowerCase(), key])).values()
+        // );
 
-        this.toastr.success('Summary generated successfully!', 'Success');
-        this.expText = '';
-        this.ExpSumLoading = false;
-        this.typeExpecSummary();
+        // this.toastr.success('Summary generated successfully!', 'Success');
+        // this.expText = '';
+        // this.ExpSumLoading = false;
+        // this.typeExpecSummary();
       },
       error: (err) => {
         console.error(err);
@@ -291,6 +324,32 @@ export class SummarisationComponent {
     return text.replace(/\**(.*?)\**/g, '<b class="fw-bold">$1</b>');
   }
 
+  approveFeedback() {
+      const empDetail = {
+        subject: this.data?.subject,
+        job_title: this.data?.job_title,
+        manager: this.data?.manager,
+        function_code: this.data?.function_code,
+        level: this.data?.level,
+        emp_id: this.data?.emp_id,
+        status : this.data?.status
+      }
 
+      this.summarizeService.approveSummary( empDetail, this.summaries).subscribe({
+        next: (res) => {
+          console.log(res);
+
+              this.toastr.success('Summary Approved!', 'Success...👍', {
+                  timeOut: 50000,
+              });
+
+
+              this.router.navigate(['/home/upload-csv']);
+          },
+          error: (err) => {
+              console.error(err);
+          }
+      });
+    }
 
 }

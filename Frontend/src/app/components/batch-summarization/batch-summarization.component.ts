@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { UploadService } from '../../services/upload.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-batch-summarization',
@@ -15,6 +16,7 @@ export class BatchSummarizationComponent {
   toastr : ToastrService = inject(ToastrService);
   uploadService : UploadService = inject(UploadService);
   selectedPrompt: number = null;
+  router : Router = inject(Router)
 
   prompts: string[] = [
     'Generated Summary',
@@ -96,22 +98,25 @@ export class BatchSummarizationComponent {
   // Export functionality
   exportCsv() {
     console.log('Exporting CSV...');
-    this.uploadService.downloadSummaryCSV().subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'summarized_feedback.csv';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      },
-      error: (error) => {
-        console.log(error);
+    this.router.navigate(['home/hr-feedback-overview'])
+  //   this.uploadService.downloadSummaryCSV().subscribe({
+  //     next: (blob) => {
+  //       const url = window.URL.createObjectURL(blob);
+  //       const a = document.createElement('a');
+  //       a.href = url;
+  //       a.download = 'summarized_feedback.csv';
+  //       document.body.appendChild(a);
+  //       a.click();
+  //       document.body.removeChild(a);
+  //       window.URL.revokeObjectURL(url);
+  //     },
+  //     error: (error) => {
+  //       console.log(error);
 
-      }
-    }
-  )}
+  //     }
+  //   }
+  // )
+
+}
 
 }

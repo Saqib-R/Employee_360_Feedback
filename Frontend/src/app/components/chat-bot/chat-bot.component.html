@@ -1,0 +1,66 @@
+<div class="chatbot-container d-flex flex-column bg-white shadow rounded">
+  <!-- Header -->
+  <div class="chatbot-header bg-primary text-white p-3 d-flex align-items-center justify-content-between rounded-top">
+    <h5 class="m-0">AI Chatbot Assistant</h5>
+    <button class="btn btn-sm btn-light" (click)="clearChat()">
+      <i class="bi bi-trash3"></i> Clear Chat
+    </button>
+  </div>
+
+  <!-- Chat Messages -->
+  <div class="chat-messages p-3 flex-grow-1 overflow-auto" #chatContainer>
+    <!-- Message Template -->
+    <ng-container *ngFor="let message of chatMessages; let last = last">
+      <!-- User Message -->
+      <div class="message user-message d-flex justify-content-end mb-3">
+        <div class="message-content bg-primary text-white p-2 rounded shadow-sm">
+          {{ message.text }}
+        </div>
+      </div>
+
+      <!-- Bot Message -->
+      <div *ngIf="message.response" class="message bot-message d-flex justify-content-start mb-3">
+        <div class="message-content bg-light p-3 rounded shadow-sm">
+          <div class="response-sections">
+            <div *ngFor="let key of objectKeys(message.response)" class="response-section">
+              <div class="response-header fw-bold text-primary mb-2">
+                {{ key }}
+              </div>
+              <ul class="response-list ps-3">
+                <li *ngFor="let expectation of message.response[key]" class="response-item mb-1">
+                  {{ expectation }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing Loader -->
+      <div *ngIf="isLoading && last" class="bot-message d-flex justify-content-start mb-3">
+        <div class="message-content bg-light p-3 rounded shadow-sm d-flex align-items-center">
+          <span class="spinner-border spinner-border-sm text-primary me-2"></span>
+          Typing...
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Input Section -->
+  <div class="chat-input d-flex p-3 bg-light rounded-bottom">
+    <input
+      [(ngModel)]="userInput"
+      type="text"
+      class="form-control rounded-start"
+      placeholder="Type your message here..."
+      (keydown.enter)="sendMessage()"
+    />
+    <button
+      class="btn btn-primary rounded-end"
+      (click)="sendMessage()"
+      [disabled]="!userInput.trim()"
+    >
+      <i class="bi bi-send-fill"></i>
+    </button>
+  </div>
+</div>

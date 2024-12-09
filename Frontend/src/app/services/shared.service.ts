@@ -25,7 +25,6 @@ export class SharedService {
   }
   csvEmpData(data : any) {
     console.log(data);
-
     this.csvData.next(data);
   }
 
