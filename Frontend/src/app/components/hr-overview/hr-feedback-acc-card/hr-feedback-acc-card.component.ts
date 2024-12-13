@@ -22,6 +22,11 @@ export class HrFeedbackAccCardComponent {
   attributeQ2 = [];
   attributeQ3 = [];
   attributeQ4 = [];
+  showChatbot = false;
+
+  toggleChatbot() {
+    this.showChatbot = !this.showChatbot;
+  }
 
   ngOnInit() {
     this.employee = this.employeeService.getEmployeeData();
@@ -93,7 +98,8 @@ export class HrFeedbackAccCardComponent {
         question1 : [...data.questions?.question1],
         question2 : [...data.questions?.question2],
         question3 : [...data.questions?.question3],
-        question4 : [...data.questions?.question4]
+        question4 : [...data.questions?.question4],
+        all : allFeedback
       }
       this.sharedService.empData(empData);
       this.sharedService.queNo(question);

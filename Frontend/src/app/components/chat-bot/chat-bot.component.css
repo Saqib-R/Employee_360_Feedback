@@ -272,3 +272,13 @@ ul li i {
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+
+::ng-deep .markdown h3 {
+  color: #007bff;
+  font-size: 1.2rem !important;
+}
+
+::ng-deep .markdown ul {
+  margin-left: 20px;
+}

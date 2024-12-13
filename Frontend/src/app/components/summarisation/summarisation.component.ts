@@ -238,7 +238,7 @@ export class SummarisationComponent {
     for (let i = 0; i < this.summaries?.length; i++) {
         setTimeout(() => {
             this.text += this.summaries?.charAt(i);
-        }, i * 20); // Adjust the delay based on the index
+        }, i * 10);
     }
   }
 
@@ -246,7 +246,7 @@ export class SummarisationComponent {
       for (let i = 0; i < this.customSummary?.length; i++) {
           setTimeout(() => {
               this.cusText += this.customSummary?.charAt(i);
-          }, i * 20); // Adjust the delay based on the index
+          }, i * 10); // Adjust the delay based on the index
       }
   }
 
@@ -254,7 +254,7 @@ export class SummarisationComponent {
       for (let i = 0; i < this.ExpecSummary?.length; i++) {
           setTimeout(() => {
               this.expText += this.ExpecSummary?.charAt(i);
-          }, i * 10); // Adjust the delay based on the index
+          }, i * 5); // Adjust the delay based on the index
       }
   }
 

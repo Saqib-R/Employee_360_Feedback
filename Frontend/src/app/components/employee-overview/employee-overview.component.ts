@@ -16,7 +16,11 @@ export class EmployeeOverviewComponent {
   searchTerm: string = '';
   isLoading : boolean;
   concatenatedResults: any[] = [];
+  showChatbot = false;
 
+  toggleChatbot() {
+    this.showChatbot = !this.showChatbot;
+  }
 
   ngOnInit(): void {
     const conRes = JSON.parse(localStorage.getItem('concatenatedResults'));

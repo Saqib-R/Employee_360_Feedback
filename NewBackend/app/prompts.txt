@@ -17,3 +17,7 @@ summarise only weakness and negative point of this employee based on its feedbac
 summarise only postive points of this employee based on its feedbacks
 summarise the feedbacks and include only positive things about him and make it shorter
 summarize the feedbacks in 20 words highlighting its posotive strengths
+can you please summarize this feedbacks in 20 words
+can you please point out the negative things about this feedbacks 
+generate a summary in 10 words
+can you generate a summary of this feedbacks in 20 words

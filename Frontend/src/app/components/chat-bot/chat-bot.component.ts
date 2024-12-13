@@ -31,11 +31,19 @@ export class ChatBotComponent {
   //     }[];
   //   };
   // }[] = [];
-  chatMessages: { text: string; response: { [key: string]: string[] } | null }[] = [];
+  // chatMessages: { text: string; response: { [key: string]: string[] } | null }[] = [];
+  chatMessages: { text: string; response: string | null }[] = [];
   isLoading: boolean = false;
   chatService : UploadService = inject(UploadService)
   toastr : ToastrService = inject(ToastrService)
   objectKeys = Object.keys;
+
+  ngOnInit() {
+    const chatData =JSON.parse(localStorage.getItem("chatData"))
+    if(chatData) {
+      this.chatMessages = chatData;
+    }
+  }
 
   sendMessage() {
     if (!this.userInput.trim()) return;
@@ -51,7 +59,7 @@ export class ChatBotComponent {
         console.log("Chatbot Response...",res);
         this.chatMessages[this.chatMessages.length - 1].response = res.data;
         console.log("CHAT ", this.chatMessages[this.chatMessages.length - 1]);
-
+        localStorage.setItem("chatData", JSON.stringify(this.chatMessages))
         this.isLoading = false;
       },
       error: (err) => {

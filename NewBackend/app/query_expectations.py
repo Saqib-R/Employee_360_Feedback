@@ -84,7 +84,7 @@ def get_query_embedding(query):
 
 
 # NEW METHOD TRYING
-def get_query_expectations(role, collection_name, top_k=30):
+def get_query_expectations(role, collection_name, top_k=40):
     query_text = role  # Using the role as the query text
     query_embedding = get_query_embedding(query_text)
     if query_embedding is None:

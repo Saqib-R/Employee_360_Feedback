@@ -1,6 +1,7 @@
 import os
 from flask import current_app
 import csv
+import pandas as pd
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'csv'}
@@ -78,8 +79,6 @@ def load_custom_prompts():
 #     print(f"Data successfully written to {csv_path}")
 
 
-import csv
-import os
 
 def update_or_create_csv(emp_data, summary, csv_path, status="not approved"):
     """
@@ -132,3 +131,24 @@ def update_or_create_csv(emp_data, summary, csv_path, status="not approved"):
         writer.writerows(rows)
 
     print(f"Data successfully written to {csv_path}")
+
+
+#  Function to return the last row from summarized data
+def get_last_row_of_csv():
+    filepath = os.path.join(current_app.config['CSV_FILE_PATH'])
+    try:
+        # Read the CSV file
+        df = pd.read_csv(filepath, encoding='cp1252')
+
+        # Check if the DataFrame is empty
+        if df.empty:
+            return ({"status": "error", "message": "CSV file is empty"})
+        
+        # Get the last row of the DataFrame
+        last_row = df.tail(1).to_dict(orient='records')[0] 
+        return last_row
+
+    except FileNotFoundError:
+        return "CSV file not found"
+    except Exception as e:
+        return ({"status": "error", "message": str(e)})

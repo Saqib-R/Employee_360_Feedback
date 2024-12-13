@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from flask import jsonify, request, current_app, send_file
-from .utils import allowed_file, load_custom_prompts, save_custom_prompt, load_prebuilt_prompt,update_or_create_csv
+from .utils import allowed_file, load_custom_prompts, save_custom_prompt, load_prebuilt_prompt,update_or_create_csv, get_last_row_of_csv
 from .prompts import exp_summarize_feedback, cust_summarize_feedback
 from datetime import datetime
 from .query_expectations import get_query_expectations
@@ -724,41 +724,10 @@ def promptExpec():
     if not query:
         return jsonify({"status": 400, "message": "No query provided"}), 400
     
-    
-    # Construct the prompt for the OpenAI API
-    # prompt = f"""
-    # Transform the following job role and associated expectations into a valid JSON structure. Follow these rules:
-    # - The output must strictly follow proper JSON syntax.
-    # - All keys and values must use double quotes (") as required by JSON.
-    # - Ensure that there are no parentheses, single quotes, or unstructured data.
-    # - Do not include any comments, explanations, or text outside of the JSON structure.
-    # - The resulting JSON must be valid and parseable using standard JSON parsers.
-
-    # JSON structure format:
-    # {{
-    #     "document_name": "<string>",
-    #     "job_title": "<string>",
-    #     "attributes": [
-    #         {{
-    #             "attribute_name": "<string>",
-    #             "expectations": ["<string>", "<string>", ...]
-    #         }},
-    #         {{
-    #             "attribute_name": "<string>",
-    #             "expectations": ["<string>", "<string>", ...]
-    #         }},
-    #         ...
-    #     ]
-    # }}
-
-    # Here is the data to format:
-    # {attribute_expectations}
-    # """
-
 
     prompt = f"""
     Please extract the job role from the given query : {query}
-    Only jo role needs to be extract like vice president, principal, etc without any extra comments, notes and explanation.
+    Only job role needs to be extract like vice president, principal, etc without any extra comments, notes and explanation.
     """
 
     try:
@@ -779,7 +748,7 @@ def promptExpec():
     try:
         response_content = res.choices[0].message.content.strip()
         # cleaned_response = response_content.replace("```json", "").replace("```", "").strip()
-        print("OPENAI_RESPONSE",response_content)
+        # print("OPENAI_RESPONSE",response_content)
         if not response_content:
             raise ValueError("Empty response from OpenAI API.")
     except Exception as e:
@@ -788,8 +757,8 @@ def promptExpec():
 
     # Retrieve relevant data based on the query
     try:
-        ragData = get_query_expectations(response_content, existing_collection)
-        
+        ragData = get_query_expectations(response_content, existing_collection)     
+        # print("RAG DATA",ragData)   
     except Exception as e:
         return jsonify({"status": 500, "message": f"Error retrieving expectations: {str(e)}"}), 500
 
@@ -802,15 +771,71 @@ def promptExpec():
             if attribute not in attribute_expectations:
                 attribute_expectations[attribute] = []
             attribute_expectations[attribute].append(expectation_text)
-    
-    print("FORMATTED EXPECTATIONS",attribute_expectations)
 
-    # Return the formatted response to the frontend
+    # print("\n\nEXPEC_DS", attribute_expectations)
+    latest_data = get_last_row_of_csv()
+    summary = latest_data.get("summary")
+
+
+    newPrompt = (
+        f"Here I'm attaching the user query along with the required data. Based on the user query, please generate the response. Follow these rules strictly:\n\n"
+        "1. Always format the response using **Markdown**:\n"
+        "   - Use `###` for side-headings.\n"
+        "   - Use `-` for bullet points under each side-heading.\n"
+        "   - Separate sections with a newline character (`\\n\\n`).\n\n"
+        "2. If the user asks for specific structured data, use side-headings (`###`) for attributes, and list the expectations as bullet points below them. And make sure there's space between '-' and the points after it.\n"
+        "   Example:\n\n"
+        "   ### Leadership\n"
+        "   - Works independently to effectively prioritize multiple competing tasks.\n"
+        "   - Proactively learns new information and skills.\n\n"
+        "   ### Business Needs\n"
+        "   - Prepares work products and/or acts as a first-level/peer reviewer.\n"
+        "   - Starts to make decisions for work assigned.\n\n"
+        "3. If the user asks for a general response (e.g., a summary or explanation), format the response as plain paragraphs without any additional bullet points or headings.\n\n"
+        "4. If the user query does not mention anything about a summary or explanation, skip generating a summary entirely.\n\n"
+        "5. Do not include any additional notes, comments, or explanations in the response.\n\n"
+        f"User query: {query}\n\n"
+        "Attributes and Expectations:\n\n"
+        + "\n\n".join(
+            [f"### {attribute}\n" + "\n".join([f"- {expectation}" for expectation in expectations]) for attribute, expectations in attribute_expectations.items()]
+        )
+        + (
+            "\n\n### Summary\n" + "\n".join( {summary})
+            if "summary" in query.lower() else ""
+        )
+    )
+
+
+
+
+    # print("\nNEW PROMPT", newPrompt)
+
     try:
-        json_data = json.dumps(attribute_expectations, indent=4)
-        json_data = json.loads(json_data)
-
-        # formatted_response = json.loads(attribute_expectations)
-        return jsonify({"status": 200, "data": json_data}), 200
+        res = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are an expert in understanding user query and performing the requested action based on the data provided."},
+                {"role": "user", "content": newPrompt}
+            ],
+            temperature=0.7,
+            max_tokens=2000,
+            top_p=0.9,
+            frequency_penalty=0.5
+        )
+        validationResponse = res.choices[0].message.content.strip()
     except Exception as e:
-        return jsonify({"status": 500, "message": f"Error formatting response: {str(e)}"}), 500
+        print(f"Error generating expectations summary: {e}")
+        validationResponse = "Error in summarization."
+
+    
+    # print("FORMATTED EXPECTATIONS",validationResponse)
+    return jsonify({"status": 200, "data": validationResponse})
+    # Return the formatted response to the frontend
+    # try:
+    #     json_data = json.dumps(attribute_expectations, indent=4)
+    #     json_data = json.loads(json_data)
+
+    #     # formatted_response = json.loads(attribute_expectations)
+    #     return jsonify({"status": 200, "data": json_data}), 200
+    # except Exception as e:
+    #     return jsonify({"status": 500, "message": f"Error formatting response: {str(e)}"}), 500

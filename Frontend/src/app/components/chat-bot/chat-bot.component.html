@@ -20,21 +20,13 @@
 
       <!-- Bot Message -->
       <div *ngIf="message.response" class="message bot-message d-flex justify-content-start mb-3">
-        <div class="message-content bg-light p-3 rounded shadow-sm">
-          <div class="response-sections">
-            <div *ngFor="let key of objectKeys(message.response)" class="response-section">
-              <div class="response-header fw-bold text-primary mb-2">
-                {{ key }}
-              </div>
-              <ul class="response-list ps-3">
-                <li *ngFor="let expectation of message.response[key]" class="response-item mb-1">
-                  {{ expectation }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      <div class="message-content bg-light p-3 rounded shadow-sm">
+        <markdown class="markdown" *ngIf="message.response; else plainText" [data]="message.response"></markdown>
+        <ng-template #plainText>
+          <p>{{ message?.response }}</p>
+        </ng-template>
       </div>
+    </div>
 
       <!-- Typing Loader -->
       <div *ngIf="isLoading && last" class="bot-message d-flex justify-content-start mb-3">

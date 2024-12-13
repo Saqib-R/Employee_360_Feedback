@@ -27,6 +27,7 @@ import { HrFeedbackAccordianComponent } from './components/hr-overview/hr-feedba
 import { HrFeedbackAccCardComponent } from './components/hr-overview/hr-feedback-acc-card/hr-feedback-acc-card.component';
 import { ExpConfigComponent } from './components/exp-config/exp-config.component';
 import { ChatBotComponent } from './components/chat-bot/chat-bot.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { ChatBotComponent } from './components/chat-bot/chat-bot.component';
     CommonModule,
     ToastrModule.forRoot(),
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
+    MarkdownModule.forRoot()
   ],
   providers: [
     UploadService

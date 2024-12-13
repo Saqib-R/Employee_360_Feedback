@@ -13,6 +13,7 @@ export class AppComponent {
       localStorage.removeItem('summary');
       localStorage.removeItem('QueNo');
       localStorage.removeItem('concatenatedResults');
+      localStorage.removeItem('chatData');
     });
   }
 

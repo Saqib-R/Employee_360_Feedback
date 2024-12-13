@@ -45,4 +45,16 @@
       <div class="spinner-border text-primary" role="status"></div>
     </div>
   </div>
+
+    <!-- Floating Chatbot Button -->
+    <button
+    class="chatbot-btn btn btn-primary rounded-circle"
+    (click)="toggleChatbot()"
+  >
+    <i class="bi bi-chat-dots-fill"></i>
+  </button>
+
+  <!-- Chatbot Modal -->
+  <app-chat-bot *ngIf="showChatbot" class="chatbot-modal"></app-chat-bot>
+
 </section>

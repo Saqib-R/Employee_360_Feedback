@@ -16,6 +16,11 @@ export class EmpAccordianCardComponent {
   attributeQ2 = [];
   attributeQ3 = [];
   attributeQ4 = [];
+  showChatbot = false;
+
+  toggleChatbot() {
+    this.showChatbot = !this.showChatbot;
+  }
 
   ngOnInit() {
     this.employee = this.employeeService.getEmployeeData();
